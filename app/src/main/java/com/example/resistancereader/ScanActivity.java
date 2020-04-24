@@ -1,5 +1,6 @@
 package com.example.resistancereader;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,18 +10,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ParcelUuid;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+import static com.example.resistancereader.BleServices.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
 import static com.example.resistancereader.utils.MsgUtils.showToast;
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class ScanActivity extends AppCompatActivity {
 
     public static final String RESISTANCE = "Resistance";
@@ -37,6 +46,20 @@ public class ScanActivity extends AppCompatActivity {
     private TextView mScanInfoView;
 
     private static final long SCAN_PERIOD = 10000; // represented in milliseconds
+
+    // We are only interested in devices with our service, so we create a scan filter
+    private static final List<ScanFilter> RESISTANCE_SCAN_FILTER;
+    private static final ScanSettings SCAN_SETTINGS;
+
+    static {
+        ScanFilter resistanceServiceFilter = new ScanFilter.Builder()
+                .setServiceUuid(new ParcelUuid(RESISTANCE_SERVICE))
+                .build();
+        RESISTANCE_SCAN_FILTER = new ArrayList<>();
+        RESISTANCE_SCAN_FILTER.add(resistanceServiceFilter);
+        SCAN_SETTINGS = new ScanSettings.Builder()
+                .setScanMode(CALLBACK_TYPE_ALL_MATCHES).build();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
