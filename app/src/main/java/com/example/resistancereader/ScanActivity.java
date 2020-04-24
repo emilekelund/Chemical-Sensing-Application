@@ -84,7 +84,7 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDeviceList.clear();
-                startScanning(RESISTANCE_SCAN_FILTER, SCAN_SETTINGS, SCAN_PERIOD);
+                scanForDevices(true);
             }
         });
 
@@ -96,7 +96,6 @@ public class ScanActivity extends AppCompatActivity {
                 new BtDeviceAdapter.IOnItemSelectedCallBack() {
                     @Override
                     public void onItemClicked(int position) {
-
                     }
                 });
 
@@ -146,32 +145,39 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
-    // Start scanning for BLE devices
-    private void startScanning(List<ScanFilter> scanFilters,
-                               ScanSettings scanSettings,
-                               long scanPeriod) {
+    /*
+     * Scan for BLE devices.
+     */
+    private void scanForDevices(final boolean enable) {
         final BluetoothLeScanner scanner =
                 mBluetoothAdapter.getBluetoothLeScanner();
-
-        if (!mScanning) {
-            // stop the scanning after a pre-defined scan period
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mScanning) {
-                        mScanning = false;
-                        scanner.stopScan(mScanCallback);
-                        showToast("BLE scan stopped", getApplicationContext());
+        if (enable) {
+            if (!mScanning) {
+                // stop scanning after a pre-defined scan period, SCAN_PERIOD
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mScanning) {
+                            mScanning = false;
+                            scanner.stopScan(mScanCallback);
+                            showToast("BLE scan stopped", ScanActivity.this);
+                        }
                     }
-                }
-            }, scanPeriod);
+                }, SCAN_PERIOD);
 
-            mScanning = true;
-            scanner.startScan(scanFilters, scanSettings, mScanCallback);
-            mScanInfoView.setText(R.string.no_devices_found);
-            showToast("BLE scan started", this);
+                mScanning = true;
+                // TODO: Add a filter, e.g. for heart rate service, scan settings
+                scanner.startScan(mScanCallback);
+                mScanInfoView.setText(R.string.no_devices_found);
+                showToast("BLE scan started", this);
+            }
+        } else {
+            if (mScanning) {
+                mScanning = false;
+                scanner.stopScan(mScanCallback);
+                showToast("BLE scan stopped", this);
+            }
         }
-
     }
 
     // Stop scanning for Ble devices
