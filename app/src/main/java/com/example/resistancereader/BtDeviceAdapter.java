@@ -1,5 +1,6 @@
 package com.example.resistancereader;
 
+import android.bluetooth.BluetoothDevice;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -7,7 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class BtDeviceAdapter extends RecyclerView.Adapter<BtDeviceAdapter.ViewHolder> {
+    private List<BluetoothDevice> mDeviceList;
 
     // interface for callbacks when item selected
     public interface IOnItemSelectedCallBack {
@@ -15,7 +19,13 @@ public class BtDeviceAdapter extends RecyclerView.Adapter<BtDeviceAdapter.ViewHo
     }
     private IOnItemSelectedCallBack mOnItemSelectedCallback;
 
+    public BtDeviceAdapter(List<BluetoothDevice> deviceList,
+                           IOnItemSelectedCallBack onItemSelectedCallBack) {
+        super();
+        mDeviceList = deviceList;
+        mOnItemSelectedCallback = onItemSelectedCallBack;
 
+    }
 
     @NonNull
     @Override
