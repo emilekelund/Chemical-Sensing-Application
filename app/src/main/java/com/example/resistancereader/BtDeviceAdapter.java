@@ -40,8 +40,13 @@ public class BtDeviceAdapter extends RecyclerView.Adapter<BtDeviceAdapter.ViewHo
         return vh;
     }
 
+    // Replace the contents of a view (invoked by the layout managaer)
     @Override
-    public void onBindViewHolder(@NonNull BtDeviceAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder vh, int position) {
+        BluetoothDevice device = mDeviceList.get(position);
+        String name = device.getName();
+        vh.deviceNameView.setText(name == null ? "Unknown" : name);
+        vh.deviceInfoView.setText(String.format("%s, %s", device.getBluetoothClass(), device.getAddress()));
 
     }
 
