@@ -150,4 +150,19 @@ public class ScanActivity extends AppCompatActivity {
         }
 
     }
+
+    // Stop scanning for Ble devices
+    private void stopScanning() {
+        if (mScanning) {
+            BluetoothLeScanner scanner =
+                    mBluetoothAdapter.getBluetoothLeScanner();
+
+            scanner.stopScan(mScanCallback);
+            mScanning = false;
+            showToast("BLE scan stopped", this);
+        }
+    }
+
+
+
 }
