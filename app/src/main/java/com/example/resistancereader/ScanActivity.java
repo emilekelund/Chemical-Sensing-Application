@@ -103,6 +103,21 @@ public class ScanActivity extends AppCompatActivity {
         recyclerView.setAdapter(mBtDeviceAdapter);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mScanInfoView.setText(R.string.no_devices_found);
+        initBLE();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopScanning();
+        mDeviceList.clear();
+        mBtDeviceAdapter.notifyDataSetChanged();
+    }
+
     // Check BLE permissions and turn on BT (if turned off) - user interaction(s)
     private void initBLE() {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
