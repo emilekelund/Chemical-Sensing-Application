@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Resistance Reader</string>
+    <string name="no_devices_found">No device(s) found</string>
+    <string name="scan_button_text">Scan for resistance board(s)</string>
 </resources>
