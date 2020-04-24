@@ -52,7 +52,7 @@ public class BtDeviceAdapter extends RecyclerView.Adapter<BtDeviceAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mDeviceList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
