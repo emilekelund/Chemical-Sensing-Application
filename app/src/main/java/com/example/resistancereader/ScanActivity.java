@@ -40,8 +40,6 @@ public class ScanActivity extends AppCompatActivity {
 
     private static final String TAG = ScanActivity.class.getSimpleName();
 
-    public static final String RESISTANCE = "Resistance";
-
     public static final int REQUEST_ENABLE_BT = 1000;
     public static final int REQUEST_ACCESS_LOCATION = 1001;
 
