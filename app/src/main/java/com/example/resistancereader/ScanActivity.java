@@ -84,6 +84,7 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDeviceList.clear();
+                startScanning(RESISTANCE_SCAN_FILTER, SCAN_SETTINGS, SCAN_PERIOD);
             }
         });
 
