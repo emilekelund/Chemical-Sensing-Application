@@ -1,5 +1,6 @@
 package com.example.resistancereader;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -197,6 +198,19 @@ public class ScanActivity extends AppCompatActivity {
             Log.i(TAG, "onScanFailed");
         }
     };
+
+    // callback for ActivityCompat.requestPermissions
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_ACCESS_LOCATION) {
+            // if request is cancelled, the result arrays are empty
+            if (grantResults.length == 0) {
+                // stop this activity
+                this.finish();
+            }
+        }
+    }
 
     // callback for request to turn on BT
     @Override
