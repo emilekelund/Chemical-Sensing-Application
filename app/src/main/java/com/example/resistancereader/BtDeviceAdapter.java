@@ -1,6 +1,7 @@
 package com.example.resistancereader;
 
 import android.bluetooth.BluetoothDevice;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -30,7 +31,13 @@ public class BtDeviceAdapter extends RecyclerView.Adapter<BtDeviceAdapter.ViewHo
     @NonNull
     @Override
     public BtDeviceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        // Create a new item view
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.scan_result_item, parent, false);
+        final ViewHolder vh = new ViewHolder(itemView, mOnItemSelectedCallback);
+        vh.deviceNameView = itemView.findViewById(R.id.device_name);
+        vh.deviceInfoView = itemView.findViewById(R.id.device_info);
+        return vh;
     }
 
     @Override
