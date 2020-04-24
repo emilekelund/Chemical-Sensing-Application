@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
@@ -120,5 +121,33 @@ public class ScanActivity extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
+    }
+
+    // Start scanning for BLE devices
+    private void startScanning(List<ScanFilter> scanFilters,
+                               ScanSettings scanSettings,
+                               long scanPeriod) {
+        final BluetoothLeScanner scanner =
+                mBluetoothAdapter.getBluetoothLeScanner();
+
+        if (!mScanning) {
+            // stop the scanning after a pre-defined scan period
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mScanning) {
+                        mScanning = false;
+                        scanner.stopScan(mScanCallback);
+                        showToast("BLE scan stopped", this);
+                    }
+                }
+            }, scanPeriod);
+
+            mScanning = true;
+            scanner.startScan(scanFilters, scanSettings, mScanCallback);
+            mScanInfoView.setText(R.string.no_devices_found);
+            showToast("BLE scan started", this);
+        }
+
     }
 }
