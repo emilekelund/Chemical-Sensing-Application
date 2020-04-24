@@ -120,25 +120,26 @@ public class ScanActivity extends AppCompatActivity {
     // Check BLE permissions and turn on BT (if turned off) - user interaction(s)
     private void initBLE() {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            showToast("BLE is not supported", this);
+            showToast("BLE not supported", this);
             finish();
+            return;
         } else {
             showToast("BLE is supported", this);
-            // Access Location is a "dangerous" permission
+            // Access location is a "dangerous permission"
             int hasAccessLocation = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION);
             if (hasAccessLocation != PackageManager.PERMISSION_GRANTED) {
-                // ask the user for permission
+                // Ask the user for permission
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         REQUEST_ACCESS_LOCATION);
-                // the callback method onRequestPermissionsResult gets the result of this request
+                // The callback method onRequestPermissionsResult gets the result of this request
             }
         }
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        // turn on BT
+        // turn on BT, i.e. start an activity for the user consent
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
