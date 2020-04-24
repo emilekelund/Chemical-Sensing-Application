@@ -84,7 +84,7 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDeviceList.clear();
-                scanForDevices(true);
+                scanForDevices(true, RESISTANCE_SCAN_FILTER, SCAN_SETTINGS, SCAN_PERIOD);
             }
         });
 
@@ -149,7 +149,10 @@ public class ScanActivity extends AppCompatActivity {
     /*
      * Scan for BLE devices.
      */
-    private void scanForDevices(final boolean enable) {
+    private void scanForDevices(final boolean enable,
+                                List<ScanFilter> scanFilters,
+                                ScanSettings scanSettings,
+                                long SCAN_PERIOD) {
         final BluetoothLeScanner scanner =
                 mBluetoothAdapter.getBluetoothLeScanner();
         if (enable) {
@@ -167,8 +170,7 @@ public class ScanActivity extends AppCompatActivity {
                 }, SCAN_PERIOD);
 
                 mScanning = true;
-                // TODO: Add a filter, e.g. for heart rate service, scan settings
-                scanner.startScan(mScanCallback);
+                scanner.startScan(scanFilters, scanSettings, mScanCallback);
                 mScanInfoView.setText(R.string.no_devices_found);
                 showToast("BLE scan started", this);
             }
