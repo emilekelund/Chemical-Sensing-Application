@@ -11,7 +11,9 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,6 +35,8 @@ import static com.example.resistancereader.utils.MsgUtils.showToast;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class ScanActivity extends AppCompatActivity {
+
+    private static final String TAG = ScanActivity.class.getSimpleName();
 
     public static final String RESISTANCE = "Resistance";
 
@@ -163,6 +168,33 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
+    // Callback methods for the BluetoothLeScanner
+    private ScanCallback mScanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            super.onScanResult(callbackType, result);
+            Log.i(TAG, "onScanResult");
+            final BluetoothDevice device = result.getDevice();
 
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mDeviceList.contains(device)) {
+                        mDeviceList.add(device);
+                        mBtDeviceAdapter.notifyDataSetChanged();
+                        String info = "Found " + mDeviceList.size() + " device(s)\n"
+                                + "Touch to connect";
+                        mScanInfoView.setText(info);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            super.onScanFailed(errorCode);
+            Log.i(TAG, "onScanFailed");
+        }
+    };
 
 }
