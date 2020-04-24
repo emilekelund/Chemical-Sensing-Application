@@ -9,13 +9,11 @@
         android:id="@+id/device_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#ffffff" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/device_info"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
