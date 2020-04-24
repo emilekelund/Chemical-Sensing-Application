@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -143,7 +144,7 @@ public class ScanActivity extends AppCompatActivity {
                     if (mScanning) {
                         mScanning = false;
                         scanner.stopScan(mScanCallback);
-                        showToast("BLE scan stopped", this);
+                        showToast("BLE scan stopped", getApplicationContext());
                     }
                 }
             }, scanPeriod);
@@ -196,5 +197,16 @@ public class ScanActivity extends AppCompatActivity {
             Log.i(TAG, "onScanFailed");
         }
     };
+
+    // callback for request to turn on BT
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // if user chooses not to enable Bluetooth.
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
 }
