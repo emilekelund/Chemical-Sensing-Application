@@ -56,6 +56,7 @@ public class ResistanceReadActivity extends Activity {
             mDeviceView.setText(R.string.no_resistance_board);
         } else {
             mDeviceView.setText(mSelectedDevice.getName());
+            mDeviceAddress = mSelectedDevice.getAddress();
         }
 
         // Bind to BleImuService
