@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.resistancereader.BtDeviceAdapter;
+import com.example.resistancereader.adapter.BtDeviceAdapter;
 import com.example.resistancereader.R;
 
 import java.util.ArrayList;
