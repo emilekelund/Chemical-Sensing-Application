@@ -58,22 +58,22 @@ public class BleResistanceService extends Service {
                 broadcastUpdate(Event.GATT_SERVICES_DISCOVERED);
                 logServices(gatt); // debug
 
-                // get the IMU service
+                // get the resistance service
                 mResistanceService = gatt.getService(RESISTANCE_SERVICE);
 
                 if (mResistanceService != null) {
                     broadcastUpdate(Event.RESISTANCE_SERVICE_DISCOVERED);
                     logCharacteristics(mResistanceService); // debug
 
-                    // enable notifications on IMU measurement
-                    BluetoothGattCharacteristic imuData =
+                    // enable notifications on resistance measurement
+                    BluetoothGattCharacteristic resistanceData =
                             mResistanceService.getCharacteristic(RESISTANCE_MEASUREMENT);
                     boolean result = setCharacteristicNotification(
-                            imuData, true);
+                            resistanceData, true);
                     Log.i(TAG, "setCharacteristicNotification: " + result);
                 } else {
                     broadcastUpdate(Event.RESISTANCE_SERVICE_NOT_AVAILABLE);
-                    Log.i(TAG, "IMU service not available");
+                    Log.i(TAG, "Resistance service not available");
                 }
             }
         }
@@ -202,9 +202,9 @@ public class BleResistanceService extends Service {
         sendBroadcast(intent);
     }
 
-    // Broadcast the new IMU data to our Intent, in this case the ExtImuActivity
+    // Broadcast the new Resistance data to our Intent, in this case the ResistanceReadActivity
     // Based on https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service
-    private void broadcastImuUpdate(final float elevation) {
+    private void broadcastResistanceUpdate(final float elevation) {
         final Intent intent = new Intent(ACTION_GATT_RESISTANCE_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
         intent.putExtra(RESISTANCE_DATA, elevation);
