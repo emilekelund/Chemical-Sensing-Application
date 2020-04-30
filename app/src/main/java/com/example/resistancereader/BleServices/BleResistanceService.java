@@ -195,7 +195,7 @@ public class BleResistanceService extends Service {
     Broadcast methods for events and data
      */
     private void broadcastUpdate(final Event event) {
-        final Intent intent = new Intent(ACTION_GATT_IMU_EVENTS);
+        final Intent intent = new Intent(ACTION_GATT_RESISTANCE_EVENTS);
         intent.putExtra(EVENT, event);
         sendBroadcast(intent);
     }
@@ -203,9 +203,9 @@ public class BleResistanceService extends Service {
     // Broadcast the new IMU data to our Intent, in this case the ExtImuActivity
     // Based on https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service
     private void broadcastImuUpdate(final float elevation) {
-        final Intent intent = new Intent(ACTION_GATT_IMU_EVENTS);
+        final Intent intent = new Intent(ACTION_GATT_RESISTANCE_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
-        intent.putExtra(IMU_DATA, elevation);
+        intent.putExtra(RESISTANCE_DATA, elevation);
         sendBroadcast(intent);
     }
 

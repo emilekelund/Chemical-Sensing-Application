@@ -6,7 +6,7 @@ public class GattActions {
      * The action corresponding to IMU events from BleImuService.
      * Intended for IntentFilters for a BroadcastReceiver.
      */
-    public final static String ACTION_GATT_IMU_EVENTS =
+    public final static String ACTION_GATT_RESISTANCE_EVENTS =
             "com.example.resistancereader.services.ACTION_GATT_IMU_EVENTS";
 
     /**
@@ -19,7 +19,7 @@ public class GattActions {
     /**
      * A flag for IMU data in intent (via intent.putExtra)
      */
-    public final static String IMU_DATA =
+    public final static String RESISTANCE_DATA =
             "com.example.resistancereader.services.IMU_DATA";
 
 
