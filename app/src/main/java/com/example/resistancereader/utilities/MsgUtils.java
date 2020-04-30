@@ -1,4 +1,4 @@
-package com.example.resistancereader.utils;
+package com.example.resistancereader.utilities;
 
 import android.app.Dialog;
 import android.content.Context;
