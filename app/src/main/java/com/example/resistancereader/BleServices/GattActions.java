@@ -30,8 +30,8 @@ public class GattActions {
         GATT_CONNECTED("Connected"),
         GATT_DISCONNECTED("Disconnected"),
         GATT_SERVICES_DISCOVERED("Services discovered"),
-        IMU_SERVICE_DISCOVERED("IMU Service"),
-        IMU_SERVICE_NOT_AVAILABLE("IMU service unavailable"),
+        RESISTANCE_SERVICE_DISCOVERED("IMU Service"),
+        RESISTANCE_SERVICE_NOT_AVAILABLE("IMU service unavailable"),
         DATA_AVAILABLE("Data available");
 
         @Override
