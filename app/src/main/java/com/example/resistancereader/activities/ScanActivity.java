@@ -46,6 +46,8 @@ public class ScanActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 1000;
     public static final int REQUEST_ACCESS_LOCATION = 1001;
 
+    public static String SELECTED_DEVICE = "Selected device";
+
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
@@ -97,6 +99,7 @@ public class ScanActivity extends AppCompatActivity {
                 new BtDeviceAdapter.IOnItemSelectedCallBack() {
                     @Override
                     public void onItemClicked(int position) {
+                        onDeviceSelected(position);
                     }
                 });
 
@@ -224,6 +227,18 @@ public class ScanActivity extends AppCompatActivity {
             Log.i(TAG, "onScanFailed");
         }
     };
+
+    /*
+     * Device selected, start DeviceActivity (displaying data)
+     */
+    private void onDeviceSelected(int position) {
+        BluetoothDevice selectedDevice = mDeviceList.get(position);
+        // BluetoothDevice objects are parceable, i.e. we can "send" the selected device
+        // to the DeviceActivity packaged in an intent.
+        Intent intent = new Intent(ScanActivity.this, ResistanceReadActivity.class);
+        intent.putExtra(SELECTED_DEVICE, selectedDevice);
+        startActivity(intent);
+    }
 
     // callback for ActivityCompat.requestPermissions
     @Override
