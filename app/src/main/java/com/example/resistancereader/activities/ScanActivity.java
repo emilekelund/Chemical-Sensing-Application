@@ -1,4 +1,4 @@
-package com.example.resistancereader;
+package com.example.resistancereader.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,6 +27,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.resistancereader.BtDeviceAdapter;
+import com.example.resistancereader.R;
 
 import java.util.ArrayList;
 import java.util.List;
