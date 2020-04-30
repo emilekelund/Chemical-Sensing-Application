@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
-import static com.example.resistancereader.BleServices.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
+import static com.example.resistancereader.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
 import static com.example.resistancereader.utilities.MsgUtils.showToast;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

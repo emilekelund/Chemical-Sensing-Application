@@ -1,4 +1,4 @@
-package com.example.resistancereader.BleServices;
+package com.example.resistancereader.services;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -19,8 +19,8 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.resistancereader.BleServices.GattActions.*;
-import static com.example.resistancereader.BleServices.ResistanceBoardUUIDs.*;
+import static com.example.resistancereader.services.GattActions.*;
+import static com.example.resistancereader.services.ResistanceBoardUUIDs.*;
 
 public class BleResistanceService extends Service {
     private BluetoothManager mBluetoothManager;

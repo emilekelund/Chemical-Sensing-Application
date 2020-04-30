@@ -22,7 +22,7 @@
         </activity>
         <activity android:name=".activities.ResistanceReadActivity" />
 
-        <service android:name=".BleServices.BleResistanceService" />
+        <service android:name=".services.BleResistanceService" />
     </application>
 
 </manifest>

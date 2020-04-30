@@ -1,4 +1,4 @@
-package com.example.resistancereader.BleServices;
+package com.example.resistancereader.services;
 
 public class GattActions {
 

@@ -17,13 +17,13 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.example.resistancereader.BleServices.BleResistanceService;
-import com.example.resistancereader.BleServices.GattActions;
+import com.example.resistancereader.services.BleResistanceService;
+import com.example.resistancereader.services.GattActions;
 import com.example.resistancereader.R;
 import com.example.resistancereader.utilities.MsgUtils;
 
-import static com.example.resistancereader.BleServices.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
-import static com.example.resistancereader.BleServices.GattActions.EVENT;
+import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
+import static com.example.resistancereader.services.GattActions.EVENT;
 
 public class ResistanceReadActivity extends Activity {
     private static final String TAG = ResistanceReadActivity.class.getSimpleName();
