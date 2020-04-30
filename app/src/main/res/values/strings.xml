@@ -4,4 +4,5 @@
     <string name="scan_button_text">Scan for resistance board(s)</string>
     <string name="no_resistance_board">No resistance board connected</string>
     <string name="no_data">No data</string>
+    <string name="device_unreachable">Device is not available</string>
 </resources>
