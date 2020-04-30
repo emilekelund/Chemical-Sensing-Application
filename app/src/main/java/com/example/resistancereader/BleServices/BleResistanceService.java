@@ -16,6 +16,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.example.resistancereader.BleServices.GattActions.*;
@@ -86,6 +87,7 @@ public class BleResistanceService extends Service {
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
 
+                Log.i(TAG, "RawData: " + Arrays.toString(rawData));
             }
         }
 
