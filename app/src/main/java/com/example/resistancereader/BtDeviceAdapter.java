@@ -40,7 +40,7 @@ public class BtDeviceAdapter extends RecyclerView.Adapter<BtDeviceAdapter.ViewHo
         return vh;
     }
 
-    // Replace the contents of a view (invoked by the layout managaer)
+    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder vh, int position) {
         BluetoothDevice device = mDeviceList.get(position);
