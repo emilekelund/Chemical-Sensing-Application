@@ -110,12 +110,12 @@ public class ResistanceReadActivity extends Activity {
         l.setTextColor(Color.BLACK);
 
         // X-axis setup
-        XAxis xl = mChart.getXAxis();
-        xl.setTextColor(Color.BLACK);
-        xl.setDrawGridLines(true);
-        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xl.setAvoidFirstLastClipping(true);
-        xl.setEnabled(true);
+        XAxis bottomAxis = mChart.getXAxis();
+        bottomAxis.setTextColor(Color.BLACK);
+        bottomAxis.setDrawGridLines(true);
+        bottomAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        bottomAxis.setAvoidFirstLastClipping(true);
+        bottomAxis.setEnabled(true);
 
         // Y-axis setup
         YAxis leftAxis = mChart.getAxisLeft();
