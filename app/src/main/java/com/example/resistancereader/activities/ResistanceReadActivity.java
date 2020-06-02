@@ -147,7 +147,7 @@ public class ResistanceReadActivity extends Activity {
                             resistanceValues.add(resistance);
                             double avgResistance = 0;
 
-                            if (resistanceValues.size() >= 4) {
+                            if (resistanceValues.size() >= 6) {
                                 for (double i : resistanceValues) {
                                     avgResistance += i;
                                 }
