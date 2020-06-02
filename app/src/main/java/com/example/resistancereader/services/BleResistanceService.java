@@ -16,11 +16,18 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.example.resistancereader.utilities.BitConverter;
+
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.resistancereader.services.GattActions.*;
-import static com.example.resistancereader.services.ResistanceBoardUUIDs.*;
+import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
+import static com.example.resistancereader.services.GattActions.EVENT;
+import static com.example.resistancereader.services.GattActions.Event;
+import static com.example.resistancereader.services.GattActions.RESISTANCE_DATA;
+import static com.example.resistancereader.services.ResistanceBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
+import static com.example.resistancereader.services.ResistanceBoardUUIDs.RESISTANCE_MEASUREMENT;
+import static com.example.resistancereader.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
 
 public class BleResistanceService extends Service {
     private BluetoothManager mBluetoothManager;
@@ -87,7 +94,9 @@ public class BleResistanceService extends Service {
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
 
+                double resistance = BitConverter.bytesToResistance(rawData);
                 Log.i(TAG, "RawData: " + Arrays.toString(rawData));
+                Log.i(TAG, "Resistance: " + resistance);
             }
         }
 
