@@ -113,6 +113,7 @@ public class ResistanceReadActivity extends Activity {
         XAxis xl = mChart.getXAxis();
         xl.setTextColor(Color.BLACK);
         xl.setDrawGridLines(true);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setAvoidFirstLastClipping(true);
         xl.setEnabled(true);
 
@@ -120,7 +121,7 @@ public class ResistanceReadActivity extends Activity {
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setAxisMaximum(1.5f);
+        leftAxis.setAxisMaximum(1.3f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
@@ -128,7 +129,7 @@ public class ResistanceReadActivity extends Activity {
         rightAxis.setEnabled(false);
 
         mChart.getAxisLeft().setDrawGridLines(true);
-        mChart.getXAxis().setDrawGridLines(true);
+        mChart.getXAxis().setDrawGridLines(false);
         mChart.setDrawBorders(false);
 
         feedMultiple();
@@ -219,7 +220,7 @@ public class ResistanceReadActivity extends Activity {
         mChart.notifyDataSetChanged();
 
         // limit the number of visible entries
-        mChart.setVisibleXRangeMaximum(10);
+        mChart.setVisibleXRangeMaximum(15);
         // mChart.setVisibleYRange(30, AxisDependency.LEFT);
 
         // move to the latest entry
@@ -230,8 +231,8 @@ public class ResistanceReadActivity extends Activity {
 
         LineDataSet set = new LineDataSet(null, "Resistance data");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setLineWidth(2f);
-        set.setColor(Color.MAGENTA);
+        set.setLineWidth(3f);
+        set.setColor(Color.RED);
         set.setHighlightEnabled(false);
         set.setDrawValues(false);
         set.setDrawCircles(true);
