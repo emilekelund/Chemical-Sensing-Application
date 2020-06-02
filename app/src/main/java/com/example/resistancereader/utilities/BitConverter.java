@@ -3,7 +3,7 @@ package com.example.resistancereader.utilities;
 public class BitConverter {
 
 
-    public int[] bitsToResistance(byte[] rawData) {
+    public int[] bytesToResistance(byte[] rawData) {
 
 
         return null;
