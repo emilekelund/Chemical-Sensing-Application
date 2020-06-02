@@ -22,6 +22,8 @@ import com.example.resistancereader.services.GattActions;
 import com.example.resistancereader.R;
 import com.example.resistancereader.utilities.MsgUtils;
 
+import java.util.ArrayList;
+
 import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
 import static com.example.resistancereader.services.GattActions.EVENT;
 import static com.example.resistancereader.services.GattActions.RESISTANCE_DATA;
@@ -34,6 +36,7 @@ public class ResistanceReadActivity extends Activity {
     private TextView mDeviceView;
     private TextView mStatusView;
     private String mDeviceAddress;
+    private ArrayList<Double> resistanceValues = new ArrayList<>();
 
     private BleResistanceService mBluetoothLeService;
 
@@ -133,11 +136,22 @@ public class ResistanceReadActivity extends Activity {
                         case GATT_SERVICES_DISCOVERED:
                         case RESISTANCE_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
-                            mResistanceView.setText("-");
+                            mResistanceView.setText(R.string.waiting_for_data);
                             break;
                         case DATA_AVAILABLE:
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
-                            mResistanceView.setText(String.format("%.3f M\u2126", (resistance * (1*Math.pow(10, -6)))));
+                            resistanceValues.add(resistance);
+                            double avgResistance = 0;
+
+                            if (resistanceValues.size() >= 5) {
+                                for (double i : resistanceValues) {
+                                    avgResistance += i;
+                                }
+                                avgResistance = avgResistance / resistanceValues.size();
+                                mResistanceView.setText(String.format("%.3f M\u2126", (avgResistance * (1*Math.pow(10, -6)))));
+                                resistanceValues.clear();
+                            }
+
                             break;
                         case RESISTANCE_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
