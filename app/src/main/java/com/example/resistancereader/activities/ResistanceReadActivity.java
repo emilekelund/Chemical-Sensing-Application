@@ -253,7 +253,7 @@ public class ResistanceReadActivity extends Activity {
                 while (true){
                     plotData = true;
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
