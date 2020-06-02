@@ -24,6 +24,7 @@ import com.example.resistancereader.utilities.MsgUtils;
 
 import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
 import static com.example.resistancereader.services.GattActions.EVENT;
+import static com.example.resistancereader.services.GattActions.RESISTANCE_DATA;
 
 public class ResistanceReadActivity extends Activity {
     private static final String TAG = ResistanceReadActivity.class.getSimpleName();
@@ -135,6 +136,8 @@ public class ResistanceReadActivity extends Activity {
                             mResistanceView.setText("-");
                             break;
                         case DATA_AVAILABLE:
+                            final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
+                            mResistanceView.setText(String.format("%.3f M\u2126", (resistance * (1*Math.pow(10, -6)))));
                             break;
                         case RESISTANCE_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
