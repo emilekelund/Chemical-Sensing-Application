@@ -7,4 +7,5 @@
     <string name="device_unreachable">Device is not available</string>
     <string name="calculating_resistance">Calculating\n resistance..</string>
     <string name="board_disconnected">Board\n disconnected</string>
+    <string name="waiting_for_resistance">Waiting for\n resistance</string>
 </resources>

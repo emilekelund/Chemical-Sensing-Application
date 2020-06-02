@@ -33,6 +33,7 @@ public class ResistanceReadActivity extends Activity {
 
     private BluetoothDevice mSelectedDevice = null;
     private TextView mResistanceView;
+    private TextView mTempView;
     private TextView mDeviceView;
     private TextView mStatusView;
     private String mDeviceAddress;
@@ -48,6 +49,7 @@ public class ResistanceReadActivity extends Activity {
 
         // Setup UI references
         mResistanceView = findViewById(R.id.resistanceValueViewer);
+        mTempView = findViewById(R.id.temp_viewer);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
 
@@ -137,7 +139,8 @@ public class ResistanceReadActivity extends Activity {
                         case GATT_SERVICES_DISCOVERED:
                         case RESISTANCE_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
-                            mResistanceView.setText(R.string.waiting_for_data);
+                            mResistanceView.setText(R.string.calculating_resistance);
+                            mTempView.setText(R.string.waiting_for_resistance);
                             break;
                         case DATA_AVAILABLE:
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
@@ -150,6 +153,7 @@ public class ResistanceReadActivity extends Activity {
                                 }
                                 avgResistance = avgResistance / resistanceValues.size();
                                 mResistanceView.setText(String.format("%.3f M\u2126", (avgResistance * (1*Math.pow(10, -6)))));
+                                mTempView.setText("TEMP HERE");
                                 resistanceValues.clear();
                             }
 
