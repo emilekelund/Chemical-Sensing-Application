@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -22,6 +23,7 @@ import com.example.resistancereader.services.BleResistanceService;
 import com.example.resistancereader.services.GattActions;
 import com.example.resistancereader.utilities.MsgUtils;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.LineData;
 
 import java.util.ArrayList;
 
@@ -67,6 +69,29 @@ public class ResistanceReadActivity extends Activity {
             mDeviceView.setText(mSelectedDevice.getName());
             mDeviceAddress = mSelectedDevice.getAddress();
         }
+
+        // Setup UI reference to the chart
+        mChart = (LineChart) findViewById(R.id.resistanceChart);
+
+        // enable description text
+        mChart.getDescription().setEnabled(true);
+
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+        mChart.setDrawGridBackground(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(true);
+
+        // set an alternative background color
+        mChart.setBackgroundColor(Color.WHITE);
+
+        LineData data = new LineData();
+        data.setValueTextColor(Color.BLACK);
 
         // Bind to BleImuService
         // We use onResume or onStart to register a broadcastReceiver
