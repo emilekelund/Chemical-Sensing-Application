@@ -154,6 +154,9 @@ public class ResistanceReadActivity extends Activity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mGattUpdateReceiver);
+        if (thread != null) {
+            thread.interrupt();
+        }
     }
 
     /*
@@ -165,6 +168,7 @@ public class ResistanceReadActivity extends Activity {
         super.onDestroy();
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
+        thread.interrupt();
     }
 
     /*
