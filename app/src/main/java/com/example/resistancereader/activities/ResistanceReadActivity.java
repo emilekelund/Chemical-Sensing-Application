@@ -133,6 +133,7 @@ public class ResistanceReadActivity extends Activity {
                     switch (event) {
                         case GATT_CONNECTED:
                         case GATT_DISCONNECTED:
+                            mResistanceView.setText(R.string.board_disconnected);
                         case GATT_SERVICES_DISCOVERED:
                         case RESISTANCE_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
