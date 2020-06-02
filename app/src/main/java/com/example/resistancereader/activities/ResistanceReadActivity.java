@@ -17,10 +17,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.example.resistancereader.R;
 import com.example.resistancereader.services.BleResistanceService;
 import com.example.resistancereader.services.GattActions;
-import com.example.resistancereader.R;
 import com.example.resistancereader.utilities.MsgUtils;
+import com.github.mikephil.charting.charts.LineChart;
 
 import java.util.ArrayList;
 
@@ -39,6 +40,10 @@ public class ResistanceReadActivity extends Activity {
     private ArrayList<Double> resistanceValues = new ArrayList<>();
 
     private BleResistanceService mBluetoothLeService;
+
+    private LineChart mChart;
+    private Thread thread;
+    private boolean plotData = true;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
