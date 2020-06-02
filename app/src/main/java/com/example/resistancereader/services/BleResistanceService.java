@@ -95,6 +95,7 @@ public class BleResistanceService extends Service {
                         characteristic.getValue().length);
 
                 double resistance = BitConverter.bytesToResistance(rawData);
+                broadcastResistanceUpdate(resistance);
                 Log.i(TAG, "RawData: " + Arrays.toString(rawData));
                 Log.i(TAG, "Resistance: " + resistance);
             }
@@ -213,10 +214,10 @@ public class BleResistanceService extends Service {
 
     // Broadcast the new Resistance data to our Intent, in this case the ResistanceReadActivity
     // Based on https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service
-    private void broadcastResistanceUpdate(final float elevation) {
+    private void broadcastResistanceUpdate(final double resistance) {
         final Intent intent = new Intent(ACTION_GATT_RESISTANCE_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
-        intent.putExtra(RESISTANCE_DATA, elevation);
+        intent.putExtra(RESISTANCE_DATA, resistance);
         sendBroadcast(intent);
     }
 
