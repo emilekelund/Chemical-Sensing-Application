@@ -210,6 +210,7 @@ public class ResistanceReadActivity extends Activity {
 
         if (set == null) {
             set = createSet();
+            assert data != null;
             data.addDataSet(set);
         }
 
@@ -295,7 +296,7 @@ public class ResistanceReadActivity extends Activity {
                                     avgResistance += i;
                                 }
                                 avgResistance = avgResistance / resistanceValues.size();
-                                mResistanceView.setText(String.format("%.3f M\u2126", (avgResistance * (1*Math.pow(10, -6)))));
+                                mResistanceView.setText(String.format("%.3f M\u2126", (avgResistance * (1*Math.pow(10, -6))))); // Display in Mega Ohm
 
                                 if (plotData) {
                                     addEntry((avgResistance * (1*Math.pow(10, -6))));
