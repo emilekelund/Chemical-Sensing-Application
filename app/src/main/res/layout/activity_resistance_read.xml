@@ -43,8 +43,8 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/resistanceChart"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="371dp"
+        android:layout_height="366dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -53,4 +53,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resistanceValueViewer" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="332dp"
+        android:rotation="270"
+        android:text="@string/resistance_x_axis"
+        app:layout_constraintBottom_toBottomOf="@+id/resistanceChart"
+        app:layout_constraintEnd_toEndOf="@+id/resistanceChart"
+        app:layout_constraintTop_toTopOf="@+id/resistanceChart" />
 </androidx.constraintlayout.widget.ConstraintLayout>

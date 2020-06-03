@@ -81,6 +81,7 @@ public class ResistanceReadActivity extends Activity {
 
         // enable description text
         mChart.getDescription().setEnabled(true);
+        mChart.getDescription().setText("Continuous resistance monitoring");
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
@@ -221,7 +222,7 @@ public class ResistanceReadActivity extends Activity {
         mChart.notifyDataSetChanged();
 
         // limit the number of visible entries
-        mChart.setVisibleXRangeMaximum(15);
+        mChart.setVisibleXRangeMaximum(200);
         // mChart.setVisibleYRange(30, AxisDependency.LEFT);
 
         // move to the latest entry
@@ -237,6 +238,7 @@ public class ResistanceReadActivity extends Activity {
         set.setHighlightEnabled(false);
         set.setDrawValues(false);
         set.setDrawCircles(true);
+        set.setCircleRadius(2f);
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setCubicIntensity(0.2f);
         return set;
@@ -255,7 +257,7 @@ public class ResistanceReadActivity extends Activity {
                 while (true){
                     plotData = true;
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -291,7 +293,8 @@ public class ResistanceReadActivity extends Activity {
                             resistanceValues.add(resistance);
                             double avgResistance = 0;
 
-                            if (resistanceValues.size() >= 6) {
+                            // New values arrive every 0.5s, so if we wait for 8 values that is about 4 seconds.
+                            if (resistanceValues.size() >= 8) {
                                 for (double i : resistanceValues) {
                                     avgResistance += i;
                                 }
