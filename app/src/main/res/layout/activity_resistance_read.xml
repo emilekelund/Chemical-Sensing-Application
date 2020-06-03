@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="332dp"
         android:rotation="270"
-        android:text="Temperature [\u00B0C]"
+        android:text="@string/temperature_y_axis"
         app:layout_constraintBottom_toBottomOf="@+id/resistanceChart"
         app:layout_constraintEnd_toEndOf="@+id/resistanceChart"
         app:layout_constraintTop_toTopOf="@+id/resistanceChart" />

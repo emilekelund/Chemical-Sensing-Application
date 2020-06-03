@@ -9,4 +9,5 @@
     <string name="board_disconnected">Board\n disconnected</string>
     <string name="waiting_for_resistance">Waiting for\n resistance</string>
     <string name="resistance_x_axis">Resistance [MΩ]</string>
+    <string name="temperature_y_axis">Temperature [°C]</string>
 </resources>
