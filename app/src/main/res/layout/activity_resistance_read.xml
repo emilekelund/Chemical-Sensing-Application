@@ -40,7 +40,7 @@
         android:text="@string/no_data"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/resistanceChart"
+        app:layout_constraintBottom_toTopOf="@+id/temperatureChart"
         app:layout_constraintEnd_toStartOf="@+id/tempViewer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
@@ -57,13 +57,13 @@
         android:text="@string/no_data"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/resistanceChart"
+        app:layout_constraintBottom_toTopOf="@+id/temperatureChart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/resistanceValueViewer"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/resistanceChart"
+        android:id="@+id/temperatureChart"
         android:layout_width="371dp"
         android:layout_height="366dp"
         android:layout_marginStart="16dp"
@@ -71,16 +71,19 @@
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+    </com.github.mikephil.charting.charts.LineChart>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="332dp"
+        android:layout_marginEnd="348dp"
         android:rotation="270"
         android:text="@string/temperature_y_axis"
-        app:layout_constraintBottom_toBottomOf="@+id/resistanceChart"
-        app:layout_constraintEnd_toEndOf="@+id/resistanceChart"
-        app:layout_constraintTop_toTopOf="@+id/resistanceChart" />
+        app:layout_constraintBottom_toBottomOf="@+id/temperatureChart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/temperatureChart" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
