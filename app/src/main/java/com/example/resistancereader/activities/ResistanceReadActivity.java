@@ -42,6 +42,7 @@ public class ResistanceReadActivity extends Activity {
 
     private BluetoothDevice mSelectedDevice = null;
     private TextView mResistanceView;
+    private TextView mTemperatureView;
     private TextView mDeviceView;
     private TextView mStatusView;
     private String mDeviceAddress;
@@ -61,6 +62,7 @@ public class ResistanceReadActivity extends Activity {
 
         // Setup UI references
         mResistanceView = findViewById(R.id.resistanceValueViewer);
+        mTemperatureView = findViewById(R.id.tempViewer);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
 
@@ -77,11 +79,11 @@ public class ResistanceReadActivity extends Activity {
         }
 
         // Setup UI reference to the chart
-        mChart = (LineChart) findViewById(R.id.resistanceChart);
+        mChart = (LineChart) findViewById(R.id.temperatureChart);
 
         // enable description text
         mChart.getDescription().setEnabled(true);
-        mChart.getDescription().setText("Continuous resistance monitoring");
+        mChart.getDescription().setText("Continuous temperature monitoring");
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
@@ -122,7 +124,7 @@ public class ResistanceReadActivity extends Activity {
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setAxisMaximum(1.3f);
+        leftAxis.setAxisMaximum(40f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
@@ -200,7 +202,7 @@ public class ResistanceReadActivity extends Activity {
     /*
     A method to add our resistance entries to the chart
      */
-    private void addEntry(double resistanceValue) {
+    private void addEntry(double temperature) {
         LineData data = mChart.getData();
         ILineDataSet set = null;
 
@@ -215,7 +217,7 @@ public class ResistanceReadActivity extends Activity {
             data.addDataSet(set);
         }
 
-        data.addEntry(new Entry(set.getEntryCount(), (float) resistanceValue), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) temperature), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -231,7 +233,7 @@ public class ResistanceReadActivity extends Activity {
 
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, "Resistance data");
+        LineDataSet set = new LineDataSet(null, "Temperature");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setLineWidth(3f);
         set.setColor(Color.RED);
@@ -287,22 +289,27 @@ public class ResistanceReadActivity extends Activity {
                         case RESISTANCE_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
                             mResistanceView.setText(R.string.calculating_resistance);
+                            mTemperatureView.setText(R.string.calculating_temperature);
                             break;
                         case DATA_AVAILABLE:
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
                             resistanceValues.add(resistance);
                             double avgResistance = 0;
+                            double temperature = 0;
 
                             // New values arrive every 0.5s, so if we wait for 8 values that is about 4 seconds.
                             if (resistanceValues.size() >= 8) {
                                 for (double i : resistanceValues) {
                                     avgResistance += i;
                                 }
+
                                 avgResistance = avgResistance / resistanceValues.size();
-                                mResistanceView.setText(String.format("%.3f M\u2126", (avgResistance * (1*Math.pow(10, -6))))); // Display in Mega Ohm
+                                mResistanceView.setText(String.format("%.0fk\u2126", (avgResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
+                                temperature = resistanceToTemp(avgResistance);
+                                mTemperatureView.setText(String.format("%.0f\u00B0C", temperature));
 
                                 if (plotData) {
-                                    addEntry((avgResistance * (1*Math.pow(10, -6))));
+                                    addEntry(temperature);
                                     plotData = false;
                                 }
 
@@ -326,6 +333,10 @@ public class ResistanceReadActivity extends Activity {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_GATT_RESISTANCE_EVENTS);
         return intentFilter;
+    }
+
+    private double resistanceToTemp(double resistance) {
+        return (-3613.9 * (resistance * (1 * Math.pow(10, -6)))) + 1005.4;
     }
 
 
