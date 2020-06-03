@@ -296,8 +296,12 @@ public class ResistanceReadActivity extends Activity {
                                 }
                                 avgResistance = avgResistance / resistanceValues.size();
                                 mResistanceView.setText(String.format("%.3f M\u2126", (avgResistance * (1*Math.pow(10, -6)))));
-                                addEntry((avgResistance * (1*Math.pow(10, -6))));
-                                plotData = false;
+
+                                if (plotData) {
+                                    addEntry((avgResistance * (1*Math.pow(10, -6))));
+                                    plotData = false;
+                                }
+
                                 resistanceValues.clear();
                             }
 
