@@ -46,6 +46,7 @@ public class ResistanceReadActivity extends Activity {
     private TextView mDeviceView;
     private TextView mStatusView;
     private String mDeviceAddress;
+    ILineDataSet set = null;
     private ArrayList<Double> resistanceValues = new ArrayList<>();
 
     private BleResistanceService mBluetoothLeService;
@@ -125,7 +126,7 @@ public class ResistanceReadActivity extends Activity {
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setAxisMaximum(40f);
-        leftAxis.setAxisMinimum(20f);
+        leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
         YAxis rightAxis = mChart.getAxisRight();
@@ -204,7 +205,7 @@ public class ResistanceReadActivity extends Activity {
      */
     private void addEntry(double temperature) {
         LineData data = mChart.getData();
-        ILineDataSet set = null;
+
 
         if (data != null) {
             set = data.getDataSetByIndex(0);
@@ -228,7 +229,8 @@ public class ResistanceReadActivity extends Activity {
         //mChart.setVisibleYRange(0,30, YAxis.AxisDependency.LEFT);
 
         // move to the latest entry
-        mChart.moveViewToX(data.getEntryCount());
+        //mChart.moveViewToX(data.getEntryCount());
+        mChart.moveViewTo(data.getEntryCount(), (float) temperature, YAxis.AxisDependency.LEFT);
     }
 
     private LineDataSet createSet() {
