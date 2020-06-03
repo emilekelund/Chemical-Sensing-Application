@@ -30,15 +30,36 @@
 
     <TextView
         android:id="@+id/resistanceValueViewer"
-        android:layout_width="304dp"
-        android:layout_height="232dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/no_data"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/resistanceChart"
+        app:layout_constraintEnd_toStartOf="@+id/tempViewer"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_view" />
+
+    <TextView
+        android:id="@+id/tempViewer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/no_data"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/resistanceChart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/resistanceValueViewer"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
 
     <com.github.mikephil.charting.charts.LineChart
@@ -46,13 +67,11 @@
         android:layout_width="371dp"
         android:layout_height="366dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resistanceValueViewer" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -60,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="332dp"
         android:rotation="270"
-        android:text="@string/resistance_x_axis"
+        android:text="Temperature [\u00B0C]"
         app:layout_constraintBottom_toBottomOf="@+id/resistanceChart"
         app:layout_constraintEnd_toEndOf="@+id/resistanceChart"
         app:layout_constraintTop_toTopOf="@+id/resistanceChart" />
