@@ -125,7 +125,7 @@ public class ResistanceReadActivity extends Activity {
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setAxisMaximum(40f);
-        leftAxis.setAxisMinimum(0f);
+        leftAxis.setAxisMinimum(20f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
         YAxis rightAxis = mChart.getAxisRight();
@@ -224,8 +224,8 @@ public class ResistanceReadActivity extends Activity {
         mChart.notifyDataSetChanged();
 
         // limit the number of visible entries
-        mChart.setVisibleXRangeMaximum(200);
-        // mChart.setVisibleYRange(30, AxisDependency.LEFT);
+        mChart.setVisibleXRangeMaximum(50);
+        //mChart.setVisibleYRange(0,30, YAxis.AxisDependency.LEFT);
 
         // move to the latest entry
         mChart.moveViewToX(data.getEntryCount());
@@ -241,8 +241,6 @@ public class ResistanceReadActivity extends Activity {
         set.setDrawValues(false);
         set.setDrawCircles(true);
         set.setCircleRadius(2f);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setCubicIntensity(0.2f);
         return set;
     }
 
@@ -297,17 +295,18 @@ public class ResistanceReadActivity extends Activity {
                             double avgResistance = 0;
                             double temperature = 0;
 
-                            // New values arrive every 0.5s, so if we wait for 8 values that is about 4 seconds.
-                            if (resistanceValues.size() >= 8) {
+                            // New values arrive every 0.25s, so if we wait for 16 values that is about 4 seconds.
+                            if (resistanceValues.size() >= 16) {
                                 for (double i : resistanceValues) {
                                     avgResistance += i;
                                 }
 
                                 avgResistance = avgResistance / resistanceValues.size();
-                                mResistanceView.setText(String.format("%.0fk\u2126", (avgResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
+                                mResistanceView.setText(String.format("%.1fk\u2126", (avgResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
                                 temperature = resistanceToTemp(avgResistance);
-                                Log.i(TAG, "" + avgResistance * (1 * Math.pow(10, -6)));
-                                mTemperatureView.setText(String.format("%.0f\u00B0C", temperature));
+                                Log.i(TAG, "Resistance: " +  ((double)Math.round((avgResistance * (1 * Math.pow(10, -6))) * 10000d) / 10000d) + " Temp: " + temperature);
+
+                                mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 
                                 if (plotData) {
                                     addEntry(temperature);
@@ -337,7 +336,7 @@ public class ResistanceReadActivity extends Activity {
     }
 
     private double resistanceToTemp(double resistance) {
-        return (-3613.9 * (resistance * (1 * Math.pow(10, -6)))) + 1005.4;
+        return (-3613.9 * ((double)Math.round((resistance * (1 * Math.pow(10, -6))) * 10000d) / 10000d)) + 1005.4;
     }
 
 
