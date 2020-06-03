@@ -306,6 +306,7 @@ public class ResistanceReadActivity extends Activity {
                                 avgResistance = avgResistance / resistanceValues.size();
                                 mResistanceView.setText(String.format("%.0fk\u2126", (avgResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
                                 temperature = resistanceToTemp(avgResistance);
+                                Log.i(TAG, "" + avgResistance * (1 * Math.pow(10, -6)));
                                 mTemperatureView.setText(String.format("%.0f\u00B0C", temperature));
 
                                 if (plotData) {

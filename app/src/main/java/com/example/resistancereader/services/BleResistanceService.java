@@ -18,7 +18,6 @@ import android.util.Log;
 
 import com.example.resistancereader.utilities.BitConverter;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
@@ -96,8 +95,6 @@ public class BleResistanceService extends Service {
 
                 double resistance = BitConverter.bytesToResistance(rawData);
                 broadcastResistanceUpdate(resistance);
-                Log.i(TAG, "RawData: " + Arrays.toString(rawData));
-                Log.i(TAG, "Resistance: " + resistance);
             }
         }
 
