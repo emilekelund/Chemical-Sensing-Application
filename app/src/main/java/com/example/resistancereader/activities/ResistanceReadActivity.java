@@ -82,7 +82,7 @@ public class ResistanceReadActivity extends Activity {
         }
 
         // Setup UI reference to the chart
-        mChart = (LineChart) findViewById(R.id.temperatureChart);
+        mChart = findViewById(R.id.temperatureChart);
 
         // enable description text
         mChart.getDescription().setEnabled(true);
