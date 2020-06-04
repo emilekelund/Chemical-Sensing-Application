@@ -86,7 +86,6 @@ public class ResistanceReadActivity extends Activity {
 
         // enable description text
         mChart.getDescription().setEnabled(true);
-        mChart.getDescription().setText("Continuous temperature monitoring");
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
