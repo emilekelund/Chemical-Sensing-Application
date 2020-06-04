@@ -117,7 +117,7 @@ public class ResistanceReadActivity extends Activity {
         XAxis bottomAxis = mChart.getXAxis();
         bottomAxis.setTextColor(Color.BLACK);
         bottomAxis.setDrawGridLines(true);
-        bottomAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        bottomAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
         bottomAxis.setAvoidFirstLastClipping(true);
         bottomAxis.setEnabled(true);
 
