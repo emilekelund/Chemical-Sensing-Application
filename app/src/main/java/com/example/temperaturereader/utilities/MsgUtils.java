@@ -1,4 +1,4 @@
-package com.example.resistancereader.utilities;
+package com.example.temperaturereader.utilities;
 
 import android.app.Dialog;
 import android.content.Context;

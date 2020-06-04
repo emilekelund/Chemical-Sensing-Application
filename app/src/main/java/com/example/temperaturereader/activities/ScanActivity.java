@@ -1,4 +1,4 @@
-package com.example.resistancereader.activities;
+package com.example.temperaturereader.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -28,15 +28,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.resistancereader.adapter.BtDeviceAdapter;
-import com.example.resistancereader.R;
+import com.example.temperaturereader.adapter.BtDeviceAdapter;
+import com.example.temperaturereader.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
-import static com.example.resistancereader.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
-import static com.example.resistancereader.utilities.MsgUtils.showToast;
+import static com.example.temperaturereader.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
+import static com.example.temperaturereader.utilities.MsgUtils.showToast;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class ScanActivity extends AppCompatActivity {

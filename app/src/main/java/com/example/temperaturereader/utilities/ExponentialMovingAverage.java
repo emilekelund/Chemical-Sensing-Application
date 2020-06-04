@@ -1,4 +1,4 @@
-package com.example.resistancereader.utilities;
+package com.example.temperaturereader.utilities;
 
 public class ExponentialMovingAverage {
     private double alpha;

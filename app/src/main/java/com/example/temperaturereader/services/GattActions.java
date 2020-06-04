@@ -1,4 +1,4 @@
-package com.example.resistancereader.services;
+package com.example.temperaturereader.services;
 
 public class GattActions {
 
@@ -7,20 +7,20 @@ public class GattActions {
      * Intended for IntentFilters for a BroadcastReceiver.
      */
     public final static String ACTION_GATT_RESISTANCE_EVENTS =
-            "com.example.resistancereader.services.ACTION_GATT_IMU_EVENTS";
+            "com.example.temperaturereader.services.ACTION_GATT_IMU_EVENTS";
 
     /**
      * A flag for event info in intents (via intent.putExtra)
      */
     public final static String EVENT =
-            "com.example.resistancereader.services.EVENT";
+            "com.example.temperaturereader.services.EVENT";
 
 
     /**
      * A flag for IMU data in intent (via intent.putExtra)
      */
     public final static String RESISTANCE_DATA =
-            "com.example.resistancereader.services.IMU_DATA";
+            "com.example.temperaturereader.services.IMU_DATA";
 
 
     /**

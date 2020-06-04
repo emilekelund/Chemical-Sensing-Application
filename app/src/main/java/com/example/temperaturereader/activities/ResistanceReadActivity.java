@@ -1,4 +1,4 @@
-package com.example.resistancereader.activities;
+package com.example.temperaturereader.activities;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
@@ -18,11 +18,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.example.resistancereader.R;
-import com.example.resistancereader.services.BleResistanceService;
-import com.example.resistancereader.services.GattActions;
-import com.example.resistancereader.utilities.ExponentialMovingAverage;
-import com.example.resistancereader.utilities.MsgUtils;
+import com.example.temperaturereader.R;
+import com.example.temperaturereader.services.BleResistanceService;
+import com.example.temperaturereader.services.GattActions;
+import com.example.temperaturereader.utilities.ExponentialMovingAverage;
+import com.example.temperaturereader.utilities.MsgUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -32,9 +32,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
-import static com.example.resistancereader.services.GattActions.EVENT;
-import static com.example.resistancereader.services.GattActions.RESISTANCE_DATA;
+import static com.example.temperaturereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
+import static com.example.temperaturereader.services.GattActions.EVENT;
+import static com.example.temperaturereader.services.GattActions.RESISTANCE_DATA;
 
 public class ResistanceReadActivity extends Activity {
     private static final String TAG = ResistanceReadActivity.class.getSimpleName();

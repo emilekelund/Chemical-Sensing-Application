@@ -1,4 +1,4 @@
-package com.example.resistancereader.adapter;
+package com.example.temperaturereader.adapter;
 
 import android.bluetooth.BluetoothDevice;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.resistancereader.R;
+import com.example.temperaturereader.R;
 
 import java.util.List;
 

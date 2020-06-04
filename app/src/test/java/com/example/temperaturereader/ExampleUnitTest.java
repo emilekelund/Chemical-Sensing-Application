@@ -1,4 +1,4 @@
-package com.example.resistancereader;
+package com.example.temperaturereader;
 
 import org.junit.Test;
 

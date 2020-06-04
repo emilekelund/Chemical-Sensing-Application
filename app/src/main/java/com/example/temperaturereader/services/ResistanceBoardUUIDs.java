@@ -1,4 +1,4 @@
-package com.example.resistancereader.services;
+package com.example.temperaturereader.services;
 
 import java.util.UUID;
 
