@@ -296,7 +296,7 @@ public class ResistanceReadActivity extends Activity {
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
                             resistanceValues.add(resistance);
                             double avgResistance = 0;
-                            double temperature = 0;
+                            double temperature;
 
                             // New values arrive every 0.25s, so if we wait for 16 values that is about 4 seconds.
                             if (resistanceValues.size() >= 16) {
