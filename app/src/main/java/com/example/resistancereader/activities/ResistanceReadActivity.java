@@ -218,6 +218,7 @@ public class ResistanceReadActivity extends Activity {
             data.addDataSet(set);
         }
 
+        assert data != null;
         data.addEntry(new Entry(set.getEntryCount(), (float) temperature), 0);
         data.notifyDataChanged();
 
