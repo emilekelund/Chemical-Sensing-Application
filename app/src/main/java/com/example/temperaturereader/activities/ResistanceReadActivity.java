@@ -46,7 +46,7 @@ public class ResistanceReadActivity extends Activity {
     private TextView mStatusView;
     private String mDeviceAddress;
     ILineDataSet set = null;
-    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.02);
+    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.04);
 
     private BleResistanceService mBluetoothLeService;
 
