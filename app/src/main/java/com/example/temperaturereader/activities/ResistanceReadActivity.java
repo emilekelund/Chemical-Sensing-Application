@@ -123,7 +123,7 @@ public class ResistanceReadActivity extends Activity {
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setAxisMaximum(40f);
+        leftAxis.setAxisMaximum(50f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
