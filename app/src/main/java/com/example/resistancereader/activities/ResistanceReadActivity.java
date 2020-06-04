@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi;
 import com.example.resistancereader.R;
 import com.example.resistancereader.services.BleResistanceService;
 import com.example.resistancereader.services.GattActions;
+import com.example.resistancereader.utilities.ExponentialMovingAverage;
 import com.example.resistancereader.utilities.MsgUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -48,6 +49,7 @@ public class ResistanceReadActivity extends Activity {
     private String mDeviceAddress;
     ILineDataSet set = null;
     private ArrayList<Double> resistanceValues = new ArrayList<>();
+    private ExponentialMovingAverage EWMA = new ExponentialMovingAverage(0.02);
 
     private BleResistanceService mBluetoothLeService;
 
@@ -260,7 +262,7 @@ public class ResistanceReadActivity extends Activity {
                 while (true){
                     plotData = true;
                     try {
-                        Thread.sleep(1500);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -297,27 +299,19 @@ public class ResistanceReadActivity extends Activity {
                             resistanceValues.add(resistance);
                             double avgResistance = 0;
                             double temperature;
+                            double ewmaResistance = 0;
+                            ewmaResistance = EWMA.average(resistance);
+                            Log.i(TAG, "EWMA: " + ((double)Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
+                            temperature = resistanceToTemp(ewmaResistance);
+                            Log.i(TAG, "Temp: " + temperature);
+                            mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
+                            mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 
-                            // New values arrive every 0.25s, so if we wait for 16 values that is about 4 seconds.
-                            if (resistanceValues.size() >= 16) {
-                                for (double i : resistanceValues) {
-                                    avgResistance += i;
-                                }
-
-                                avgResistance = avgResistance / resistanceValues.size();
-                                mResistanceView.setText(String.format("%.1fk\u2126", (avgResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
-                                temperature = resistanceToTemp(avgResistance);
-                                Log.i(TAG, "Resistance: " +  ((double)Math.round((avgResistance * (1 * Math.pow(10, -3))) * 10000d) / 10000d) + " Temp: " + temperature);
-
-                                mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
-
-                                if (plotData) {
-                                    addEntry(temperature);
-                                    plotData = false;
-                                }
-
-                                resistanceValues.clear();
+                            if (plotData) {
+                                addEntry(temperature);
+                                plotData = false;
                             }
+
 
                             break;
                         case RESISTANCE_SERVICE_NOT_AVAILABLE:
@@ -339,7 +333,7 @@ public class ResistanceReadActivity extends Activity {
     }
 
     private double resistanceToTemp(double resistance) {
-        return (-3.4331 * ((double)Math.round((resistance * (1 * Math.pow(10, -3))) * 10000d) / 10000d)) + 958.29;
+        return (-3.4331 * ((double)Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 958.29;
     }
 
 
