@@ -32,8 +32,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import java.util.ArrayList;
-
 import static com.example.resistancereader.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
 import static com.example.resistancereader.services.GattActions.EVENT;
 import static com.example.resistancereader.services.GattActions.RESISTANCE_DATA;
@@ -48,7 +46,6 @@ public class ResistanceReadActivity extends Activity {
     private TextView mStatusView;
     private String mDeviceAddress;
     ILineDataSet set = null;
-    private ArrayList<Double> resistanceValues = new ArrayList<>();
     private ExponentialMovingAverage EWMA = new ExponentialMovingAverage(0.02);
 
     private BleResistanceService mBluetoothLeService;
@@ -295,8 +292,6 @@ public class ResistanceReadActivity extends Activity {
                             break;
                         case DATA_AVAILABLE:
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
-                            resistanceValues.add(resistance);
-                            double avgResistance = 0;
                             double temperature;
                             double ewmaResistance = 0;
                             ewmaResistance = EWMA.average(resistance);
