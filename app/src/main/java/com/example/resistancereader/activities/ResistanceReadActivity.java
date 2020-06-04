@@ -46,7 +46,7 @@ public class ResistanceReadActivity extends Activity {
     private TextView mStatusView;
     private String mDeviceAddress;
     ILineDataSet set = null;
-    private ExponentialMovingAverage EWMA = new ExponentialMovingAverage(0.02);
+    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.02);
 
     private BleResistanceService mBluetoothLeService;
 
@@ -294,7 +294,7 @@ public class ResistanceReadActivity extends Activity {
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
                             double temperature;
                             double ewmaResistance = 0;
-                            ewmaResistance = EWMA.average(resistance);
+                            ewmaResistance = ewmaFilter.average(resistance);
                             Log.i(TAG, "EWMA: " + ((double)Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
                             temperature = resistanceToTemp(ewmaResistance);
                             Log.i(TAG, "Temp: " + temperature);
