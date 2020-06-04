@@ -82,7 +82,7 @@ public class ResistanceReadActivity extends Activity {
         mChart = findViewById(R.id.temperatureChart);
 
         // enable description text
-        mChart.getDescription().setEnabled(true);
+        mChart.getDescription().setEnabled(false);
 
         // enable touch gestures
         mChart.setTouchEnabled(true);
