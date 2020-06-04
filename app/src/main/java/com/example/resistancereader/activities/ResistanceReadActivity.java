@@ -307,7 +307,7 @@ public class ResistanceReadActivity extends Activity {
                                 avgResistance = avgResistance / resistanceValues.size();
                                 mResistanceView.setText(String.format("%.1fk\u2126", (avgResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
                                 temperature = resistanceToTemp(avgResistance);
-                                Log.i(TAG, "Resistance: " +  ((double)Math.round((avgResistance * (1 * Math.pow(10, -6))) * 10000d) / 10000d) + " Temp: " + temperature);
+                                Log.i(TAG, "Resistance: " +  ((double)Math.round((avgResistance * (1 * Math.pow(10, -3))) * 10000d) / 10000d) + " Temp: " + temperature);
 
                                 mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 
@@ -339,7 +339,7 @@ public class ResistanceReadActivity extends Activity {
     }
 
     private double resistanceToTemp(double resistance) {
-        return (-3613.9 * ((double)Math.round((resistance * (1 * Math.pow(10, -6))) * 10000d) / 10000d)) + 1005.4;
+        return (-3.4331 * ((double)Math.round((resistance * (1 * Math.pow(10, -3))) * 10000d) / 10000d)) + 958.29;
     }
 
 
