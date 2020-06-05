@@ -293,7 +293,7 @@ public class ResistanceReadActivity extends Activity {
                         case DATA_AVAILABLE:
                             final double resistance = intent.getDoubleExtra(RESISTANCE_DATA, 0);
                             double temperature;
-                            double ewmaResistance = 0;
+                            double ewmaResistance;
                             ewmaResistance = ewmaFilter.average(resistance);
                             Log.i(TAG, "EWMA: " + ((double) Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
                             temperature = resistanceToTemp(ewmaResistance);
