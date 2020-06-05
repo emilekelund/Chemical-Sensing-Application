@@ -247,7 +247,7 @@ public class ResistanceReadActivity extends Activity {
 
     private void feedMultiple() {
 
-        if (thread != null){
+        if (thread != null) {
             thread.interrupt();
         }
 
@@ -255,7 +255,7 @@ public class ResistanceReadActivity extends Activity {
 
             @Override
             public void run() {
-                while (true){
+                while (true) {
                     plotData = true;
                     try {
                         Thread.sleep(1000);
@@ -291,14 +291,14 @@ public class ResistanceReadActivity extends Activity {
                             mTemperatureView.setText(R.string.calculating_temperature);
                             break;
                         case DATA_AVAILABLE:
-                            final double resistance = intent.getDoubleExtra(RESISTANCE_DATA,0);
+                            final double resistance = intent.getDoubleExtra(RESISTANCE_DATA, 0);
                             double temperature;
                             double ewmaResistance = 0;
                             ewmaResistance = ewmaFilter.average(resistance);
-                            Log.i(TAG, "EWMA: " + ((double)Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
+                            Log.i(TAG, "EWMA: " + ((double) Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
                             temperature = resistanceToTemp(ewmaResistance);
                             Log.i(TAG, "Temp: " + temperature);
-                            mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1*Math.pow(10, -3))))); // Display in kiloOhm
+                            mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1 * Math.pow(10, -3))))); // Display in kiloOhm
                             mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 
                             if (plotData) {
@@ -327,7 +327,7 @@ public class ResistanceReadActivity extends Activity {
     }
 
     private double resistanceToTemp(double resistance) {
-        return (-3.4331 * ((double)Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 958.29;
+        return (-3.4331 * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 958.29;
     }
 
 
