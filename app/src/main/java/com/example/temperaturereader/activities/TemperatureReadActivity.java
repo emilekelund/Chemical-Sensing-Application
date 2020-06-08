@@ -36,8 +36,8 @@ import static com.example.temperaturereader.services.GattActions.ACTION_GATT_RES
 import static com.example.temperaturereader.services.GattActions.EVENT;
 import static com.example.temperaturereader.services.GattActions.RESISTANCE_DATA;
 
-public class ResistanceReadActivity extends Activity {
-    private static final String TAG = ResistanceReadActivity.class.getSimpleName();
+public class TemperatureReadActivity extends Activity {
+    private static final String TAG = TemperatureReadActivity.class.getSimpleName();
 
     private BluetoothDevice mSelectedDevice = null;
     private TextView mResistanceView;

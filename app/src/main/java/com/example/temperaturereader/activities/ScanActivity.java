@@ -1,13 +1,5 @@
 package com.example.temperaturereader.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -28,8 +20,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.temperaturereader.adapter.BtDeviceAdapter;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.temperaturereader.R;
+import com.example.temperaturereader.adapter.BtDeviceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,7 +235,7 @@ public class ScanActivity extends AppCompatActivity {
         BluetoothDevice selectedDevice = mDeviceList.get(position);
         // BluetoothDevice objects are parceable, i.e. we can "send" the selected device
         // to the DeviceActivity packaged in an intent.
-        Intent intent = new Intent(ScanActivity.this, ResistanceReadActivity.class);
+        Intent intent = new Intent(ScanActivity.this, TemperatureReadActivity.class);
         intent.putExtra(SELECTED_DEVICE, selectedDevice);
         startActivity(intent);
     }
