@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.chemicalsensingapplication.R;
-import com.example.chemicalsensingapplication.services.BleResistanceService;
+import com.example.chemicalsensingapplication.services.BleService;
 import com.example.chemicalsensingapplication.services.GattActions;
 import com.example.chemicalsensingapplication.utilities.ExponentialMovingAverage;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
@@ -48,7 +48,7 @@ public class TemperatureReadActivity extends Activity {
     ILineDataSet set = null;
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.04);
 
-    private BleResistanceService mBluetoothLeService;
+    private BleService mBluetoothLeService;
 
     private LineChart mChart;
     private Thread thread;
@@ -139,7 +139,7 @@ public class TemperatureReadActivity extends Activity {
 
         // Bind to BleImuService
         // We use onResume or onStart to register a broadcastReceiver
-        Intent gattServiceIntent = new Intent(this, BleResistanceService.class);
+        Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
@@ -181,7 +181,7 @@ public class TemperatureReadActivity extends Activity {
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
-            mBluetoothLeService = ((BleResistanceService.LocalBinder) service).getService();
+            mBluetoothLeService = ((BleService.LocalBinder) service).getService();
             if (!mBluetoothLeService.initialize()) {
                 Log.i(TAG, "Unable to initialize Bluetooth");
                 finish();

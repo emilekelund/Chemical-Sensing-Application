@@ -28,7 +28,7 @@ import static com.example.chemicalsensingapplication.services.ResistanceBoardUUI
 import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_MEASUREMENT;
 import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
 
-public class BleResistanceService extends Service {
+public class BleService extends Service {
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
@@ -223,9 +223,9 @@ public class BleResistanceService extends Service {
     Android Service specific code for binding and unbinding to this Android service
      */
     public class LocalBinder extends Binder {
-        public BleResistanceService getService() {
+        public BleService getService() {
 
-            return BleResistanceService.this;
+            return BleService.this;
         }
     }
 
@@ -253,7 +253,7 @@ public class BleResistanceService extends Service {
     From https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service
     logging and debugging
      */
-    private final static String TAG = BleResistanceService.class.getSimpleName();
+    private final static String TAG = BleService.class.getSimpleName();
 
     private void logServices(BluetoothGatt gatt) {
         List<BluetoothGattService> services = gatt.getServices();
