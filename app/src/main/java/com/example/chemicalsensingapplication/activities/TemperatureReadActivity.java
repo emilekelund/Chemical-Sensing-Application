@@ -32,9 +32,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
+import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_TEMPERATURE_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
-import static com.example.chemicalsensingapplication.services.GattActions.RESISTANCE_DATA;
+import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 
 public class TemperatureReadActivity extends Activity {
     private static final String TAG = TemperatureReadActivity.class.getSimpleName();
@@ -277,7 +277,7 @@ public class TemperatureReadActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (ACTION_GATT_RESISTANCE_EVENTS.equals(action)) {
+            if (ACTION_GATT_TEMPERATURE_EVENTS.equals(action)) {
                 GattActions.Event event = (GattActions.Event) intent.getSerializableExtra(EVENT);
                 if (event != null) {
                     switch (event) {
@@ -285,13 +285,13 @@ public class TemperatureReadActivity extends Activity {
                         case GATT_DISCONNECTED:
                             mResistanceView.setText(R.string.board_disconnected);
                         case GATT_SERVICES_DISCOVERED:
-                        case RESISTANCE_SERVICE_DISCOVERED:
+                        case TEMPERATURE_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
                             mResistanceView.setText(R.string.calculating_resistance);
                             mTemperatureView.setText(R.string.calculating_temperature);
                             break;
                         case DATA_AVAILABLE:
-                            final double resistance = intent.getDoubleExtra(RESISTANCE_DATA, 0);
+                            final double resistance = intent.getDoubleExtra(TEMPERATURE_DATA, 0);
                             double temperature;
                             double ewmaResistance;
                             ewmaResistance = ewmaFilter.average(resistance);
@@ -308,7 +308,7 @@ public class TemperatureReadActivity extends Activity {
 
 
                             break;
-                        case RESISTANCE_SERVICE_NOT_AVAILABLE:
+                        case TEMPERATURE_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
                             break;
                         default:
@@ -322,7 +322,7 @@ public class TemperatureReadActivity extends Activity {
     // Intent filter for broadcast updates from BleHeartRateServices
     private IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_GATT_RESISTANCE_EVENTS);
+        intentFilter.addAction(ACTION_GATT_TEMPERATURE_EVENTS);
         return intentFilter;
     }
 

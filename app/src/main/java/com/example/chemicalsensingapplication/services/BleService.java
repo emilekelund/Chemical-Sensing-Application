@@ -20,10 +20,10 @@ import com.example.chemicalsensingapplication.utilities.BitConverter;
 
 import java.util.List;
 
-import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_RESISTANCE_EVENTS;
+import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_TEMPERATURE_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.Event;
-import static com.example.chemicalsensingapplication.services.GattActions.RESISTANCE_DATA;
+import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
 import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_MEASUREMENT;
 import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
@@ -34,7 +34,7 @@ public class BleService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
 
-    private BluetoothGattService mResistanceService = null;
+    private BluetoothGattService mBleService = null;
 
     // Callback method for the BluetoothGatt
     // From https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service with modifications
@@ -64,21 +64,21 @@ public class BleService extends Service {
                 broadcastUpdate(Event.GATT_SERVICES_DISCOVERED);
                 logServices(gatt); // debug
 
-                // get the resistance service
-                mResistanceService = gatt.getService(RESISTANCE_SERVICE);
+                // get the temperature service
+                mBleService = gatt.getService(RESISTANCE_SERVICE);
 
-                if (mResistanceService != null) {
-                    broadcastUpdate(Event.RESISTANCE_SERVICE_DISCOVERED);
-                    logCharacteristics(mResistanceService); // debug
+                if (mBleService != null) {
+                    broadcastUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
+                    logCharacteristics(mBleService); // debug
 
                     // enable notifications on resistance measurement
                     BluetoothGattCharacteristic resistanceData =
-                            mResistanceService.getCharacteristic(RESISTANCE_MEASUREMENT);
+                            mBleService.getCharacteristic(RESISTANCE_MEASUREMENT);
                     boolean result = setCharacteristicNotification(
                             resistanceData, true);
                     Log.i(TAG, "setCharacteristicNotification: " + result);
                 } else {
-                    broadcastUpdate(Event.RESISTANCE_SERVICE_NOT_AVAILABLE);
+                    broadcastUpdate(Event.TEMPERATURE_SERVICE_NOT_AVAILABLE);
                     Log.i(TAG, "Resistance service not available");
                 }
             }
@@ -204,7 +204,7 @@ public class BleService extends Service {
     Broadcast methods for events and data
      */
     private void broadcastUpdate(final Event event) {
-        final Intent intent = new Intent(ACTION_GATT_RESISTANCE_EVENTS);
+        final Intent intent = new Intent(ACTION_GATT_TEMPERATURE_EVENTS);
         intent.putExtra(EVENT, event);
         sendBroadcast(intent);
     }
@@ -212,9 +212,9 @@ public class BleService extends Service {
     // Broadcast the new Resistance data to our Intent, in this case the ResistanceReadActivity
     // Based on https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service
     private void broadcastResistanceUpdate(final double resistance) {
-        final Intent intent = new Intent(ACTION_GATT_RESISTANCE_EVENTS);
+        final Intent intent = new Intent(ACTION_GATT_TEMPERATURE_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
-        intent.putExtra(RESISTANCE_DATA, resistance);
+        intent.putExtra(TEMPERATURE_DATA, resistance);
         sendBroadcast(intent);
     }
 

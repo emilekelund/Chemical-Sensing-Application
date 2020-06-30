@@ -6,7 +6,7 @@ public class GattActions {
      * The action corresponding to IMU events from BleImuService.
      * Intended for IntentFilters for a BroadcastReceiver.
      */
-    public final static String ACTION_GATT_RESISTANCE_EVENTS =
+    public final static String ACTION_GATT_TEMPERATURE_EVENTS =
             "com.example.chemicalsensingapplication.services.ACTION_GATT_IMU_EVENTS";
 
     /**
@@ -19,7 +19,7 @@ public class GattActions {
     /**
      * A flag for IMU data in intent (via intent.putExtra)
      */
-    public final static String RESISTANCE_DATA =
+    public final static String TEMPERATURE_DATA =
             "com.example.chemicalsensingapplication.services.IMU_DATA";
 
 
@@ -30,8 +30,8 @@ public class GattActions {
         GATT_CONNECTED("Connected"),
         GATT_DISCONNECTED("Disconnected"),
         GATT_SERVICES_DISCOVERED("Services discovered"),
-        RESISTANCE_SERVICE_DISCOVERED("Temperature Service"),
-        RESISTANCE_SERVICE_NOT_AVAILABLE("Temperature service unavailable"),
+        TEMPERATURE_SERVICE_DISCOVERED("Temperature Service"),
+        TEMPERATURE_SERVICE_NOT_AVAILABLE("Temperature service unavailable"),
         DATA_AVAILABLE("Data available");
 
         @Override
