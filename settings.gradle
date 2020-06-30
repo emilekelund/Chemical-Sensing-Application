@@ -1,2 +1,2 @@
-rootProject.name='Resistance Reader'
+rootProject.name='Chemical Sensing Application'
 include ':app'
