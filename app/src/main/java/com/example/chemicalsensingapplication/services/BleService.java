@@ -71,15 +71,15 @@ public class BleService extends Service {
                     broadcastUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
                     logCharacteristics(mBleService); // debug
 
-                    // enable notifications on resistance measurement
-                    BluetoothGattCharacteristic resistanceData =
+                    // enable notifications on temperature measurement
+                    BluetoothGattCharacteristic temperatureData =
                             mBleService.getCharacteristic(TEMPERATURE_MEASUREMENT);
                     boolean result = setCharacteristicNotification(
-                            resistanceData, true);
+                            temperatureData, true);
                     Log.i(TAG, "setCharacteristicNotification: " + result);
                 } else {
                     broadcastUpdate(Event.TEMPERATURE_SERVICE_NOT_AVAILABLE);
-                    Log.i(TAG, "Resistance service not available");
+                    Log.i(TAG, "Temperature service not available");
                 }
             }
         }
@@ -209,7 +209,7 @@ public class BleService extends Service {
         sendBroadcast(intent);
     }
 
-    // Broadcast the new Resistance data to our Intent, in this case the ResistanceReadActivity
+    // Broadcast the new Resistance data to our Intent, in this case the TemperatureReadActivity
     // Based on https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service
     private void broadcastResistanceUpdate(final double resistance) {
         final Intent intent = new Intent(ACTION_GATT_TEMPERATURE_EVENTS);
