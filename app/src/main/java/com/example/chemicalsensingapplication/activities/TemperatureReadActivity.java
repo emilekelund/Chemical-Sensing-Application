@@ -199,7 +199,7 @@ public class TemperatureReadActivity extends Activity {
     };
 
     /*
-    A method to add our resistance entries to the chart
+    A method to add our temperature entries to the chart
      */
     private void addEntry(double temperature) {
         LineData data = mChart.getData();
@@ -295,7 +295,7 @@ public class TemperatureReadActivity extends Activity {
                             double temperature;
                             double ewmaResistance;
                             ewmaResistance = ewmaFilter.average(resistance);
-                            Log.i(TAG, "EWMA: " + ((double) Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
+                            //Log.i(TAG, "EWMA: " + ((double) Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
                             temperature = resistanceToTemp(ewmaResistance);
                             Log.i(TAG, "Temp: " + temperature);
                             mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1 * Math.pow(10, -3))))); // Display in kiloOhm
