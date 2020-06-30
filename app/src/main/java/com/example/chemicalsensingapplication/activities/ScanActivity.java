@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
-import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.TEMPERATURE_SERVICE;
+import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.TEMPERATURE_SERVICE;
 import static com.example.chemicalsensingapplication.utilities.MsgUtils.showToast;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

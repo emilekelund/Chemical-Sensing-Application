@@ -2,7 +2,7 @@ package com.example.chemicalsensingapplication.services;
 
 import java.util.UUID;
 
-public class ResistanceBoardUUIDs {
+public class TemperatureBoardUUIDs {
 
     public static UUID TEMPERATURE_SERVICE =
             UUID.fromString("b067f00d-744d-8db5-9b42-aae2d7041e3c");
