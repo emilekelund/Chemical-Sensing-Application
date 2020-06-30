@@ -1,4 +1,4 @@
-package com.example.temperaturereader.utilities;
+package com.example.chemicalsensingapplication.utilities;
 
 public class ExponentialMovingAverage {
     private double alpha;

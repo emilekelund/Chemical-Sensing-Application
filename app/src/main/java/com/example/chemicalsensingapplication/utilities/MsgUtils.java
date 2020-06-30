@@ -1,4 +1,4 @@
-package com.example.temperaturereader.utilities;
+package com.example.chemicalsensingapplication.utilities;
 
 import android.app.Dialog;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.temperaturereader;
+package com.example.chemicalsensingapplication;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.temperaturereader.activities;
+package com.example.chemicalsensingapplication.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -28,15 +28,15 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.temperaturereader.R;
-import com.example.temperaturereader.adapter.BtDeviceAdapter;
+import com.example.chemicalsensingapplication.R;
+import com.example.chemicalsensingapplication.adapter.BtDeviceAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
-import static com.example.temperaturereader.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
-import static com.example.temperaturereader.utilities.MsgUtils.showToast;
+import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
+import static com.example.chemicalsensingapplication.utilities.MsgUtils.showToast;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class ScanActivity extends AppCompatActivity {

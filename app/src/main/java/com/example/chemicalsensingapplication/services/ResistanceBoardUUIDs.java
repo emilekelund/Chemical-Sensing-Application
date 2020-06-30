@@ -1,4 +1,4 @@
-package com.example.temperaturereader.services;
+package com.example.chemicalsensingapplication.services;
 
 import java.util.UUID;
 
