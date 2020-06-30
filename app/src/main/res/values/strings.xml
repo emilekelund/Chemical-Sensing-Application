@@ -2,7 +2,7 @@
     <string name="app_name">Temperature reader</string>
     <string name="no_devices_found">No device(s) found</string>
     <string name="scan_button_text">Scan for temperature board(s)</string>
-    <string name="no_resistance_board">No temperature board connected</string>
+    <string name="no_temperature_board">No temperature board connected</string>
     <string name="no_data">No data</string>
     <string name="device_unreachable">Device is not available</string>
     <string name="calculating_resistance">Calculating\nresistance</string>

@@ -58,7 +58,7 @@ public class TemperatureReadActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resistance_read);
+        setContentView(R.layout.activity_temperature_read);
 
         // Setup UI references
         mResistanceView = findViewById(R.id.resistanceValueViewer);
@@ -72,7 +72,7 @@ public class TemperatureReadActivity extends Activity {
 
         if (mSelectedDevice == null) {
             MsgUtils.createDialog("Error", "No device found", this).show();
-            mDeviceView.setText(R.string.no_resistance_board);
+            mDeviceView.setText(R.string.no_temperature_board);
         } else {
             mDeviceView.setText(mSelectedDevice.getName());
             mDeviceAddress = mSelectedDevice.getAddress();
