@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
-import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
+import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.TEMPERATURE_SERVICE;
 import static com.example.chemicalsensingapplication.utilities.MsgUtils.showToast;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -64,7 +64,7 @@ public class ScanActivity extends AppCompatActivity {
 
     static {
         ScanFilter resistanceServiceFilter = new ScanFilter.Builder()
-                .setServiceUuid(new ParcelUuid(RESISTANCE_SERVICE))
+                .setServiceUuid(new ParcelUuid(TEMPERATURE_SERVICE))
                 .build();
         RESISTANCE_SCAN_FILTER = new ArrayList<>();
         RESISTANCE_SCAN_FILTER.add(resistanceServiceFilter);

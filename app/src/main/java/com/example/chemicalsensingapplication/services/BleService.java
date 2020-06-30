@@ -25,8 +25,8 @@ import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.Event;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
-import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_MEASUREMENT;
-import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.RESISTANCE_SERVICE;
+import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.TEMPERATURE_MEASUREMENT;
+import static com.example.chemicalsensingapplication.services.ResistanceBoardUUIDs.TEMPERATURE_SERVICE;
 
 public class BleService extends Service {
     private BluetoothManager mBluetoothManager;
@@ -65,7 +65,7 @@ public class BleService extends Service {
                 logServices(gatt); // debug
 
                 // get the temperature service
-                mBleService = gatt.getService(RESISTANCE_SERVICE);
+                mBleService = gatt.getService(TEMPERATURE_SERVICE);
 
                 if (mBleService != null) {
                     broadcastUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
@@ -73,7 +73,7 @@ public class BleService extends Service {
 
                     // enable notifications on resistance measurement
                     BluetoothGattCharacteristic resistanceData =
-                            mBleService.getCharacteristic(RESISTANCE_MEASUREMENT);
+                            mBleService.getCharacteristic(TEMPERATURE_MEASUREMENT);
                     boolean result = setCharacteristicNotification(
                             resistanceData, true);
                     Log.i(TAG, "setCharacteristicNotification: " + result);
@@ -87,7 +87,7 @@ public class BleService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            if(RESISTANCE_MEASUREMENT.equals(characteristic.getUuid())) {
+            if(TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid())) {
                 // Copy the received byte array so we have a threadsafe copy
                 byte[] rawData = new byte[characteristic.getValue().length];
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,

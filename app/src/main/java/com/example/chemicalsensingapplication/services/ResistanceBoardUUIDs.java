@@ -4,10 +4,10 @@ import java.util.UUID;
 
 public class ResistanceBoardUUIDs {
 
-    public static UUID RESISTANCE_SERVICE =
+    public static UUID TEMPERATURE_SERVICE =
             UUID.fromString("b067f00d-744d-8db5-9b42-aae2d7041e3c");
 
-    public static UUID RESISTANCE_MEASUREMENT =
+    public static UUID TEMPERATURE_MEASUREMENT =
             UUID.fromString("b067beef-744d-8db5-9b42-aae2d7041e3c");
 
     // UUID for the client characteristic which is necessary for notifications
