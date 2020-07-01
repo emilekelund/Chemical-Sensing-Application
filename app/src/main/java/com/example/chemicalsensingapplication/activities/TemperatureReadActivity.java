@@ -32,7 +32,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_TEMPERATURE_EVENTS;
+import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 
@@ -277,7 +277,7 @@ public class TemperatureReadActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (ACTION_GATT_TEMPERATURE_EVENTS.equals(action)) {
+            if (ACTION_GATT_CHEMICAL_SENSING_EVENTS.equals(action)) {
                 GattActions.Event event = (GattActions.Event) intent.getSerializableExtra(EVENT);
                 if (event != null) {
                     switch (event) {
@@ -319,10 +319,10 @@ public class TemperatureReadActivity extends Activity {
         }
     };
 
-    // Intent filter for broadcast updates from BleHeartRateServices
+    // Intent filter for broadcast updates from BleService
     private IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_GATT_TEMPERATURE_EVENTS);
+        intentFilter.addAction(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
         return intentFilter;
     }
 

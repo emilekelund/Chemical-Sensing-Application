@@ -6,7 +6,7 @@ public class GattActions {
      * The action corresponding to Temperature events from BleService.
      * Intended for IntentFilters for a BroadcastReceiver.
      */
-    public final static String ACTION_GATT_TEMPERATURE_EVENTS =
+    public final static String ACTION_GATT_CHEMICAL_SENSING_EVENTS =
             "com.example.chemicalsensingapplication.services.ACTION_GATT_TEMPERATURE_EVENTS";
 
     /**
@@ -20,13 +20,6 @@ public class GattActions {
      */
     public final static String TEMPERATURE_DATA =
             "com.example.chemicalsensingapplication.services.TEMPERATURE_DATA";
-
-    /**
-     * The action corresponding to Potentiometric events from BleService
-     * Intended for IntentFilters for a BroadcastReceiver
-     */
-    public final static String ACTION_GATT_POTENTIOMETRIC_EVENTS =
-            "com.example.chemicalsensingapplication.services.ACTION_GATT_POTENTIOMETRIC_EVENTS";
 
     /**
      * A flag for Potentiometric data in intent (via intent.putExtra)
