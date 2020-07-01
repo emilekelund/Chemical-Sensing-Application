@@ -47,7 +47,6 @@ public class PotentiometricReadActivity extends Activity {
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
 
-    private static float potential;
     private static final float MULTIPLIER = 0.03125F;
 
     ILineDataSet set = null;
@@ -201,7 +200,7 @@ public class PotentiometricReadActivity extends Activity {
     /*
     A method to add our temperature entries to the chart
      */
-    private void addEntry(double temperature) {
+    private void addEntry(double pH) {
         LineData data = mChart.getData();
 
 
@@ -217,7 +216,7 @@ public class PotentiometricReadActivity extends Activity {
         }
 
         assert data != null;
-        data.addEntry(new Entry(set.getEntryCount(), (float) temperature), 0);
+        data.addEntry(new Entry(set.getEntryCount(), (float) pH), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -229,7 +228,7 @@ public class PotentiometricReadActivity extends Activity {
 
         // move to the latest entry
         //mChart.moveViewToX(data.getEntryCount());
-        mChart.moveViewTo(data.getEntryCount(), (float) temperature, YAxis.AxisDependency.LEFT);
+        mChart.moveViewTo(data.getEntryCount(), (float) pH, YAxis.AxisDependency.LEFT);
     }
 
     private LineDataSet createSet() {
@@ -258,7 +257,7 @@ public class PotentiometricReadActivity extends Activity {
                 while (true) {
                     plotData = true;
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(900);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -290,12 +289,15 @@ public class PotentiometricReadActivity extends Activity {
                             break;
                         case DATA_AVAILABLE:
                             final double rawPotential = intent.getDoubleExtra(POTENTIOMETRIC_DATA, 0);
-                            m_pHView.setText("0");
-                            potential = (float) (rawPotential * MULTIPLIER);
+                            float potential = (float) (rawPotential * MULTIPLIER);
+                            float pH = potentialTo_pH(potential);
                             Log.i(TAG, "Potential: " + potential);
+                            Log.i(TAG, "pH: " + pH);
                             mPotentialView.setText(String.format("%.1fmV", potential));
+                            m_pHView.setText(String.format("%.1fpH", pH));
 
                             if (plotData) {
+                                addEntry(pH);
                                 plotData = false;
                             }
 
