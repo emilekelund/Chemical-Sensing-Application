@@ -1,5 +1,6 @@
 package com.example.chemicalsensingapplication.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -8,15 +9,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
@@ -31,6 +37,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
@@ -47,6 +61,11 @@ public class TemperatureReadActivity extends Activity {
     private String mDeviceAddress;
     ILineDataSet set = null;
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.04);
+
+    private ToggleButton mSaveDataButton;
+
+    private DateFormat df = new SimpleDateFormat("yyMMdd HH:mm:ss"); // Custom date format for file saving
+    private FileOutputStream dataSample = null;
 
     private BleService mBluetoothLeService;
 
@@ -65,6 +84,25 @@ public class TemperatureReadActivity extends Activity {
         mTemperatureView = findViewById(R.id.tempViewer);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
+        mSaveDataButton = findViewById(R.id.toggleButton);
+
+        // On-click listener for the toggle button used to sample data
+        mSaveDataButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Button is checked, create a new file and start the timer
+                    dataSample = createFiles();
+                } else {
+                    try {
+                        // Button is unchecked, close the file
+                        closeFiles(dataSample);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
 
         final Intent intent = getIntent();
@@ -160,6 +198,10 @@ public class TemperatureReadActivity extends Activity {
         if (thread != null) {
             thread.interrupt();
         }
+        // When the activity is paused, toggle the button so that the files are closed
+        if (mSaveDataButton.isChecked()) {
+            mSaveDataButton.toggle();
+        }
     }
 
     /*
@@ -172,6 +214,12 @@ public class TemperatureReadActivity extends Activity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
         thread.interrupt();
+        try {
+            // Button is unchecked, close the file
+            closeFiles(dataSample);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -306,6 +354,15 @@ public class TemperatureReadActivity extends Activity {
                                 plotData = false;
                             }
 
+                            if (isStoragePermissionGranted() && mSaveDataButton.isChecked()) {
+                                try {
+                                    dataSample.write((resistance + ",").getBytes());
+                                    dataSample.write((temperature + "\n").getBytes());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
 
                             break;
                         case TEMPERATURE_SERVICE_NOT_AVAILABLE:
@@ -328,6 +385,59 @@ public class TemperatureReadActivity extends Activity {
 
     private double resistanceToTemp(double resistance) {
         return (-3.4331 * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 958.29;
+    }
+
+    // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
+    // One for each file to be saved, i.e only accelerometer and one accelerometer/geomagnetic
+    private FileOutputStream createFiles() {
+        // Get the external storage location
+        String root = Environment.getExternalStorageDirectory().toString();
+        // Create a new directory
+        File myDir = new File(root, "/Chemical_sensing_data");
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+
+        String potentiometric = "temperature_measurement" + df.format(Calendar.getInstance().getTime()) + ".csv";
+
+        File potentiometricFile = new File(myDir, potentiometric);
+
+
+        try {
+            return new FileOutputStream(potentiometricFile, true);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    // Helper method to close the files.
+    private static void closeFiles(FileOutputStream fo) throws IOException {
+        fo.flush();
+        fo.close();
+    }
+
+
+    // Method to check if the user has granted access to store data on external memory
+    public boolean isStoragePermissionGranted() {
+        String TAG = "Storage Permission";
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Log.v(TAG, "Permission is granted");
+                return true;
+            } else {
+                //Log.v(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            //Log.v(TAG,"Permission is granted");
+            return true;
+        }
     }
 
 
