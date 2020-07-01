@@ -3,11 +3,11 @@ package com.example.chemicalsensingapplication.services;
 public class GattActions {
 
     /**
-     * The action corresponding to IMU events from BleImuService.
+     * The action corresponding to Temperature events from BleService.
      * Intended for IntentFilters for a BroadcastReceiver.
      */
     public final static String ACTION_GATT_TEMPERATURE_EVENTS =
-            "com.example.chemicalsensingapplication.services.ACTION_GATT_IMU_EVENTS";
+            "com.example.chemicalsensingapplication.services.ACTION_GATT_TEMPERATURE_EVENTS";
 
     /**
      * A flag for event info in intents (via intent.putExtra)
@@ -15,12 +15,24 @@ public class GattActions {
     public final static String EVENT =
             "com.example.chemicalsensingapplication.services.EVENT";
 
-
     /**
-     * A flag for IMU data in intent (via intent.putExtra)
+     * A flag for Temperature data in intent (via intent.putExtra)
      */
     public final static String TEMPERATURE_DATA =
-            "com.example.chemicalsensingapplication.services.IMU_DATA";
+            "com.example.chemicalsensingapplication.services.TEMPERATURE_DATA";
+
+    /**
+     * The action corresponding to Potentiometric events from BleService
+     * Intended for IntentFilters for a BroadcastReceiver
+     */
+    public final static String ACTION_GATT_POTENTIOMETRIC_EVENTS =
+            "com.example.chemicalsensingapplication.services.ACTION_GATT_POTENTIOMETRIC_EVENTS";
+
+    /**
+     * A flag for Potentiometric data in intent (via intent.putExtra)
+     */
+    public final static String POTENTIOMETRIC_DATA =
+            "com.example.chemicalsensingapplication.services.POTENTIOMETRIC_DATA";
 
 
     /**

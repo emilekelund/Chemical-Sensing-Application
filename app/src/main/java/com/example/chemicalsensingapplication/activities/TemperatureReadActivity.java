@@ -297,7 +297,7 @@ public class TemperatureReadActivity extends Activity {
                             ewmaResistance = ewmaFilter.average(resistance);
                             //Log.i(TAG, "EWMA: " + ((double) Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
                             temperature = resistanceToTemp(ewmaResistance);
-                            Log.i(TAG, "Temp: " + temperature);
+                            //Log.i(TAG, "Temp: " + temperature);
                             mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1 * Math.pow(10, -3))))); // Display in kiloOhm
                             mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 

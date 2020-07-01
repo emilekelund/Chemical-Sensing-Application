@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.POTENTIOMETRIC_SERVICE;
 import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.TEMPERATURE_SERVICE;
 import static com.example.chemicalsensingapplication.utilities.MsgUtils.showToast;
 
@@ -65,6 +66,7 @@ public class ScanActivity extends AppCompatActivity {
     static {
         ScanFilter resistanceServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(TEMPERATURE_SERVICE))
+                .setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
                 .build();
         RESISTANCE_SCAN_FILTER = new ArrayList<>();
         RESISTANCE_SCAN_FILTER.add(resistanceServiceFilter);
@@ -233,9 +235,15 @@ public class ScanActivity extends AppCompatActivity {
      */
     private void onDeviceSelected(int position) {
         BluetoothDevice selectedDevice = mDeviceList.get(position);
+        Intent intent = null;
         // BluetoothDevice objects are parceable, i.e. we can "send" the selected device
         // to the DeviceActivity packaged in an intent.
-        Intent intent = new Intent(ScanActivity.this, TemperatureReadActivity.class);
+        if (selectedDevice.getName().contains("Temperature")) {
+            intent = new Intent(ScanActivity.this, TemperatureReadActivity.class);
+        } else if (selectedDevice.getName().contains("Potentiometric")) {
+            intent = new Intent(ScanActivity.this, PotentiometricReadActivity.class);
+        }
+
         intent.putExtra(SELECTED_DEVICE, selectedDevice);
         startActivity(intent);
     }
