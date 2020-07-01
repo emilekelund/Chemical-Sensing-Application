@@ -390,7 +390,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     }
 
     private float potentialTo_pH(float potential) {
-        return 0;
+        return (float) ((-0.018929240306489 * potential) + 7.02902483513662);
     }
 
     // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
