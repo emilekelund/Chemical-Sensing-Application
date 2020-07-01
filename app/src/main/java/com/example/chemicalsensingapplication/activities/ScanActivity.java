@@ -66,12 +66,16 @@ public class ScanActivity extends AppCompatActivity {
     private static final ScanSettings SCAN_SETTINGS;
 
     static {
-        ScanFilter resistanceServiceFilter = new ScanFilter.Builder()
+        ScanFilter temperatureServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(TEMPERATURE_SERVICE))
+                //.setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
+                .build();
+        ScanFilter potentiometricServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
                 .build();
         CHEMICAL_SENSING_SCAN_FILTER = new ArrayList<>();
-        CHEMICAL_SENSING_SCAN_FILTER.add(resistanceServiceFilter);
+        CHEMICAL_SENSING_SCAN_FILTER.add(temperatureServiceFilter);
+        CHEMICAL_SENSING_SCAN_FILTER.add(potentiometricServiceFilter);
         SCAN_SETTINGS = new ScanSettings.Builder()
                 .setScanMode(CALLBACK_TYPE_ALL_MATCHES).build();
     }
