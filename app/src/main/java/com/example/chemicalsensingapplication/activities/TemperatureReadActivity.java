@@ -64,7 +64,7 @@ public class TemperatureReadActivity extends Activity {
 
     private ToggleButton mSaveDataButton;
 
-    private DateFormat df = new SimpleDateFormat("yyMMdd HH:mm:ss"); // Custom date format for file saving
+    private DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private BleService mBluetoothLeService;
@@ -400,7 +400,7 @@ public class TemperatureReadActivity extends Activity {
             myDir.mkdirs();
         }
 
-        String potentiometric = "temperature_measurement" + df.format(Calendar.getInstance().getTime()) + ".csv";
+        String potentiometric = "temp_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
 
         File potentiometricFile = new File(myDir, potentiometric);
 
