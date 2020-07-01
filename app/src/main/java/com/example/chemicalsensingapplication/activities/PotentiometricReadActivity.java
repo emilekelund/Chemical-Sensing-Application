@@ -93,7 +93,7 @@ public class PotentiometricReadActivity extends Activity {
                     dataSample = createFiles();
                 } else {
                     try {
-                        // Button is unchecked, close the file and stop the timer
+                        // Button is unchecked, close the file
                         closeFiles(dataSample);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -196,6 +196,10 @@ public class PotentiometricReadActivity extends Activity {
         if (thread != null) {
             thread.interrupt();
         }
+        // When the activity is paused, toggle the button so that the files are closed
+        if (mSaveDataButton.isChecked()) {
+            mSaveDataButton.toggle();
+        }
     }
 
     /*
@@ -208,6 +212,12 @@ public class PotentiometricReadActivity extends Activity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
         thread.interrupt();
+        try {
+            // Button is unchecked, close the file
+            closeFiles(dataSample);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -338,6 +348,15 @@ public class PotentiometricReadActivity extends Activity {
                                 plotData = false;
                             }
 
+                            if (isStoragePermissionGranted() && mSaveDataButton.isChecked()) {
+                                try {
+                                    dataSample.write((potential + ",").getBytes());
+                                    dataSample.write((pH + "\n").getBytes());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                             break;
                         case POTENTIOMETRIC_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
@@ -358,7 +377,7 @@ public class PotentiometricReadActivity extends Activity {
     }
 
     private float potentialTo_pH(float potential) {
-        return  0;
+        return 0;
     }
 
     // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
@@ -366,7 +385,7 @@ public class PotentiometricReadActivity extends Activity {
     private FileOutputStream createFiles() {
         // Get the external storage location
         String root = Environment.getExternalStorageDirectory().toString();
-        // Create a new directory called IMU_DATA
+        // Create a new directory
         File myDir = new File(root, "/Chemical_sensing_data");
         if (!myDir.exists()) {
             myDir.mkdirs();
@@ -378,8 +397,7 @@ public class PotentiometricReadActivity extends Activity {
 
 
         try {
-            FileOutputStream potentiometricOut = new FileOutputStream(potentiometricFile, true);
-            return potentiometricOut;
+            return new FileOutputStream(potentiometricFile, true);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -390,10 +408,9 @@ public class PotentiometricReadActivity extends Activity {
 
     // Helper method to close the files.
     private static void closeFiles(FileOutputStream fo) throws IOException {
-            fo.flush();
-            fo.close();
+        fo.flush();
+        fo.close();
     }
-
 
 
     // Method to check if the user has granted access to store data on external memory
@@ -410,8 +427,7 @@ public class PotentiometricReadActivity extends Activity {
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
+        } else { //permission is automatically granted on sdk<23 upon installation
             //Log.v(TAG,"Permission is granted");
             return true;
         }
