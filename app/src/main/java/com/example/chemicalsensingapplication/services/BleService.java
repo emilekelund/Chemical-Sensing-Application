@@ -104,13 +104,13 @@ public class BleService extends Service {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            if(TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid())) {
+            if (TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid())) {
                 // Copy the received byte array so we have a threadsafe copy
                 byte[] rawData = new byte[characteristic.getValue().length];
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
 
-                double resistance = BitConverter.bytesToResistance(rawData);
+                double resistance = BitConverter.bytesToDouble(rawData);
                 broadcastResistanceUpdate(resistance);
             } else if (POTENTIOMETRIC_MEASUREMENT.equals(characteristic.getUuid())) {
                 // Copy the received byte array so we have a threadsafe copy
@@ -118,7 +118,8 @@ public class BleService extends Service {
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
 
-                // DO SOMETHING AND THEN BROADCAST
+                double potential = BitConverter.bytesToDouble(rawData);
+                broadcastPotentiometricUpdate(potential);
             }
         }
 

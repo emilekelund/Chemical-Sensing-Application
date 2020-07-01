@@ -3,6 +3,7 @@
     <string name="no_devices_found">No device(s) found</string>
     <string name="scan_button_text">Scan for chemical sensing board(s)</string>
     <string name="no_temperature_board">No temperature board connected</string>
+    <string name="no_potentiometric_board">No potentiometric board connected</string>
     <string name="no_data">No data</string>
     <string name="device_unreachable">Device is not available</string>
     <string name="calculating_resistance">Calculating\nresistance</string>
@@ -10,6 +11,7 @@
     <string name="waiting_for_resistance">Waiting for\n resistance</string>
     <string name="resistance_x_axis">Resistance [MΩ]</string>
     <string name="temperature_y_axis">Temperature [°C]</string>
+    <string name="pH_y_axis">Potential [mV]</string>
     <string name="calculating_temperature">Calculating\ntemperature</string>
     <string name="x_axis_label">Time [s]</string>
     <string name="start_sampling">Start sampling</string>
