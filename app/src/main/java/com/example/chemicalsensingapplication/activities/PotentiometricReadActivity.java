@@ -34,7 +34,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
-import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 
 public class PotentiometricReadActivity extends Activity {
     private static final String TAG = PotentiometricReadActivity.class.getSimpleName();
