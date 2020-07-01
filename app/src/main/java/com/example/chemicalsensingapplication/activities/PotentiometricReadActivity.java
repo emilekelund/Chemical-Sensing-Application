@@ -21,9 +21,11 @@ import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
 import com.example.chemicalsensingapplication.services.GattActions;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
+import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 
 public class PotentiometricReadActivity extends Activity {
@@ -36,6 +38,11 @@ public class PotentiometricReadActivity extends Activity {
     private TextView mStatusView;
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
+
+    private static float potential;
+    private static final float MULTIPLIER = 0.03125F;
+
+    ILineDataSet set = null;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -138,7 +145,11 @@ public class PotentiometricReadActivity extends Activity {
                             mStatusView.setText(event.toString());
                             break;
                         case DATA_AVAILABLE:
-
+                            final double rawPotential = intent.getDoubleExtra(POTENTIOMETRIC_DATA, 0);
+                            m_pHView.setText("0");
+                            potential = (float) (rawPotential * MULTIPLIER);
+                            Log.i(TAG, "Potential: " + potential);
+                            mPotentialView.setText(String.format("%.1fmV", potential));
 
                             break;
                         case POTENTIOMETRIC_SERVICE_NOT_AVAILABLE:
@@ -157,5 +168,9 @@ public class PotentiometricReadActivity extends Activity {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
         return intentFilter;
+    }
+
+    private float potentialTo_pH(float potential) {
+        return  0;
     }
 }
