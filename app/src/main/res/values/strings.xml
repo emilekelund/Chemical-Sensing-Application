@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Chemical sensing</string>
     <string name="no_devices_found">No device(s) found</string>
-    <string name="scan_button_text">Scan for chemical sensing board(s)</string>
+    <string name="scan_button_text">Scan for chemical sensing devices</string>
     <string name="no_temperature_board">No temperature board connected</string>
     <string name="no_potentiometric_board">No potentiometric board connected</string>
     <string name="no_data">No data</string>
@@ -16,4 +16,5 @@
     <string name="x_axis_label">Time [s]</string>
     <string name="start_sampling">Start data saving</string>
     <string name="stop_sampling">Stop data saving</string>
+    <string name="welcome_info_text">Welcome to the chemical sensing application.\nPress the button to scan for chemical sensing devices.</string>
 </resources>

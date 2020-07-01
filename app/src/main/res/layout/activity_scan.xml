@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.ScanActivity">
 
-
     <TextView
         android:id="@+id/scan_info"
         android:layout_width="wrap_content"
@@ -23,13 +22,13 @@
         android:id="@+id/start_scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:hapticFeedbackEnabled="true"
         android:padding="15dp"
         android:text="@string/scan_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/info_Text" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scan_recycler_view"
@@ -45,6 +44,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scan_info" />
+
+    <TextView
+        android:id="@+id/info_Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/welcome_info_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
