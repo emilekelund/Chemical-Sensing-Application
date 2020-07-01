@@ -62,7 +62,7 @@ public class PotentiometricReadActivity extends Activity {
     private BleService mBluetoothLeService;
     private ToggleButton mSaveDataButton;
 
-    private DateFormat df = new SimpleDateFormat("yyMMdd HH:mm:ss"); // Custom date format for file saving
+    private DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private static final float MULTIPLIER = 0.03125F;
@@ -176,6 +176,8 @@ public class PotentiometricReadActivity extends Activity {
         // We use onResume or onStart to register a broadcastReceiver
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        isStoragePermissionGranted(); // The user needs to approve the file storing
 
     }
 
@@ -348,7 +350,7 @@ public class PotentiometricReadActivity extends Activity {
                                 plotData = false;
                             }
 
-                            if (isStoragePermissionGranted() && mSaveDataButton.isChecked()) {
+                            if (mSaveDataButton.isChecked()) {
                                 try {
                                     dataSample.write((potential + ",").getBytes());
                                     dataSample.write((pH + "\n").getBytes());
@@ -391,10 +393,15 @@ public class PotentiometricReadActivity extends Activity {
             myDir.mkdirs();
         }
 
-        String potentiometric = "pH_measurement" + df.format(Calendar.getInstance().getTime()) + ".csv";
+        String potentiometric = "pH_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
 
         File potentiometricFile = new File(myDir, potentiometric);
 
+        try {
+            potentiometricFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
             return new FileOutputStream(potentiometricFile, true);
@@ -419,16 +426,16 @@ public class PotentiometricReadActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                //Log.v(TAG, "Permission is granted");
+                Log.i(TAG, "Permission is granted");
                 return true;
             } else {
-                //Log.v(TAG, "Permission is revoked");
+                Log.i(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            //Log.v(TAG,"Permission is granted");
+            Log.i(TAG,"Permission is granted");
             return true;
         }
     }
