@@ -179,6 +179,8 @@ public class TemperatureReadActivity extends Activity {
         // We use onResume or onStart to register a broadcastReceiver
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        isStoragePermissionGranted();
     }
 
     @Override
@@ -354,7 +356,7 @@ public class TemperatureReadActivity extends Activity {
                                 plotData = false;
                             }
 
-                            if (isStoragePermissionGranted() && mSaveDataButton.isChecked()) {
+                            if (mSaveDataButton.isChecked()) {
                                 try {
                                     dataSample.write((resistance + ",").getBytes());
                                     dataSample.write((temperature + "\n").getBytes());
