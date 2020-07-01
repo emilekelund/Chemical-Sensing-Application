@@ -234,12 +234,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
         thread.interrupt();
-        try {
-            // Button is unchecked, close the file
-            closeFiles(dataSample);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /*
