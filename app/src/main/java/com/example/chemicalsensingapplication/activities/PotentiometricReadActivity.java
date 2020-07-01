@@ -1,7 +1,6 @@
 package com.example.chemicalsensingapplication.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -16,13 +15,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Button;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.example.chemicalsensingapplication.R;
@@ -45,12 +46,13 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 
-public class PotentiometricReadActivity extends Activity {
+public class PotentiometricReadActivity extends AppCompatActivity {
     private static final String TAG = PotentiometricReadActivity.class.getSimpleName();
 
     private BluetoothDevice mSelectedDevice = null;
@@ -83,6 +85,21 @@ public class PotentiometricReadActivity extends Activity {
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
         mSaveDataButton = findViewById(R.id.toggleButton);
+
+        // SETTING UP THE TOOLBAR
+        Toolbar mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Potentiometric measurements");
+        // TOOLBAR: BACK ARROW
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         // On-click listener for the toggle button used to sample data
         mSaveDataButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -214,12 +231,6 @@ public class PotentiometricReadActivity extends Activity {
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
         thread.interrupt();
-        try {
-            // Button is unchecked, close the file
-            closeFiles(dataSample);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /*
