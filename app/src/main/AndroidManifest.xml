@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.chemicalsensingapplication.activities.TemperatureReadActivity" />
-
+        <activity android:name="com.example.chemicalsensingapplication.activities.PotentiometricReadActivity" />
         <service android:name="com.example.chemicalsensingapplication.services.BleService" />
     </application>
 

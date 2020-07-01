@@ -41,7 +41,7 @@ public class PotentiometricReadActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temperature_read);
+        setContentView(R.layout.activity_potentiometric_read);
 
         mPotentialView = findViewById(R.id.potentialValueViewer);
         m_pHView = findViewById(R.id.pHViewer);
@@ -151,10 +151,6 @@ public class PotentiometricReadActivity extends Activity {
             }
         }
     };
-
-
-
-
 
     // Intent filter for broadcast updates from BleService
     private IntentFilter makeGattUpdateIntentFilter() {

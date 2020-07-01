@@ -60,7 +60,7 @@ public class ScanActivity extends AppCompatActivity {
     private static final long SCAN_PERIOD = 10000; // represented in milliseconds
 
     // We are only interested in devices with our service, so we create a scan filter
-    private static final List<ScanFilter> RESISTANCE_SCAN_FILTER;
+    private static final List<ScanFilter> CHEMICAL_SENSING_SCAN_FILTER;
     private static final ScanSettings SCAN_SETTINGS;
 
     static {
@@ -68,8 +68,8 @@ public class ScanActivity extends AppCompatActivity {
                 .setServiceUuid(new ParcelUuid(TEMPERATURE_SERVICE))
                 .setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
                 .build();
-        RESISTANCE_SCAN_FILTER = new ArrayList<>();
-        RESISTANCE_SCAN_FILTER.add(resistanceServiceFilter);
+        CHEMICAL_SENSING_SCAN_FILTER = new ArrayList<>();
+        CHEMICAL_SENSING_SCAN_FILTER.add(resistanceServiceFilter);
         SCAN_SETTINGS = new ScanSettings.Builder()
                 .setScanMode(CALLBACK_TYPE_ALL_MATCHES).build();
     }
@@ -89,7 +89,7 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDeviceList.clear();
-                scanForDevices(true, RESISTANCE_SCAN_FILTER, SCAN_SETTINGS, SCAN_PERIOD);
+                scanForDevices(true, CHEMICAL_SENSING_SCAN_FILTER, SCAN_SETTINGS, SCAN_PERIOD);
             }
         });
 
@@ -235,17 +235,18 @@ public class ScanActivity extends AppCompatActivity {
      */
     private void onDeviceSelected(int position) {
         BluetoothDevice selectedDevice = mDeviceList.get(position);
-        Intent intent = null;
+
         // BluetoothDevice objects are parceable, i.e. we can "send" the selected device
         // to the DeviceActivity packaged in an intent.
         if (selectedDevice.getName().contains("Temperature")) {
-            intent = new Intent(ScanActivity.this, TemperatureReadActivity.class);
+            Intent intent = new Intent(ScanActivity.this, TemperatureReadActivity.class);
+            intent.putExtra(SELECTED_DEVICE, selectedDevice);
+            startActivity(intent);
         } else if (selectedDevice.getName().contains("Potentiometric")) {
-            intent = new Intent(ScanActivity.this, PotentiometricReadActivity.class);
+            Intent intent = new Intent(ScanActivity.this, PotentiometricReadActivity.class);
+            intent.putExtra(SELECTED_DEVICE, selectedDevice);
+            startActivity(intent);
         }
-
-        intent.putExtra(SELECTED_DEVICE, selectedDevice);
-        startActivity(intent);
     }
 
     // callback for ActivityCompat.requestPermissions
