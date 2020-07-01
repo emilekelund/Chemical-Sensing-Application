@@ -44,6 +44,8 @@ public class GattActions {
         GATT_SERVICES_DISCOVERED("Services discovered"),
         TEMPERATURE_SERVICE_DISCOVERED("Temperature Service"),
         TEMPERATURE_SERVICE_NOT_AVAILABLE("Temperature service unavailable"),
+        POTENTIOMETRIC_SERVICE_DISCOVERED("Potentiometric service"),
+        POTENTIOMETRIC_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
         DATA_AVAILABLE("Data available");
 
         @Override
