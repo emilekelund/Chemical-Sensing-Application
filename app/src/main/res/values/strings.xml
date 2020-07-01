@@ -14,6 +14,6 @@
     <string name="pH_y_axis">Potential [mV]</string>
     <string name="calculating_temperature">Calculating\ntemperature</string>
     <string name="x_axis_label">Time [s]</string>
-    <string name="start_sampling">Start sampling</string>
-    <string name="stop_sampling">Stop sampling</string>
+    <string name="start_sampling">Start data saving</string>
+    <string name="stop_sampling">Stop data saving</string>
 </resources>
