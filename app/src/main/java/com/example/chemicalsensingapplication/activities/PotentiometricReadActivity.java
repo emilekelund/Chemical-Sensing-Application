@@ -29,6 +29,7 @@ import androidx.core.app.ActivityCompat;
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
 import com.example.chemicalsensingapplication.services.GattActions;
+import com.example.chemicalsensingapplication.utilities.ExponentialMovingAverage;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -175,7 +176,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setAxisMaximum(50f);
+        leftAxis.setAxisMaximum(15f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
@@ -349,12 +350,12 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                             break;
                         case DATA_AVAILABLE:
                             final double rawPotential = intent.getDoubleExtra(POTENTIOMETRIC_DATA, 0);
-                            float potential = (float) (rawPotential * MULTIPLIER);
+                            float potential = (float) (rawPotential);
                             float pH = potentialTo_pH(potential);
                             Log.i(TAG, "Potential: " + potential);
                             Log.i(TAG, "pH: " + pH);
                             mPotentialView.setText(String.format("%.1fmV", potential));
-                            m_pHView.setText(String.format("%.1fpH", pH));
+                            m_pHView.setText(String.format("pH%.1f", pH));
 
                             if (plotData) {
                                 addEntry(pH);
@@ -390,7 +391,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     }
 
     private float potentialTo_pH(float potential) {
-        return (float) ((-0.018929240306489 * potential) + 7.02902483513662);
+        return (float) ((-0.0227959 * potential) + 7.6079);
     }
 
     // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
