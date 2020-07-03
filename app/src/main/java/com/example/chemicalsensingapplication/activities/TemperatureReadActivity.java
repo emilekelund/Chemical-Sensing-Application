@@ -398,7 +398,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
     }
 
     private double resistanceToTemp(double resistance) {
-        return (-3.4331 * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 958.29;
+        return (-0.0415254 * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 140.9624;
     }
 
     // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
