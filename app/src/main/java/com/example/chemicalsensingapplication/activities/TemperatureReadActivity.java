@@ -62,7 +62,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private TextView mDeviceView;
     private TextView mStatusView;
     private String mDeviceAddress;
-    ILineDataSet set = null;
+    private ILineDataSet set = null;
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.04);
 
     private ToggleButton mSaveDataButton;

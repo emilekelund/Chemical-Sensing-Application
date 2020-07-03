@@ -70,7 +70,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
 
     private static final float MULTIPLIER = 0.03125F;
 
-    ILineDataSet set = null;
+    private ILineDataSet set = null;
     private LineChart mChart;
     private Thread thread;
     private boolean plotData = true;
