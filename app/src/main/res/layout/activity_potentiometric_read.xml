@@ -93,7 +93,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="356dp"
+        android:layout_marginEnd="376dp"
         android:rotation="270"
         android:text="@string/pH_y_axis"
         app:layout_constraintBottom_toBottomOf="@+id/pHChart"

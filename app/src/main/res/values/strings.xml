@@ -11,7 +11,7 @@
     <string name="waiting_for_resistance">Waiting for\n resistance</string>
     <string name="resistance_x_axis">Resistance [MΩ]</string>
     <string name="temperature_y_axis">Temperature [°C]</string>
-    <string name="pH_y_axis">Potential [mV]</string>
+    <string name="pH_y_axis">pH Value</string>
     <string name="calculating_temperature">Calculating\ntemperature</string>
     <string name="x_axis_label">Time [s]</string>
     <string name="start_sampling">Start data saving</string>

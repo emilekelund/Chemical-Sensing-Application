@@ -259,7 +259,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     };
 
     /*
-    A method to add our temperature entries to the chart
+    A method to add our pH entries to the chart
      */
     private void addEntry(double pH) {
         LineData data = mChart.getData();
@@ -294,7 +294,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
 
     private LineDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, "Temperature");
+        LineDataSet set = new LineDataSet(null, "pH Value");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setLineWidth(3f);
         set.setColor(Color.RED);
