@@ -224,7 +224,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             MsgUtils.showToast("Please enter values in all boxes", this);
 
         } else {
-            createFiles();
+            calibrationValues = createFiles();
 
             pH4Potential = Float.parseFloat(ph4String);
             pH7Potential = Float.parseFloat(ph7String);
@@ -247,8 +247,8 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             MsgUtils.showToast("Success!", this);
 
             try {
-                calibrationValues.write((slope + ",").getBytes());
-                calibrationValues.write((intercept + "\n").getBytes());
+                calibrationValues.write((eqValues[0] + ",").getBytes());
+                calibrationValues.write((eqValues[1] + "\n").getBytes());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
