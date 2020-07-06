@@ -75,42 +75,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:autofillHints=""
         android:ems="10"
         android:gravity="center_horizontal|center_vertical"
         android:hint="@string/ph_4"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calibration_info"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/calibration_info" />
 
     <EditText
         android:id="@+id/pH7_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:gravity="center_horizontal|center_vertical"
         android:hint="@string/ph_7"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pH4_box"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/pH4_box" />
 
     <EditText
         android:id="@+id/pH10_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:gravity="center_horizontal|center_vertical"
         android:hint="@string/ph_10"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pH7_box"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/pH7_box" />
 
     <Button
         android:id="@+id/button"

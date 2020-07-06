@@ -195,5 +195,21 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     }
 
     public void startCalibration(View view) {
+        float pH4Potential = 0;
+        float pH7Potential = 0;
+        float pH10Potential = 0;
+        String ph4String = pH4_box.getText().toString();
+        String ph7String = pH7_box.getText().toString();
+        String ph10String = pH10_box.getText().toString();
+
+        if (ph4String.length() == 0 || ph7String.length() == 0 || ph10String.length() == 0) {
+            MsgUtils.showToast("Please enter values in all boxes", this);
+        } else {
+            pH4Potential = Float.parseFloat(ph4String);
+            pH7Potential = Float.parseFloat(ph7String);
+            pH10Potential = Float.parseFloat(ph10String);
+        }
+
+
     }
 }
