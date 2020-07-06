@@ -17,4 +17,5 @@
     <string name="start_sampling">Start data saving</string>
     <string name="stop_sampling">Stop data saving</string>
     <string name="welcome_info_text">Welcome to the chemical sensing application.\nPress the button to scan for chemical sensing devices.</string>
+    <string name="calibrate_sensor">Calibrate Sensor</string>
 </resources>
