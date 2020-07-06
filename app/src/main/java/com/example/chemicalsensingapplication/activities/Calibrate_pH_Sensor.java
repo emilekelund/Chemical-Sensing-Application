@@ -1,4 +1,4 @@
 package com.example.chemicalsensingapplication.activities;
 
-public class CalibrateTemperatureSensor {
+public class Calibrate_pH_Sensor {
 }

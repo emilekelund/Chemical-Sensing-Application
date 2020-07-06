@@ -457,7 +457,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     }
 
     public void startCalibration(View view) {
-        Intent intent = new Intent(PotentiometricReadActivity.this, CalibrateTemperatureSensor.class);
+        Intent intent = new Intent(PotentiometricReadActivity.this, Calibrate_pH_Sensor.class);
         intent.putExtra(SELECTED_DEVICE, mSelectedDevice);
         startActivity(intent);
     }
