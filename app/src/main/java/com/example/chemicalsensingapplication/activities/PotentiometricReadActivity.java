@@ -65,6 +65,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
     private ToggleButton mSaveDataButton;
+    private float[] eqValues = new float[2];
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
 

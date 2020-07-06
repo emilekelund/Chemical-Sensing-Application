@@ -45,6 +45,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     private TextView pH7_box;
     private TextView pH10_box;
     private TextView newEquation;
+    private float[] eqValues = new float[2];
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
     private static final float MULTIPLIER = 0.03125F;
@@ -95,6 +96,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
     }
+
 
     @Override
     protected void onResume() {
@@ -195,21 +197,46 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     }
 
     public void startCalibration(View view) {
-        float pH4Potential = 0;
-        float pH7Potential = 0;
-        float pH10Potential = 0;
+        float pH4Potential;
+        float pH7Potential;
+        float pH10Potential;
         String ph4String = pH4_box.getText().toString();
         String ph7String = pH7_box.getText().toString();
         String ph10String = pH10_box.getText().toString();
 
         if (ph4String.length() == 0 || ph7String.length() == 0 || ph10String.length() == 0) {
             MsgUtils.showToast("Please enter values in all boxes", this);
+
         } else {
+
             pH4Potential = Float.parseFloat(ph4String);
             pH7Potential = Float.parseFloat(ph7String);
             pH10Potential = Float.parseFloat(ph10String);
+
+            float a = 3 * ((pH4Potential * 4) + (pH7Potential * 7) + pH10Potential * 10);
+            float b = (pH4Potential + pH7Potential + pH10Potential) * (4 + 7 + 10);
+            float c = (float) (3 * (Math.pow(pH4Potential, 2) + Math.pow(pH7Potential, 2) + Math.pow(pH10Potential, 2)));
+            float d = (float) Math.pow((pH4Potential + pH7Potential + pH10Potential), 2);
+
+            float slope = (a - b) / (c - d);
+
+            float e = 4 + 7 + 10;
+            float f = slope * (pH4Potential + pH7Potential + pH10Potential);
+
+            float intercept = (e - f) / 3;
+
+            eqValues[0] = slope;
+            eqValues[1] = intercept;
+            MsgUtils.showToast("Success!", this);
+
+            newEquation.setText(String.format("f(x) = %.2fx + %.2f", eqValues[0], eqValues[1]));
+
         }
 
-
     }
+
+    public float[] getEqValues() {
+        return eqValues;
+    }
+
 }
