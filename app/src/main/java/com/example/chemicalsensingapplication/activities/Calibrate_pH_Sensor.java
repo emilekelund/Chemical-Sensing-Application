@@ -1,5 +1,6 @@
 package com.example.chemicalsensingapplication.activities;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -7,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
@@ -25,7 +29,13 @@ import com.example.chemicalsensingapplication.services.GattActions;
 import com.example.chemicalsensingapplication.utilities.ExponentialMovingAverage;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
@@ -49,6 +59,10 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
     private static final float MULTIPLIER = 0.03125F;
+
+    private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
+
+    private FileOutputStream calibrationValues = null;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -94,6 +108,8 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         // We use onResume or onStart to register a broadcastReceiver
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        isStoragePermissionGranted();
 
     }
 
@@ -208,6 +224,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             MsgUtils.showToast("Please enter values in all boxes", this);
 
         } else {
+            createFiles();
 
             pH4Potential = Float.parseFloat(ph4String);
             pH7Potential = Float.parseFloat(ph7String);
@@ -229,14 +246,79 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             eqValues[1] = intercept;
             MsgUtils.showToast("Success!", this);
 
+            try {
+                calibrationValues.write((slope + ",").getBytes());
+                calibrationValues.write((intercept + "\n").getBytes());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
             newEquation.setText(String.format("f(x) = %.2fx + %.2f", eqValues[0], eqValues[1]));
+
+            try {
+                closeFiles(calibrationValues);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
         }
 
     }
 
-    public float[] getEqValues() {
-        return eqValues;
+    // Method to save the last calibration values
+    private FileOutputStream createFiles() {
+        // Get the external storage location
+        String root = Environment.getExternalStorageDirectory().toString();
+        // Create a new directory
+        File myDir = new File(root, "/Chemical_sensing_data/Calibrations");
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+
+        String pH_calibration = "pH_calibration_" + df.format(Calendar.getInstance().getTime()) + ".txt";
+
+        File potentiometricFile = new File(myDir, pH_calibration);
+
+        try {
+            potentiometricFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            return new FileOutputStream(potentiometricFile, true);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    // Helper method to close the files.
+    private static void closeFiles(FileOutputStream fo) throws IOException {
+        fo.flush();
+        fo.close();
+    }
+
+    // Method to check if the user has granted access to store data on external memory
+    public boolean isStoragePermissionGranted() {
+        String TAG = "Storage Permission";
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "Permission is granted");
+                return true;
+            } else {
+                Log.i(TAG, "Permission is revoked");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.i(TAG,"Permission is granted");
+            return true;
+        }
     }
 
 }

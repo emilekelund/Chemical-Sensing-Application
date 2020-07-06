@@ -67,7 +67,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
 
     private ToggleButton mSaveDataButton;
 
-    private DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
+    private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private BleService mBluetoothLeService;
@@ -401,8 +401,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
         return (-0.0415254 * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 140.9624;
     }
 
-    // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
-    // One for each file to be saved, i.e only accelerometer and one accelerometer/geomagnetic
+    // Method to sample data used by the ToggleButton.
     private FileOutputStream createFiles() {
         // Get the external storage location
         String root = Environment.getExternalStorageDirectory().toString();

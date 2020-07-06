@@ -69,7 +69,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
 
-    private DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
+    private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private static final float MULTIPLIER = 0.03125F;
@@ -399,8 +399,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         return (float) ((-0.020123331311517 * potential) + 7.21961262237969);
     }
 
-    // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
-    // One for each file to be saved, i.e only accelerometer and one accelerometer/geomagnetic
+    // Method to sample data used by the ToggleButton
     private FileOutputStream createFiles() {
         // Get the external storage location
         String root = Environment.getExternalStorageDirectory().toString();
@@ -435,7 +434,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         fo.flush();
         fo.close();
     }
-
 
     // Method to check if the user has granted access to store data on external memory
     public boolean isStoragePermissionGranted() {
