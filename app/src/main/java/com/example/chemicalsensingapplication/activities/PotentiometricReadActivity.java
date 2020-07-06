@@ -460,4 +460,9 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         intent.putExtra(SELECTED_DEVICE, mSelectedDevice);
         startActivity(intent);
     }
+
+    public void readCalibrationData() {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File calibrationFile = new File(root, "/Chemical_sensing_data/Calibrations/pH_calibrations.txt");
+    }
 }
