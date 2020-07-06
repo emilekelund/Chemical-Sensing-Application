@@ -55,6 +55,7 @@ import static com.example.chemicalsensingapplication.services.GattActions.POTENT
 
 public class PotentiometricReadActivity extends AppCompatActivity {
     private static final String TAG = PotentiometricReadActivity.class.getSimpleName();
+    public static String SELECTED_DEVICE = "Selected device";
 
     private BluetoothDevice mSelectedDevice = null;
     private TextView mPotentialView;
@@ -453,5 +454,11 @@ public class PotentiometricReadActivity extends AppCompatActivity {
             Log.i(TAG,"Permission is granted");
             return true;
         }
+    }
+
+    public void startCalibration(View view) {
+        Intent intent = new Intent(PotentiometricReadActivity.this, CalibrateTemperatureSensor.class);
+        intent.putExtra(SELECTED_DEVICE, mSelectedDevice);
+        startActivity(intent);
     }
 }

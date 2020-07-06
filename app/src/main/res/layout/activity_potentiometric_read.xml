@@ -130,6 +130,7 @@
         android:text="@string/calibrate_sensor"
         app:layout_constraintBottom_toTopOf="@+id/pHChart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/toggleButton" />
+        app:layout_constraintStart_toEndOf="@+id/toggleButton"
+        android:onClick="startCalibration"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
