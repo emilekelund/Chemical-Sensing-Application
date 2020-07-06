@@ -25,6 +25,7 @@
         </activity>
         <activity android:name="com.example.chemicalsensingapplication.activities.TemperatureReadActivity" />
         <activity android:name="com.example.chemicalsensingapplication.activities.PotentiometricReadActivity" />
+        <activity android:name="com.example.chemicalsensingapplication.activities.Calibrate_pH_Sensor" />
         <service android:name="com.example.chemicalsensingapplication.services.BleService" />
     </application>
 
