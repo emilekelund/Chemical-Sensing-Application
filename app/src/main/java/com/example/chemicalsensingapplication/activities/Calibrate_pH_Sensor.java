@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -246,6 +247,8 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             eqValues[1] = intercept;
             MsgUtils.showToast("Success!", this);
 
+            hideKeybaord(view);
+
             try {
                 calibrationValues.write((eqValues[0] + ",").getBytes());
                 calibrationValues.write((eqValues[1] + "\n").getBytes());
@@ -275,7 +278,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             myDir.mkdirs();
         }
 
-        String pH_calibration = "pH_calibration_" + df.format(Calendar.getInstance().getTime()) + ".txt";
+        String pH_calibration = "pH_calibrations.txt";
 
         File potentiometricFile = new File(myDir, pH_calibration);
 
@@ -320,5 +323,10 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             return true;
         }
     }
+    private void hideKeybaord(View v) {
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
+    }
+
 
 }
