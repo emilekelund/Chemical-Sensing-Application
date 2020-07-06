@@ -64,7 +64,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/calibration_info"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,7 +120,8 @@
         android:text="@string/calibrate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pH10_box" />
+        app:layout_constraintTop_toBottomOf="@+id/pH10_box"
+        android:onClick="startCalibration"/>
 
     <TextView
         android:id="@+id/new_equation"

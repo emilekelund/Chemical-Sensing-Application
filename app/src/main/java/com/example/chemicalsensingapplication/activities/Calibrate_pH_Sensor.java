@@ -55,7 +55,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibrate_ph);
 
-        mPotentialView = findViewById(R.id.potentialValueViewer);
+        mPotentialView = findViewById(R.id.potential_view);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
         pH4_box = findViewById(R.id.pH4_box);
@@ -159,17 +159,20 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
                 if (event != null) {
                     switch (event) {
                         case GATT_CONNECTED:
+                            mStatusView.setText(event.toString());
                         case GATT_DISCONNECTED:
                             mPotentialView.setText(R.string.board_disconnected);
                         case GATT_SERVICES_DISCOVERED:
+                            mStatusView.setText(event.toString());
                         case POTENTIOMETRIC_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
                             break;
                         case DATA_AVAILABLE:
+                            mStatusView.setText(R.string.ready_to_calibrate);
                             final double rawPotential = intent.getDoubleExtra(POTENTIOMETRIC_DATA, 0);
                             float potential = (float) (rawPotential * MULTIPLIER);
                             float ewmaPotential = (float) ewmaFilter.average(potential);
-                            Log.i(TAG, "Potential: " + potential);
+                            Log.i(TAG, "Potential: " + ewmaPotential);
                             mPotentialView.setText(String.format("%.2f mV", ewmaPotential));
 
                             break;
@@ -191,4 +194,6 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         return intentFilter;
     }
 
+    public void startCalibration(View view) {
+    }
 }
