@@ -65,7 +65,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private BleService mBluetoothLeService;
     private ToggleButton mSaveDataButton;
 
-    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.08);
+    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
 
     private DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
@@ -354,10 +354,10 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                             final double rawPotential = intent.getDoubleExtra(POTENTIOMETRIC_DATA, 0);
                             float potential = (float) (rawPotential * MULTIPLIER);
                             float ewmaPotential = (float) ewmaFilter.average(potential);
-                            float pH = potentialTo_pH(potential);
+                            float pH = potentialTo_pH(ewmaPotential);
                             Log.i(TAG, "Potential: " + potential);
                             Log.i(TAG, "pH: " + pH);
-                            mPotentialView.setText(String.format("%.2fmV", ewmaPotential));
+                            mPotentialView.setText(String.format("%.2f mV", ewmaPotential));
                             m_pHView.setText(String.format("pH %.1f", pH));
 
                             if (plotData) {
@@ -394,7 +394,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     }
 
     private float potentialTo_pH(float potential) {
-        return (float) ((-0.0227959 * potential) + 7.6079);
+        return (float) ((-0.020123331311517 * potential) + 7.21961262237969);
     }
 
     // Method to sample data used by the ToggleButton, returns an array with two FileOutputStreams,
