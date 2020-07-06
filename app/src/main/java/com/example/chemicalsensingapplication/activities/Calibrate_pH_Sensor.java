@@ -36,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Objects;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
@@ -62,8 +61,6 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     private static final float MULTIPLIER = 0.03125F;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
-
-    private FileOutputStream calibrationValues = null;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -225,7 +222,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             MsgUtils.showToast("Please enter values in all boxes", this);
 
         } else {
-            calibrationValues = createFiles();
+            FileOutputStream calibrationValues = createFiles();
 
             pH4Potential = Float.parseFloat(ph4String);
             pH7Potential = Float.parseFloat(ph7String);
@@ -245,9 +242,8 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
 
             eqValues[0] = slope;
             eqValues[1] = intercept;
-            MsgUtils.showToast("Success!", this);
 
-            hideKeybaord(view);
+            hideKeyboard(view);
 
             try {
                 calibrationValues.write((eqValues[0] + ",").getBytes());
@@ -263,6 +259,8 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+
+            MsgUtils.showToast("Success!", this);
 
         }
 
@@ -323,7 +321,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             return true;
         }
     }
-    private void hideKeybaord(View v) {
+    private void hideKeyboard(View v) {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(),0);
     }
