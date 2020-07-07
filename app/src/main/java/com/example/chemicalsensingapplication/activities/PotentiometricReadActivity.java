@@ -40,14 +40,20 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
+import java.util.Scanner;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
@@ -65,7 +71,8 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
     private ToggleButton mSaveDataButton;
-    private float[] eqValues = new float[2];
+    private static float slope = 0;
+    private static float intercept = 0;
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
 
@@ -201,6 +208,13 @@ public class PotentiometricReadActivity extends AppCompatActivity {
 
         isStoragePermissionGranted(); // The user needs to approve the file storing
 
+        // Read the latest calibrations
+        try {
+            readCalibrationData();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -210,6 +224,12 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
+        }
+        // Read the latest calibrations
+        try {
+            readCalibrationData();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -396,7 +416,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     }
 
     private float potentialTo_pH(float potential) {
-        return (float) ((-0.020123331311517 * potential) + 7.21961262237969);
+        return (slope * potential) + intercept;
     }
 
     // Method to sample data used by the ToggleButton
@@ -461,11 +481,37 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void readCalibrationData() {
-        String root = Environment.getExternalStorageDirectory().toString() + "Chemical_sensing_data/Calibrations";
-        File calibrationData = new File(root, "pH_calibrations.txt");
+    public void readCalibrationData() throws FileNotFoundException {
+        String root = Environment.getExternalStorageDirectory().toString() + "/Chemical_sensing_data/Calibrations";
+        InputStream calibrationData = new FileInputStream(root + "/pH_calibrations.csv");
 
+        BufferedReader reader = new BufferedReader(new InputStreamReader(calibrationData));
 
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] rowData = line.split(",");
+                slope = Float.parseFloat(rowData[0]);
+                intercept = Float.parseFloat(rowData[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                calibrationData.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+    }
+
+    public static float getSlope() {
+        return slope;
+    }
+
+    public static float getIntercept() {
+        return intercept;
     }
 }

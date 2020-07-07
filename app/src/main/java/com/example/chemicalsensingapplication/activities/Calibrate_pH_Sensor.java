@@ -55,12 +55,11 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     private TextView pH7_box;
     private TextView pH10_box;
     private TextView newEquation;
-    private float[] eqValues = new float[2];
+    private static float slope;
+    private static float intercept;
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
     private static final float MULTIPLIER = 0.03125F;
-
-    private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -108,6 +107,13 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
         isStoragePermissionGranted();
+
+        slope = PotentiometricReadActivity.getSlope();
+        intercept = PotentiometricReadActivity.getIntercept();
+
+        if ((slope != 0) && (intercept != 0)) {
+            newEquation.setText(String.format("f(x) = %.2fx + %.2f", slope, intercept));
+        }
 
     }
 
@@ -233,26 +239,23 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             float c = (float) (3 * (Math.pow(pH4Potential, 2) + Math.pow(pH7Potential, 2) + Math.pow(pH10Potential, 2)));
             float d = (float) Math.pow((pH4Potential + pH7Potential + pH10Potential), 2);
 
-            float slope = (a - b) / (c - d);
+            slope = (a - b) / (c - d);
 
             float e = 4 + 7 + 10;
             float f = slope * (pH4Potential + pH7Potential + pH10Potential);
 
-            float intercept = (e - f) / 3;
-
-            eqValues[0] = slope;
-            eqValues[1] = intercept;
+            intercept = (e - f) / 3;
 
             hideKeyboard(view);
 
             try {
-                calibrationValues.write((eqValues[0] + ",").getBytes());
-                calibrationValues.write((eqValues[1] + "\n").getBytes());
+                calibrationValues.write((slope + ",").getBytes());
+                calibrationValues.write((intercept + "\n").getBytes());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
-            newEquation.setText(String.format("f(x) = %.2fx + %.2f", eqValues[0], eqValues[1]));
+            newEquation.setText(String.format("f(x) = %.2fx + %.2f", slope, intercept));
 
             try {
                 closeFiles(calibrationValues);
@@ -276,7 +279,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
             myDir.mkdirs();
         }
 
-        String pH_calibration = "pH_calibrations.txt";
+        String pH_calibration = "pH_calibrations.csv";
 
         File potentiometricFile = new File(myDir, pH_calibration);
 
