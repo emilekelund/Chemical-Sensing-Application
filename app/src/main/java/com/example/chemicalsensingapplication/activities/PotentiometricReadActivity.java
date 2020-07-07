@@ -76,7 +76,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
 
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.1);
 
-    private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
+    private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private static final float MULTIPLIER = 0.03125F;
