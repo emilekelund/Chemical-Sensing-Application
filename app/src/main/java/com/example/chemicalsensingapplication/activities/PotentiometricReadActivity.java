@@ -50,10 +50,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
-import java.util.Scanner;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;

@@ -25,11 +25,11 @@ import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.Event;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
-import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
-import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.POTENTIOMETRIC_MEASUREMENT;
-import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.POTENTIOMETRIC_SERVICE;
-import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.TEMPERATURE_MEASUREMENT;
-import static com.example.chemicalsensingapplication.services.TemperatureBoardUUIDs.TEMPERATURE_SERVICE;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_MEASUREMENT;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_SERVICE;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.TEMPERATURE_MEASUREMENT;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.TEMPERATURE_SERVICE;
 
 public class BleService extends Service {
     private BluetoothManager mBluetoothManager;
