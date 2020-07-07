@@ -24,4 +24,15 @@
     <string name="ph_10">pH 10</string>
     <string name="calibrate">Calibrate</string>
     <string name="ready_to_calibrate">Ready to calibrate</string>
+    <string name="temp_calibration_info">Enter the temperature (in °C) and resistance (in kΩ) and click calibrate to get your new linear regression formula.</string>
+    <string name="temp_1">Temp 1</string>
+    <string name="resistance_1">Resistance 1</string>
+    <string name="temp_2">Temp 2</string>
+    <string name="resistance_2">Resistance 2</string>
+    <string name="temp_3">Temp 3</string>
+    <string name="resistance_3">Resistance 3</string>
+    <string name="temp_4">Temp 4</string>
+    <string name="resistance_4">Resistance 4</string>
+    <string name="temp_5">Temp 5</string>
+    <string name="resistance_5">Resistance 5</string>
 </resources>
