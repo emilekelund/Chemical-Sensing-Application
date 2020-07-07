@@ -40,10 +40,14 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,6 +59,7 @@ import static com.example.chemicalsensingapplication.services.GattActions.TEMPER
 
 public class TemperatureReadActivity extends AppCompatActivity {
     private static final String TAG = TemperatureReadActivity.class.getSimpleName();
+    public static String SELECTED_DEVICE = "Selected device";
 
     private BluetoothDevice mSelectedDevice = null;
     private TextView mResistanceView;
@@ -64,6 +69,8 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private String mDeviceAddress;
     private ILineDataSet set = null;
     private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.04);
+    private static float slope = 0;
+    private static float intercept = 0;
 
     private ToggleButton mSaveDataButton;
 
@@ -115,6 +122,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
                     try {
                         // Button is unchecked, close the file
                         closeFiles(dataSample);
+                        MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -199,6 +207,13 @@ public class TemperatureReadActivity extends AppCompatActivity {
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
         isStoragePermissionGranted();
+
+        // Read the latest calibrations
+        try {
+            readCalibrationData();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -208,6 +223,13 @@ public class TemperatureReadActivity extends AppCompatActivity {
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
+        }
+
+        // Read the latest calibrations
+        try {
+            readCalibrationData();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -398,7 +420,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
     }
 
     private double resistanceToTemp(double resistance) {
-        return (-0.0415254 * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + 140.9624;
+        return (slope * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + intercept;
     }
 
     // Method to sample data used by the ToggleButton.
@@ -454,4 +476,43 @@ public class TemperatureReadActivity extends AppCompatActivity {
     }
 
 
+    public void startTempCalibrationActivity(View view) {
+        Intent intent = new Intent(TemperatureReadActivity.this, CalibrateTempSensor.class);
+        intent.putExtra(SELECTED_DEVICE, mSelectedDevice);
+        startActivity(intent);
+    }
+
+    public void readCalibrationData() throws FileNotFoundException {
+        String root = Environment.getExternalStorageDirectory().toString() + "/Chemical_sensing_data/Calibrations";
+        InputStream calibrationData = new FileInputStream(root + "/temp_calibrations.csv");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(calibrationData));
+
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] rowData = line.split(",");
+                slope = Float.parseFloat(rowData[0]);
+                intercept = Float.parseFloat(rowData[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                calibrationData.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static float getSlope() {
+        return slope;
+    }
+
+    public static float getIntercept() {
+        return intercept;
+    }
 }
