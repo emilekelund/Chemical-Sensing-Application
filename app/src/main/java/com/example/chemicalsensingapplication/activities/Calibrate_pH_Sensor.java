@@ -263,7 +263,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
                 ex.printStackTrace();
             }
 
-            MsgUtils.showToast("Success!", this);
+            MsgUtils.showToast("Success! Saved calibration.", this);
 
         }
 

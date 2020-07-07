@@ -124,6 +124,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                     try {
                         // Button is unchecked, close the file
                         closeFiles(dataSample);
+                        MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -137,11 +137,11 @@ public class ScanActivity extends AppCompatActivity {
     // Check BLE permissions and turn on BT (if turned off) - user interaction(s)
     private void initBLE() {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            showToast("BLE not supported", this);
+            //showToast("BLE not supported", this);
             finish();
             return;
         } else {
-            showToast("BLE is supported", this);
+            //showToast("BLE is supported", this);
             // Access location is a "dangerous permission"
             int hasAccessLocation = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -181,7 +181,7 @@ public class ScanActivity extends AppCompatActivity {
                         if (mScanning) {
                             mScanning = false;
                             scanner.stopScan(mScanCallback);
-                            showToast("BLE scan stopped", ScanActivity.this);
+                            //showToast("BLE scan stopped", ScanActivity.this);
                         }
                     }
                 }, SCAN_PERIOD);
@@ -189,13 +189,13 @@ public class ScanActivity extends AppCompatActivity {
                 mScanning = true;
                 scanner.startScan(scanFilters, scanSettings, mScanCallback);
                 mScanInfoView.setText(R.string.no_devices_found);
-                showToast("BLE scan started", this);
+                //showToast("BLE scan started", this);
             }
         } else {
             if (mScanning) {
                 mScanning = false;
                 scanner.stopScan(mScanCallback);
-                showToast("BLE scan stopped", this);
+                //showToast("BLE scan stopped", this);
             }
         }
     }
@@ -208,7 +208,7 @@ public class ScanActivity extends AppCompatActivity {
 
             scanner.stopScan(mScanCallback);
             mScanning = false;
-            showToast("BLE scan stopped", this);
+            //showToast("BLE scan stopped", this);
         }
     }
 
