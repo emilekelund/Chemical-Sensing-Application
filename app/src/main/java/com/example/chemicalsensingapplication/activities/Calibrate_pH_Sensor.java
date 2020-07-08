@@ -34,8 +34,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
@@ -54,7 +52,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     private TextView pH4_box;
     private TextView pH7_box;
     private TextView pH10_box;
-    private TextView newEquation;
+    private TextView regressionFormula;
     private static float slope;
     private static float intercept;
 
@@ -73,7 +71,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         pH4_box = findViewById(R.id.pH4_box);
         pH7_box = findViewById(R.id.pH7_box);
         pH10_box = findViewById(R.id.pH10_box);
-        newEquation = findViewById(R.id.new_equation);
+        regressionFormula = findViewById(R.id.new_equation);
 
         // SETTING UP THE TOOLBAR
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -112,7 +110,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         intercept = PotentiometricReadActivity.getIntercept();
 
         if ((slope != 0) && (intercept != 0)) {
-            newEquation.setText(String.format("f(x) = %.2fx + %.2f", slope, intercept));
+            regressionFormula.setText(String.format("f(x) = %.2fx + %.2f", slope, intercept));
         }
 
     }
@@ -255,7 +253,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
                 ex.printStackTrace();
             }
 
-            newEquation.setText(String.format("f(x) = %.2fx + %.2f", slope, intercept));
+            regressionFormula.setText(String.format("f(x) = %.2fx + %.2f", slope, intercept));
 
             try {
                 closeFiles(calibrationValues);
