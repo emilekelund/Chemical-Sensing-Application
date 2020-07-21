@@ -68,9 +68,9 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         mPotentialView = findViewById(R.id.potential_view);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
-        pH4_box = findViewById(R.id.pH4_box);
-        pH7_box = findViewById(R.id.pH7_box);
-        pH10_box = findViewById(R.id.pH10_box);
+        pH4_box = findViewById(R.id.pH_value_1);
+        pH7_box = findViewById(R.id.pH_value_2);
+        pH10_box = findViewById(R.id.pH_value_3);
         regressionFormula = findViewById(R.id.new_equation);
 
         // SETTING UP THE TOOLBAR

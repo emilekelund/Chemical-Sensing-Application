@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@+id/potential_view" />
 
     <EditText
-        android:id="@+id/pH4_box"
+        android:id="@+id/pH_value_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -82,12 +82,12 @@
         android:gravity="center_horizontal|center_vertical"
         android:hint="@string/ph_4"
         android:inputType="numberSigned|numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/potential1"
+        app:layout_constraintEnd_toStartOf="@+id/potential_value_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/calibration_info" />
 
     <EditText
-        android:id="@+id/pH7_box"
+        android:id="@+id/pH_value_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -98,12 +98,12 @@
         android:gravity="center_horizontal|center_vertical"
         android:hint="@string/ph_7"
         android:inputType="numberSigned|numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/potential2"
+        app:layout_constraintEnd_toStartOf="@+id/potential_value_2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pH4_box" />
+        app:layout_constraintTop_toBottomOf="@+id/pH_value_1" />
 
     <EditText
-        android:id="@+id/pH10_box"
+        android:id="@+id/pH_value_3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -114,9 +114,9 @@
         android:gravity="center_horizontal|center_vertical"
         android:hint="@string/ph_10"
         android:inputType="numberSigned|numberDecimal"
-        app:layout_constraintEnd_toStartOf="@+id/potential3"
+        app:layout_constraintEnd_toStartOf="@+id/potential_value_3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pH7_box" />
+        app:layout_constraintTop_toBottomOf="@+id/pH_value_2" />
 
     <Button
         android:id="@+id/button"
@@ -127,7 +127,7 @@
         android:onClick="startCalibration"
         android:text="@string/calibrate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pH10_box" />
+        app:layout_constraintTop_toBottomOf="@+id/pH_value_3" />
 
     <TextView
         android:id="@+id/new_equation"
@@ -142,7 +142,7 @@
         app:layout_constraintTop_toTopOf="@+id/button" />
 
     <EditText
-        android:id="@+id/potential1"
+        android:id="@+id/potential_value_1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -154,12 +154,12 @@
         android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/pH4_box"
+        app:layout_constraintStart_toEndOf="@+id/pH_value_1"
         app:layout_constraintTop_toBottomOf="@+id/calibration_info"
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/potential2"
+        android:id="@+id/potential_value_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -170,12 +170,12 @@
         android:hint="@string/potential_value_2"
         android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pH7_box"
-        app:layout_constraintTop_toBottomOf="@+id/potential1"
+        app:layout_constraintStart_toEndOf="@+id/pH_value_2"
+        app:layout_constraintTop_toBottomOf="@+id/potential_value_1"
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/potential3"
+        android:id="@+id/potential_value_3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -186,8 +186,8 @@
         android:hint="@string/potential_value_3"
         android:inputType="numberSigned|numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pH10_box"
-        app:layout_constraintTop_toBottomOf="@+id/potential2"
+        app:layout_constraintStart_toEndOf="@+id/pH_value_3"
+        app:layout_constraintTop_toBottomOf="@+id/potential_value_2"
         android:autofillHints="" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
