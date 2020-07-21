@@ -49,9 +49,12 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     private TextView mDeviceView;
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
-    private TextView pH4_box;
-    private TextView pH7_box;
-    private TextView pH10_box;
+    private TextView pH_value_1;
+    private TextView pH_value_2;
+    private TextView pH_value_3;
+    private TextView potential_value_1;
+    private TextView potential_value_2;
+    private TextView potential_value_3;
     private TextView regressionFormula;
     private static float slope;
     private static float intercept;
@@ -68,9 +71,12 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         mPotentialView = findViewById(R.id.potential_view);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
-        pH4_box = findViewById(R.id.pH_value_1);
-        pH7_box = findViewById(R.id.pH_value_2);
-        pH10_box = findViewById(R.id.pH_value_3);
+        pH_value_1 = findViewById(R.id.pH_value_1);
+        pH_value_2 = findViewById(R.id.pH_value_2);
+        pH_value_3 = findViewById(R.id.pH_value_3);
+        potential_value_1 = findViewById(R.id.potential_value_1);
+        potential_value_2 = findViewById(R.id.potential_value_2);
+        potential_value_3 = findViewById(R.id.potential_value_3);
         regressionFormula = findViewById(R.id.new_equation);
 
         // SETTING UP THE TOOLBAR
@@ -215,32 +221,38 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
     }
 
     public void startCalibration(View view) {
-        float pH4Potential;
-        float pH7Potential;
-        float pH10Potential;
-        String ph4String = pH4_box.getText().toString();
-        String ph7String = pH7_box.getText().toString();
-        String ph10String = pH10_box.getText().toString();
+        float pH1, pH2, pH3, potential1, potential2, potential3;
 
-        if (ph4String.length() == 0 || ph7String.length() == 0 || ph10String.length() == 0) {
+        String pH1String = pH_value_1.getText().toString();
+        String pH2String = pH_value_2.getText().toString();
+        String pH3String = pH_value_3.getText().toString();
+        String potential1String = potential_value_1.getText().toString();
+        String potential2String = potential_value_2.getText().toString();
+        String potential3String = potential_value_3.getText().toString();
+
+        if (pH1String.length() == 0 || pH2String.length() == 0 || pH3String.length() == 0
+            || potential1String.length() == 0 || potential2String.length() == 0 || potential3String.length() == 0) {
             MsgUtils.showToast("Please enter values in all boxes", this);
 
         } else {
             FileOutputStream calibrationValues = createFiles();
 
-            pH4Potential = Float.parseFloat(ph4String);
-            pH7Potential = Float.parseFloat(ph7String);
-            pH10Potential = Float.parseFloat(ph10String);
+            pH1 = Float.parseFloat(pH1String);
+            pH2 = Float.parseFloat(pH2String);
+            pH3 = Float.parseFloat(pH3String);
+            potential1 = Float.parseFloat(potential1String);
+            potential2 = Float.parseFloat(potential2String);
+            potential3 = Float.parseFloat(potential3String);
 
-            float a = 3 * ((pH4Potential * 4) + (pH7Potential * 7) + pH10Potential * 10);
-            float b = (pH4Potential + pH7Potential + pH10Potential) * (4 + 7 + 10);
-            float c = (float) (3 * (Math.pow(pH4Potential, 2) + Math.pow(pH7Potential, 2) + Math.pow(pH10Potential, 2)));
-            float d = (float) Math.pow((pH4Potential + pH7Potential + pH10Potential), 2);
+            float a = 3 * ((potential1 * pH1) + (potential2 * pH2) + (potential3 * pH3));
+            float b = (potential1 + potential2 + potential3) * (pH1 + pH2 + pH3);
+            float c = (float) (3 * (Math.pow(potential1, 2) + Math.pow(potential2, 2) + Math.pow(potential3, 2)));
+            float d = (float) Math.pow((potential1 + potential2 + potential3), 2);
 
             slope = (a - b) / (c - d);
 
-            float e = 4 + 7 + 10;
-            float f = slope * (pH4Potential + pH7Potential + pH10Potential);
+            float e = pH1 + pH2 + pH3;
+            float f = slope * (potential1 + potential2 + potential3);
 
             intercept = (e - f) / 3;
 
