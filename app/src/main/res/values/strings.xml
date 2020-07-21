@@ -19,9 +19,9 @@
     <string name="welcome_info_text">Welcome to the chemical sensing application.\nPress the button to scan for chemical sensing devices.</string>
     <string name="calibrate_sensor">Calibrate Sensor</string>
     <string name="calibration_info">Enter the potential (in mV) corresponding to each pH value. Click calibrate to calculate your new linear regression formula.</string>
-    <string name="ph_4">pH 4</string>
-    <string name="ph_7">pH 7</string>
-    <string name="ph_10">pH 10</string>
+    <string name="ph_4">pH value 1</string>
+    <string name="ph_7">pH value 2</string>
+    <string name="ph_10">pH value 3</string>
     <string name="calibrate">Calibrate</string>
     <string name="ready_to_calibrate">Ready to calibrate</string>
     <string name="temp_calibration_info">Enter the temperature (in °C) and resistance (in kΩ) and click calibrate to get your new linear regression formula.</string>
@@ -35,4 +35,7 @@
     <string name="resistance_4">Resistance 4</string>
     <string name="temp_5">Temp 5</string>
     <string name="resistance_5">Resistance 5</string>
+    <string name="potential_value_1">Potential value 1</string>
+    <string name="potential_value_2">Potential value 2</string>
+    <string name="potential_value_3">Potential value 3</string>
 </resources>
