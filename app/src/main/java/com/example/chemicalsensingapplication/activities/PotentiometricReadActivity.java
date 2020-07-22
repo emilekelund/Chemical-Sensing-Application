@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
@@ -69,6 +70,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
     private ToggleButton mSaveDataButton;
+    private ToggleButton mPauseDataButton;
     private static float slope = 0;
     private static float intercept = 0;
 
@@ -84,6 +86,21 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private Thread thread;
     private boolean plotData = true;
 
+    private long timeSinceSamplingStart = 0;
+
+    private final CountDownTimer mCountDownTimer = new
+            CountDownTimer(86400000, 50) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timeSinceSamplingStart = 86400000 - millisUntilFinished;
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            };
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +112,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
         mSaveDataButton = findViewById(R.id.toggleButton);
+        mPauseDataButton = findViewById(R.id.pause_button);
 
         // SETTING UP THE TOOLBAR
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -118,11 +136,14 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                 if (isChecked) {
                     // Button is checked, create a new file and start the timer
                     dataSample = createFiles();
+                    mCountDownTimer.start();
                 } else {
                     try {
                         // Button is unchecked, close the file
                         closeFiles(dataSample);
                         MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
+                        mCountDownTimer.cancel();
+                        timeSinceSamplingStart = 0;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -386,8 +407,9 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                                 plotData = false;
                             }
 
-                            if (mSaveDataButton.isChecked()) {
+                            if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
                                 try {
+                                    dataSample.write((timeSinceSamplingStart + ",").getBytes());
                                     dataSample.write((potential + ",").getBytes());
                                     dataSample.write((pH + "\n").getBytes());
                                 } catch (IOException e) {

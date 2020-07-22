@@ -38,4 +38,6 @@
     <string name="potential_value_1">Potential value 1</string>
     <string name="potential_value_2">Potential value 2</string>
     <string name="potential_value_3">Potential value 3</string>
+    <string name="pause_data_saving">Pause data saving</string>
+    <string name="continue_data_saving">Continue data saving</string>
 </resources>
