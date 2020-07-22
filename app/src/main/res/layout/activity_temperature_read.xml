@@ -112,7 +112,7 @@
 
     <ToggleButton
         android:id="@+id/toggleButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -120,20 +120,33 @@
         android:textOff="@string/start_sampling"
         android:textOn="@string/stop_sampling"
         app:layout_constraintBottom_toTopOf="@+id/temperatureChart"
-        app:layout_constraintEnd_toStartOf="@+id/calibrate_sensor"
+        app:layout_constraintEnd_toStartOf="@+id/pause_button"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/calibrate_sensor"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:onClick="startTempCalibrationActivity"
         android:text="@string/calibrate_sensor"
         app:layout_constraintBottom_toTopOf="@+id/temperatureChart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/toggleButton"
-        android:onClick="startTempCalibrationActivity"/>
+        app:layout_constraintStart_toEndOf="@+id/pause_button" />
+
+    <ToggleButton
+        android:id="@+id/pause_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:textOff="@string/pause_data_saving"
+        android:textOn="@string/continue_data_saving"
+        app:layout_constraintBottom_toTopOf="@+id/temperatureChart"
+        app:layout_constraintEnd_toStartOf="@+id/calibrate_sensor"
+        app:layout_constraintStart_toEndOf="@+id/toggleButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

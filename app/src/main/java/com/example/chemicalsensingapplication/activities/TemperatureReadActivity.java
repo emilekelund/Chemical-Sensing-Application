@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
@@ -73,6 +74,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private static float intercept = 0;
 
     private ToggleButton mSaveDataButton;
+    private ToggleButton mPauseButton;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
@@ -82,6 +84,21 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private LineChart mChart;
     private Thread thread;
     private boolean plotData = true;
+
+    private long timeSinceSamplingStart = 0;
+
+    private final CountDownTimer mCountDownTimer = new
+            CountDownTimer(86400000, 50) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timeSinceSamplingStart = 86400000 - millisUntilFinished;
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            };
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -95,6 +112,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
         mSaveDataButton = findViewById(R.id.toggleButton);
+        mPauseButton = findViewById(R.id.pause_button);
 
         // SETTING UP THE TOOLBAR
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -118,11 +136,14 @@ public class TemperatureReadActivity extends AppCompatActivity {
                 if (isChecked) {
                     // Button is checked, create a new file and start the timer
                     dataSample = createFiles();
+                    mCountDownTimer.start();
                 } else {
                     try {
                         // Button is unchecked, close the file
                         closeFiles(dataSample);
                         MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
+                        mCountDownTimer.cancel();
+                        timeSinceSamplingStart = 0;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -379,9 +400,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
                             double temperature;
                             double ewmaResistance;
                             ewmaResistance = ewmaFilter.average(resistance);
-                            //Log.i(TAG, "EWMA: " + ((double) Math.round((ewmaResistance * (1 * Math.pow(10, -3))) * 10d) / 10d));
                             temperature = resistanceToTemp(ewmaResistance);
-                            //Log.i(TAG, "Temp: " + temperature);
                             mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1 * Math.pow(10, -3))))); // Display in kiloOhm
                             mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 
@@ -390,8 +409,9 @@ public class TemperatureReadActivity extends AppCompatActivity {
                                 plotData = false;
                             }
 
-                            if (mSaveDataButton.isChecked()) {
+                            if (mSaveDataButton.isChecked() && !mPauseButton.isChecked()) {
                                 try {
+                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
                                     dataSample.write((resistance + ",").getBytes());
                                     dataSample.write((temperature + "\n").getBytes());
                                 } catch (IOException e) {
