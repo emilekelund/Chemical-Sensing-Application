@@ -74,7 +74,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private static float slope = 0;
     private static float intercept = 0;
 
-    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.4);
+    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.5);
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
@@ -397,8 +397,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                             float potential = (float) (rawPotential * MULTIPLIER);
                             float ewmaPotential = (float) ewmaFilter.average(potential);
                             float pH = potentialTo_pH(ewmaPotential);
-                            Log.i(TAG, "Potential: " + potential);
-                            Log.i(TAG, "pH: " + pH);
                             mPotentialView.setText(String.format("%.2f mV", ewmaPotential));
                             m_pHView.setText(String.format("pH %.1f", pH));
 
@@ -409,8 +407,8 @@ public class PotentiometricReadActivity extends AppCompatActivity {
 
                             if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
                                 try {
-                                    dataSample.write((timeSinceSamplingStart + ",").getBytes());
-                                    dataSample.write((potential + ",").getBytes());
+                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
+                                    dataSample.write((ewmaPotential + ",").getBytes());
                                     dataSample.write((pH + "\n").getBytes());
                                 } catch (IOException e) {
                                     e.printStackTrace();
