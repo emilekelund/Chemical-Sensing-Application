@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_SERVICE;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_SERVICE;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.TEMPERATURE_SERVICE;
 
@@ -72,9 +74,13 @@ public class ScanActivity extends AppCompatActivity {
         ScanFilter potentiometricServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
                 .build();
+        ScanFilter multiChannelServiceFilter = new ScanFilter.Builder()
+                .setServiceUuid(new ParcelUuid(MULTICHANNEL_SERVICE))
+                .build();
         CHEMICAL_SENSING_SCAN_FILTER = new ArrayList<>();
         CHEMICAL_SENSING_SCAN_FILTER.add(temperatureServiceFilter);
         CHEMICAL_SENSING_SCAN_FILTER.add(potentiometricServiceFilter);
+        CHEMICAL_SENSING_SCAN_FILTER.add(multiChannelServiceFilter);
         SCAN_SETTINGS = new ScanSettings.Builder()
                 .setScanMode(CALLBACK_TYPE_ALL_MATCHES).build();
     }
@@ -256,6 +262,8 @@ public class ScanActivity extends AppCompatActivity {
             Intent intent = new Intent(ScanActivity.this, PotentiometricReadActivity.class);
             intent.putExtra(SELECTED_DEVICE, selectedDevice);
             startActivity(intent);
+        } else if (selectedDevice.getName().contains("MultiChannel")) {
+            // TODO: SEND INTENT TO MULTICHANNEL ACTIVITY
         }
     }
 
