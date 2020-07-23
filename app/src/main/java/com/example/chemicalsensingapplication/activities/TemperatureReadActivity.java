@@ -137,6 +137,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
                     // Button is checked, create a new file and start the timer
                     dataSample = createFiles();
                     mCountDownTimer.start();
+                    MsgUtils.showToast("Data saving started", getApplicationContext());
                 } else {
                     try {
                         // Button is unchecked, close the file
