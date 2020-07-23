@@ -27,18 +27,27 @@ public class GattActions {
     public final static String POTENTIOMETRIC_DATA =
             "com.example.chemicalsensingapplication.services.POTENTIOMETRIC_DATA";
 
+    /**
+     * A flag for MultiChannel data in intent (via intent.putExtra)
+     */
+    public final static String MULTICHANNEL_DATA =
+            "com.example.chemicalsensingapplication.services.MULTICHANNEL_DATA";
+
 
     /**
      * Events corresponding to Gatt status/events
      */
     public enum Event {
         GATT_CONNECTED("Connected"),
+
         GATT_DISCONNECTED("Disconnected"),
         GATT_SERVICES_DISCOVERED("Services discovered"),
         TEMPERATURE_SERVICE_DISCOVERED("Temperature Service"),
         TEMPERATURE_SERVICE_NOT_AVAILABLE("Temperature service unavailable"),
         POTENTIOMETRIC_SERVICE_DISCOVERED("Potentiometric service"),
         POTENTIOMETRIC_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
+        MULTICHANNEL_SERVICE_DISCOVERED("Potentiometric service"),
+        MULTICHANNEL_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
         DATA_AVAILABLE("Data available");
 
         @Override
