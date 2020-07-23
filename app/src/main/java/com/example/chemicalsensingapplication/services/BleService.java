@@ -20,9 +20,12 @@ import com.example.chemicalsensingapplication.utilities.BitConverter;
 
 import java.util.List;
 
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_MEASUREMENT;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_SERVICE;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.Event;
+import static com.example.chemicalsensingapplication.services.GattActions.MULTICHANNEL_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
@@ -39,6 +42,7 @@ public class BleService extends Service {
 
     private BluetoothGattService mBleTemperatureService = null;
     private BluetoothGattService mBlePotentiometricService = null;
+    private BluetoothGattService mMultiChannelService = null;
 
     // Callback method for the BluetoothGatt
     // From https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service with modifications
@@ -68,9 +72,10 @@ public class BleService extends Service {
                 broadcastChemicalSensingUpdate(Event.GATT_SERVICES_DISCOVERED);
                 logServices(gatt); // debug
 
-                // get the temperature service
+                // get the relevant service
                 mBleTemperatureService = gatt.getService(TEMPERATURE_SERVICE);
                 mBlePotentiometricService = gatt.getService(POTENTIOMETRIC_SERVICE);
+                mMultiChannelService = gatt.getService(MULTICHANNEL_SERVICE);
 
                 if (mBleTemperatureService != null) {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
@@ -94,9 +99,20 @@ public class BleService extends Service {
                             potentiometricData, true);
                     Log.i(TAG, "setCharacteristicNotification: " + result);
 
+                } else if (mMultiChannelService != null) {
+                    broadcastChemicalSensingUpdate(Event.MULTICHANNEL_SERVICE_DISCOVERED);
+                    logCharacteristics(mMultiChannelService);
+
+                    // Enable notifications on the multichannel measurements
+                    BluetoothGattCharacteristic multiChannelData =
+                            mMultiChannelService.getCharacteristic(MULTICHANNEL_MEASUREMENT);
+                    boolean result = setCharacteristicNotification(
+                            multiChannelData, true);
+                    Log.i(TAG, "setCharacteristicNotification" + result);
+
                 } else {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_NOT_AVAILABLE);
-                    Log.i(TAG, "Temperature service not available");
+                    Log.i(TAG, "No relevant service not available");
                 }
             }
         }
@@ -120,6 +136,15 @@ public class BleService extends Service {
 
                 double potential = BitConverter.bytesToDouble(rawData);
                 broadcastPotentiometricUpdate(potential);
+            } else if (MULTICHANNEL_MEASUREMENT.equals(characteristic.getUuid())) {
+                // Copy the received byte array so we have a threadsafe copy
+                byte[] rawData = new byte[characteristic.getValue().length];
+                System.arraycopy(characteristic.getValue(), 0, rawData, 0,
+                        characteristic.getValue().length);
+
+                double[] multiChannelMeasurements = BitConverter.bytesToDoubleArr(rawData);
+
+                broadcastMultiChannelUpdate(multiChannelMeasurements);
             }
         }
 
@@ -247,6 +272,13 @@ public class BleService extends Service {
         final Intent intent = new Intent(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
         intent.putExtra(POTENTIOMETRIC_DATA, potential);
+        sendBroadcast(intent);
+    }
+
+    private void broadcastMultiChannelUpdate (final double[] multiChannelData) {
+        final Intent intent = new Intent(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
+        intent.putExtra(EVENT, Event.DATA_AVAILABLE);
+        intent.putExtra(MULTICHANNEL_DATA, multiChannelData);
         sendBroadcast(intent);
     }
 
