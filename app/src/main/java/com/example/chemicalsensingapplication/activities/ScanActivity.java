@@ -69,7 +69,6 @@ public class ScanActivity extends AppCompatActivity {
     static {
         ScanFilter temperatureServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(TEMPERATURE_SERVICE))
-                //.setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
                 .build();
         ScanFilter potentiometricServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(POTENTIOMETRIC_SERVICE))
