@@ -40,10 +40,6 @@ public class BleService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
 
-    private BluetoothGattService mBleTemperatureService = null;
-    private BluetoothGattService mBlePotentiometricService = null;
-    private BluetoothGattService mMultiChannelService = null;
-
     // Callback method for the BluetoothGatt
     // From https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service with modifications
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -73,9 +69,9 @@ public class BleService extends Service {
                 logServices(gatt); // debug
 
                 // get the relevant service
-                mBleTemperatureService = gatt.getService(TEMPERATURE_SERVICE);
-                mBlePotentiometricService = gatt.getService(POTENTIOMETRIC_SERVICE);
-                mMultiChannelService = gatt.getService(MULTICHANNEL_SERVICE);
+                BluetoothGattService mBleTemperatureService = gatt.getService(TEMPERATURE_SERVICE);
+                BluetoothGattService mBlePotentiometricService = gatt.getService(POTENTIOMETRIC_SERVICE);
+                BluetoothGattService mMultiChannelService = gatt.getService(MULTICHANNEL_SERVICE);
 
                 if (mBleTemperatureService != null) {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
