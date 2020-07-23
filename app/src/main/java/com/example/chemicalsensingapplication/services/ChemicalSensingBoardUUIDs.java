@@ -17,10 +17,10 @@ public class ChemicalSensingBoardUUIDs {
             UUID.fromString("0ee9bffe-af10-433b-b396-af3aecda5508");
 
     public static UUID MULTICHANNEL_SERVICE =
-            UUID.fromString("32738145-263f-459c-b375-466d7a0f64f7");
+            UUID.fromString("32733bcf-263f-459c-b375-466d7a0f64f7");
 
     public static UUID MULTICHANNEL_MEASUREMENT =
-            UUID.fromString("3273cb56-263f-459c-b375-466d7a0f64f7");
+            UUID.fromString("3273bf1e-263f-459c-b375-466d7a0f64f7");
 
 
     // UUID for the client characteristic which is necessary for notifications
