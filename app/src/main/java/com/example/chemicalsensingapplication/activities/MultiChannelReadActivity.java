@@ -64,6 +64,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     private TextView we5;
     private TextView we6;
     private TextView we7;
+    private TextView noOfChannels;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
@@ -98,6 +99,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         we5 = findViewById(R.id.we5_value);
         we6 = findViewById(R.id.we6_value);
         we7 = findViewById(R.id.we7_value);
+        noOfChannels = findViewById(R.id.numberofchannels);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
         mSaveDataButton = findViewById(R.id.savedata_toggle);
@@ -158,7 +160,6 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
         isStoragePermissionGranted(); // The user needs to approve the file storing
-
 
     }
 
@@ -335,5 +336,9 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     }
 
     public void setChannels(View view) {
+        int channels;
+        boolean write;
+        channels = Integer.parseInt(noOfChannels.getText().toString());
+
     }
 }

@@ -22,7 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_MEASUREMENT;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_NO_OF_ACTIVE_CHANNELS;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_SERVICE;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_SERVICE;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.Event;
@@ -31,7 +33,6 @@ import static com.example.chemicalsensingapplication.services.GattActions.POTENT
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_MEASUREMENT;
-import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_SERVICE;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.TEMPERATURE_MEASUREMENT;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.TEMPERATURE_SERVICE;
 
@@ -40,6 +41,12 @@ public class BleService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
+
+    private BluetoothGattService mBleTemperatureService = null;
+    private BluetoothGattService mBlePotentiometricService = null;
+    private BluetoothGattService mBleMultiChannelService = null;
+
+    private boolean isMultiChannel = false;
 
     // Callback method for the BluetoothGatt
     // From https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service with modifications
@@ -70,9 +77,9 @@ public class BleService extends Service {
                 logServices(gatt); // debug
 
                 // get the relevant service
-                BluetoothGattService mBleTemperatureService = gatt.getService(TEMPERATURE_SERVICE);
-                BluetoothGattService mBlePotentiometricService = gatt.getService(POTENTIOMETRIC_SERVICE);
-                BluetoothGattService mMultiChannelService = gatt.getService(MULTICHANNEL_SERVICE);
+                mBleTemperatureService = gatt.getService(TEMPERATURE_SERVICE);
+                mBlePotentiometricService = gatt.getService(POTENTIOMETRIC_SERVICE);
+                mBleMultiChannelService = gatt.getService(MULTICHANNEL_SERVICE);
 
                 if (mBleTemperatureService != null) {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
@@ -96,20 +103,22 @@ public class BleService extends Service {
                             potentiometricData, true);
                     Log.i(TAG, "setCharacteristicNotification: " + result);
 
-                } else if (mMultiChannelService != null) {
+                } else if (mBleMultiChannelService != null) {
                     broadcastChemicalSensingUpdate(Event.MULTICHANNEL_SERVICE_DISCOVERED);
-                    logCharacteristics(mMultiChannelService);
+                    logCharacteristics(mBleMultiChannelService);
 
                     // Enable notifications on the multichannel measurements
                     BluetoothGattCharacteristic multiChannelData =
-                            mMultiChannelService.getCharacteristic(MULTICHANNEL_MEASUREMENT);
+                            mBleMultiChannelService.getCharacteristic(MULTICHANNEL_MEASUREMENT);
                     boolean result = setCharacteristicNotification(
                             multiChannelData, true);
                     Log.i(TAG, "setCharacteristicNotification" + result);
 
+                    isMultiChannel = true;
+
                 } else {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_NOT_AVAILABLE);
-                    Log.i(TAG, "No relevant service not available");
+                    Log.i(TAG, "No relevant service available");
                 }
             }
         }
@@ -138,13 +147,22 @@ public class BleService extends Service {
                 byte[] rawData = new byte[characteristic.getValue().length];
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
-                Log.i(TAG, "RawData: " + Arrays.toString(rawData));
 
                 int[] multiChannelMeasurements = BitConverter.bytesToDoubleArr(rawData);
 
-                Log.i(TAG, "Shifted values" + Arrays.toString(multiChannelMeasurements));
 
                 broadcastMultiChannelUpdate(multiChannelMeasurements);
+            }
+        }
+
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            super.onDescriptorWrite(gatt, descriptor, status);
+            // Implement a callback for descriptor write. When the descriptor is written to
+            // and the gatt service is ready to receive commands again we set the measurement interval
+            if (isMultiChannel) {
+                boolean setChannels = setNoOfChannels(7);
+                Log.i(TAG, "changeMeasurementInterval: " + setChannels);
             }
         }
 
@@ -247,6 +265,19 @@ public class BleService extends Service {
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
         return result;
+    }
+
+    public boolean setNoOfChannels (int channels) {
+        if (mBluetoothAdapter == null && mBluetoothGatt == null) {
+            Log.i(TAG, "BluetoothAdapter not initialized");
+            return false;
+        }
+        BluetoothGattCharacteristic noOfChannels =
+                mBleMultiChannelService.getCharacteristic(MULTICHANNEL_NO_OF_ACTIVE_CHANNELS);
+        boolean setVal = noOfChannels.setValue(channels, BluetoothGattCharacteristic.FORMAT_UINT32,0);
+        Log.i(TAG,"SetValue: " + setVal);
+
+        return mBluetoothGatt.writeCharacteristic(noOfChannels);
     }
 
     /*
