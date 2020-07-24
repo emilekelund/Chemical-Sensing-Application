@@ -48,7 +48,6 @@ import static com.example.chemicalsensingapplication.services.GattActions.POTENT
 
 public class MultiChannelReadActivity extends AppCompatActivity {
     private static final String TAG = MultiChannelReadActivity.class.getSimpleName();
-    public static String SELECTED_DEVICE = "Selected device";
 
     private BluetoothDevice mSelectedDevice = null;
     private String mDeviceAddress;
@@ -57,14 +56,9 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     private TextView mStatusView;
     private ToggleButton mSaveDataButton;
     private ToggleButton mPauseDataButton;
-    private TextView we1;
-    private TextView we2;
-    private TextView we3;
-    private TextView we4;
-    private TextView we5;
-    private TextView we6;
-    private TextView we7;
+    private TextView[] wePotentials = new TextView[7];
     private TextView noOfChannels;
+    private static int activeChannels = 1;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
@@ -92,13 +86,13 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multichannel_read);
 
-        we1 = findViewById(R.id.we1_value);
-        we2 = findViewById(R.id.we2_value);
-        we3 = findViewById(R.id.we3_value);
-        we4 = findViewById(R.id.we4_value);
-        we5 = findViewById(R.id.we5_value);
-        we6 = findViewById(R.id.we6_value);
-        we7 = findViewById(R.id.we7_value);
+        wePotentials[0] = findViewById(R.id.we1_value);
+        wePotentials[1] = findViewById(R.id.we2_value);
+        wePotentials[2] = findViewById(R.id.we3_value);
+        wePotentials[3] = findViewById(R.id.we4_value);
+        wePotentials[4] = findViewById(R.id.we5_value);
+        wePotentials[5] = findViewById(R.id.we6_value);
+        wePotentials[6] = findViewById(R.id.we7_value);
         noOfChannels = findViewById(R.id.numberofchannels);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
@@ -227,13 +221,9 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                 if (event != null) {
                     switch (event) {
                         case GATT_CONNECTED:
-                            we1.setText("-");
-                            we2.setText("-");
-                            we3.setText("-");
-                            we4.setText("-");
-                            we5.setText("-");
-                            we6.setText("-");
-                            we7.setText("-");
+                            for (TextView wePotential : wePotentials) {
+                                wePotential.setText("-");
+                            }
                             break;
                         case GATT_DISCONNECTED:
                             mStatusView.setText(event.toString());
@@ -242,6 +232,9 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                             break;
                         case MULTICHANNEL_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
+                            for (TextView wePotential : wePotentials) {
+                                wePotential.setText(R.string.not_active);
+                            }
                             break;
                         case DATA_AVAILABLE:
                             final int[] rawPotentials = intent.getIntArrayExtra(MULTICHANNEL_DATA);
@@ -252,13 +245,9 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                                 potentials[i] = rawPotentials[i] * MULTIPLIER;
                             }
 
-                            we1.setText(String.format("%.1fmV", potentials[0]));
-                            we2.setText(String.format("%.1fmV", potentials[1]));
-                            we3.setText(String.format("%.1fmV", potentials[2]));
-                            we4.setText(String.format("%.1fmV", potentials[3]));
-                            we5.setText(String.format("%.1fmV", potentials[4]));
-                            we6.setText(String.format("%.1fmV", potentials[5]));
-                            we7.setText(String.format("%.1fmV", potentials[6]));
+                            for (int i = 0; i < activeChannels; i++) {
+                                wePotentials[i].setText(String.format("%.1fmV", potentials[i]));
+                            }
 
                             break;
                         case MULTICHANNEL_SERVICE_NOT_AVAILABLE:
@@ -336,9 +325,21 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     }
 
     public void setChannels(View view) {
-        int channels;
-        boolean write;
-        channels = Integer.parseInt(noOfChannels.getText().toString());
+        int fromTextBox;
+        fromTextBox = Integer.parseInt(noOfChannels.getText().toString());
+        Log.i(TAG, "ActiveChannels: " + activeChannels);
+        if (fromTextBox < 1 || fromTextBox > 7) {
+            MsgUtils.showToast("Select between 1-7 channels.", this);
+        } else {
+            activeChannels = fromTextBox;
+            final Intent intent = new Intent(this, BleService.class);
+            intent.putExtra("ActiveChannels", activeChannels);
+            this.startService(intent);
+            for (int i = activeChannels; i < 7; i++) {
+                wePotentials[i].setText(R.string.not_active);
+            }
+        }
+
 
     }
 }

@@ -10,8 +10,10 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -41,12 +43,25 @@ public class BleService extends Service {
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
+    private int activeChannels = 1;
 
     private BluetoothGattService mBleTemperatureService = null;
     private BluetoothGattService mBlePotentiometricService = null;
     private BluetoothGattService mBleMultiChannelService = null;
 
     private boolean isMultiChannel = false;
+
+    public int onStartCommand(Intent intent, int flags, int noOfChannels) {
+
+        activeChannels = intent.getIntExtra("ActiveChannels", 0);
+
+        Log.i(TAG, "ActiveChannels: " + activeChannels);
+
+        setNoOfChannels(activeChannels);
+
+        return START_STICKY;
+
+    }
 
     // Callback method for the BluetoothGatt
     // From https://gits-15.sys.kth.se/anderslm/Ble-Gatt-with-Service with modifications
@@ -161,7 +176,7 @@ public class BleService extends Service {
             // Implement a callback for descriptor write. When the descriptor is written to
             // and the gatt service is ready to receive commands again we set the measurement interval
             if (isMultiChannel) {
-                boolean setChannels = setNoOfChannels(7);
+                boolean setChannels = setNoOfChannels(activeChannels);
                 Log.i(TAG, "changeMeasurementInterval: " + setChannels);
             }
         }
