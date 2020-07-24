@@ -203,12 +203,12 @@
         android:layout_marginEnd="32dp"
         android:textOff="@string/start_sampling"
         android:textOn="@string/stop_sampling"
-        app:layout_constraintBottom_toTopOf="@+id/pause_data"
+        app:layout_constraintBottom_toTopOf="@+id/pause_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/we1_value" />
 
     <ToggleButton
-        android:id="@+id/pause_data"
+        android:id="@+id/pause_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -221,48 +221,42 @@
     <View
         android:id="@+id/we1_divider"
         style="@style/Divider"
-        android:layout_width="138dp"
-        app:layout_constraintEnd_toEndOf="@+id/we1_value"
+        android:layout_width="122dp"
         app:layout_constraintStart_toStartOf="@+id/we1_text"
         app:layout_constraintTop_toBottomOf="@+id/we1_text" />
 
     <View
         android:id="@+id/we2_divider"
         style="@style/Divider"
-        android:layout_width="138dp"
-        app:layout_constraintEnd_toEndOf="@+id/we2_value"
+        android:layout_width="122dp"
         app:layout_constraintStart_toStartOf="@+id/we2_text"
         app:layout_constraintTop_toBottomOf="@+id/we2_text" />
 
     <View
         android:id="@+id/we3_divider"
         style="@style/Divider"
-        android:layout_width="138dp"
-        app:layout_constraintEnd_toEndOf="@+id/we3_value"
+        android:layout_width="122dp"
         app:layout_constraintStart_toStartOf="@+id/we3_text"
         app:layout_constraintTop_toBottomOf="@+id/we3_text" />
 
     <View
         android:id="@+id/we4_divider"
         style="@style/Divider"
-        android:layout_width="138dp"
-        app:layout_constraintEnd_toEndOf="@+id/we4_value"
+        android:layout_width="122dp"
         app:layout_constraintStart_toStartOf="@+id/we4_text"
         app:layout_constraintTop_toBottomOf="@+id/we4_text" />
 
     <View
         android:id="@+id/we5_divider"
         style="@style/Divider"
-        android:layout_width="138dp"
-        app:layout_constraintEnd_toEndOf="@+id/we5_value"
+        android:layout_width="122dp"
         app:layout_constraintStart_toStartOf="@+id/we5_text"
         app:layout_constraintTop_toBottomOf="@+id/we5_text" />
 
     <View
         android:id="@+id/we6_divider"
         style="@style/Divider"
-        android:layout_width="138dp"
-        app:layout_constraintEnd_toEndOf="@+id/we6_value"
+        android:layout_width="122dp"
         app:layout_constraintStart_toStartOf="@+id/we6_text"
         app:layout_constraintTop_toBottomOf="@+id/we6_text" />
 
