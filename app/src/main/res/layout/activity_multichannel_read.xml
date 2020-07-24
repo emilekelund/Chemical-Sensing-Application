@@ -207,17 +207,19 @@
         android:id="@+id/savedata_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
         android:layout_marginEnd="32dp"
         android:textOff="@string/start_sampling"
         android:textOn="@string/stop_sampling"
         app:layout_constraintBottom_toTopOf="@+id/pause_toggle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/we1_value" />
+        app:layout_constraintTop_toBottomOf="@+id/numberofchannels" />
 
     <ToggleButton
         android:id="@+id/pause_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
         android:layout_marginEnd="32dp"
         android:textOff="@string/pause_data_saving"
         android:textOn="@string/continue_data_saving"
@@ -272,5 +274,29 @@
         app:layout_constraintEnd_toEndOf="@+id/we7_value"
         app:layout_constraintStart_toStartOf="@+id/we7_text"
         app:layout_constraintTop_toBottomOf="@+id/we7_text" />
+
+    <EditText
+        android:id="@+id/numberofchannels"
+        android:layout_width="97dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/no_of_channels"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/savedata_toggle"
+        app:layout_constraintEnd_toStartOf="@+id/setchannels"
+        app:layout_constraintTop_toTopOf="@+id/we1_value"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/setchannels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="@string/set"
+        app:layout_constraintBottom_toBottomOf="@+id/numberofchannels"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/numberofchannels"
+        android:onClick="setChannels"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

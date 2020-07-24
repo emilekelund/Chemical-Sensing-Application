@@ -49,4 +49,6 @@
     <string name="we6">WE6:</string>
     <string name="we7">WE7:</string>
     <string name="not_active">Not active</string>
+    <string name="no_of_channels"># channels</string>
+    <string name="set">Set</string>
 </resources>

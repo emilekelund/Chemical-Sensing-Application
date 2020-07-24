@@ -333,4 +333,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
             return true;
         }
     }
+
+    public void setChannels(View view) {
+    }
 }
