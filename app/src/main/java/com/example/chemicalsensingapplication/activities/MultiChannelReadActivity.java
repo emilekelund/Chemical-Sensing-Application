@@ -58,7 +58,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     private ToggleButton mPauseDataButton;
     private TextView[] wePotentials = new TextView[7];
     private TextView noOfChannels;
-    private static int activeChannels = 1;
+    private static int activeChannels = 0;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
@@ -123,6 +123,11 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                     dataSample = createFiles();
                     mCountDownTimer.start();
                     MsgUtils.showToast("Data saving started", getApplicationContext());
+                    try {
+                        dataSample.write(("time[s],ch1,ch2,ch3,ch4,ch5,ch6,ch7\n").getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     try {
                         // Button is unchecked, close the file
@@ -249,6 +254,24 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                                 wePotentials[i].setText(String.format("%.1fmV", potentials[i]));
                             }
 
+                            if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
+                                try {
+                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
+                                    for (int i = 0; i < activeChannels; i++) {
+                                        dataSample.write(((float)potentials[i] + ",").getBytes());
+                                    }
+                                    for (int i = activeChannels; i < 7; i++) {
+                                        dataSample.write(("-").getBytes());
+                                        if (i < 6) {
+                                            dataSample.write((",").getBytes());
+                                        }
+                                    }
+                                    dataSample.write(("\n").getBytes());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
                             break;
                         case MULTICHANNEL_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
@@ -278,7 +301,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
             myDir.mkdirs();
         }
 
-        String potentiometric = "multiChannel_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
+        String potentiometric = "MultiChannel_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
 
         File potentiometricFile = new File(myDir, potentiometric);
 
@@ -339,7 +362,6 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                 wePotentials[i].setText(R.string.not_active);
             }
         }
-
 
     }
 }
