@@ -22,6 +22,9 @@ public class ChemicalSensingBoardUUIDs {
     public static UUID MULTICHANNEL_MEASUREMENT =
             UUID.fromString("3273bf1e-263f-459c-b375-466d7a0f64f7");
 
+    public static UUID MULTICHANNEL_NO_OF_ACTIVE_CHANNELS =
+            UUID.fromString("3273bef2-263f-459c-b375-466d7a0f64f7");
+
 
     // UUID for the client characteristic which is necessary for notifications
     public static final UUID CLIENT_CHARACTERISTIC_CONFIG =
