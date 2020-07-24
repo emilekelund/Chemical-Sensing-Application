@@ -1,6 +1,7 @@
 package com.example.chemicalsensingapplication.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -216,6 +217,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     A BroadcastReceiver handling various events fired by the Service, see GattActions.Event.
     */
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @SuppressLint("DefaultLocale")
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
@@ -241,21 +243,21 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                             mStatusView.setText(event.toString());
                             break;
                         case DATA_AVAILABLE:
-                            final double[] rawPotentials = intent.getDoubleArrayExtra(MULTICHANNEL_DATA);
+                            final int[] rawPotentials = intent.getIntArrayExtra(MULTICHANNEL_DATA);
                             assert rawPotentials != null;
                             double[] potentials = new double[rawPotentials.length];
 
                             for (int i = 0; i < potentials.length; i++) {
-                                potentials[i] = potentials[i] * MULTIPLIER;
+                                potentials[i] = rawPotentials[i] * MULTIPLIER;
                             }
 
-                            we1.setText(String.format("%.1fmV", potentials[1]));
-                            we2.setText(String.format("%.1fmV", potentials[2]));
-                            we3.setText(String.format("%.1fmV", potentials[3]));
-                            we4.setText(String.format("%.1fmV", potentials[4]));
-                            we5.setText(String.format("%.1fmV", potentials[5]));
-                            we6.setText(String.format("%.1fmV", potentials[6]));
-                            we7.setText(String.format("%.1fmV", potentials[7]));
+                            we1.setText(String.format("%.1fmV", potentials[0]));
+                            we2.setText(String.format("%.1fmV", potentials[1]));
+                            we3.setText(String.format("%.1fmV", potentials[2]));
+                            we4.setText(String.format("%.1fmV", potentials[3]));
+                            we5.setText(String.format("%.1fmV", potentials[4]));
+                            we6.setText(String.format("%.1fmV", potentials[5]));
+                            we7.setText(String.format("%.1fmV", potentials[6]));
 
                             break;
                         case MULTICHANNEL_SERVICE_NOT_AVAILABLE:

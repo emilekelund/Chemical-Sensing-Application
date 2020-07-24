@@ -46,8 +46,8 @@ public class GattActions {
         TEMPERATURE_SERVICE_NOT_AVAILABLE("Temperature service unavailable"),
         POTENTIOMETRIC_SERVICE_DISCOVERED("Potentiometric service"),
         POTENTIOMETRIC_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
-        MULTICHANNEL_SERVICE_DISCOVERED("Potentiometric service"),
-        MULTICHANNEL_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
+        MULTICHANNEL_SERVICE_DISCOVERED("MultiChannel service"),
+        MULTICHANNEL_SERVICE_NOT_AVAILABLE("MultiChannel service unavailable"),
         DATA_AVAILABLE("Data available");
 
         @Override

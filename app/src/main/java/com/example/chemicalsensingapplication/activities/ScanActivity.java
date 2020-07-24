@@ -262,7 +262,9 @@ public class ScanActivity extends AppCompatActivity {
             intent.putExtra(SELECTED_DEVICE, selectedDevice);
             startActivity(intent);
         } else if (selectedDevice.getName().contains("MultiChannel")) {
-            // TODO: SEND INTENT TO MULTICHANNEL ACTIVITY
+            Intent intent = new Intent(ScanActivity.this, MultiChannelReadActivity.class);
+            intent.putExtra(SELECTED_DEVICE, selectedDevice);
+            startActivity(intent);
         }
     }
 

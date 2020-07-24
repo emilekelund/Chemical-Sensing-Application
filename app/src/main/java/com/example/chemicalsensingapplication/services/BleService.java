@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.example.chemicalsensingapplication.utilities.BitConverter;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_MEASUREMENT;
@@ -137,8 +138,11 @@ public class BleService extends Service {
                 byte[] rawData = new byte[characteristic.getValue().length];
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
+                Log.i(TAG, "RawData: " + Arrays.toString(rawData));
 
-                double[] multiChannelMeasurements = BitConverter.bytesToDoubleArr(rawData);
+                int[] multiChannelMeasurements = BitConverter.bytesToDoubleArr(rawData);
+
+                Log.i(TAG, "Shifted values" + Arrays.toString(multiChannelMeasurements));
 
                 broadcastMultiChannelUpdate(multiChannelMeasurements);
             }
@@ -271,7 +275,7 @@ public class BleService extends Service {
         sendBroadcast(intent);
     }
 
-    private void broadcastMultiChannelUpdate (final double[] multiChannelData) {
+    private void broadcastMultiChannelUpdate (final int[] multiChannelData) {
         final Intent intent = new Intent(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
         intent.putExtra(MULTICHANNEL_DATA, multiChannelData);
