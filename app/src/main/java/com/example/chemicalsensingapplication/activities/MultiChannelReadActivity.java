@@ -42,6 +42,7 @@ import java.util.Objects;
 
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
+import static com.example.chemicalsensingapplication.services.GattActions.MULTICHANNEL_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 
 public class MultiChannelReadActivity extends AppCompatActivity {
@@ -223,16 +224,41 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                 if (event != null) {
                     switch (event) {
                         case GATT_CONNECTED:
+                            we1.setText("-");
+                            we2.setText("-");
+                            we3.setText("-");
+                            we4.setText("-");
+                            we5.setText("-");
+                            we6.setText("-");
+                            we7.setText("-");
+                            break;
                         case GATT_DISCONNECTED:
-
+                            mStatusView.setText(event.toString());
+                            break;
                         case GATT_SERVICES_DISCOVERED:
-                        case POTENTIOMETRIC_SERVICE_DISCOVERED:
+                            break;
+                        case MULTICHANNEL_SERVICE_DISCOVERED:
                             mStatusView.setText(event.toString());
                             break;
                         case DATA_AVAILABLE:
+                            final double[] rawPotentials = intent.getDoubleArrayExtra(MULTICHANNEL_DATA);
+                            assert rawPotentials != null;
+                            double[] potentials = new double[rawPotentials.length];
+
+                            for (int i = 0; i < potentials.length; i++) {
+                                potentials[i] = potentials[i] * MULTIPLIER;
+                            }
+
+                            we1.setText(String.format("%.1fmV", potentials[1]));
+                            we2.setText(String.format("%.1fmV", potentials[2]));
+                            we3.setText(String.format("%.1fmV", potentials[3]));
+                            we4.setText(String.format("%.1fmV", potentials[4]));
+                            we5.setText(String.format("%.1fmV", potentials[5]));
+                            we6.setText(String.format("%.1fmV", potentials[6]));
+                            we7.setText(String.format("%.1fmV", potentials[7]));
 
                             break;
-                        case POTENTIOMETRIC_SERVICE_NOT_AVAILABLE:
+                        case MULTICHANNEL_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
                             break;
                         default:
