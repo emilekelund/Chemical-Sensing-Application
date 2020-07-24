@@ -40,4 +40,12 @@
     <string name="potential_value_3">Potential value 3</string>
     <string name="pause_data_saving">Pause data saving</string>
     <string name="continue_data_saving">Continue data saving</string>
+    <string name="no_multichannel_board_connected">No multichannel board connected</string>
+    <string name="we1">WE1:</string>
+    <string name="we2">WE2:</string>
+    <string name="we3">WE3:</string>
+    <string name="we4">WE4:</string>
+    <string name="we5">WE5:</string>
+    <string name="we6">WE6:</string>
+    <string name="we7">WE7:</string>
 </resources>
