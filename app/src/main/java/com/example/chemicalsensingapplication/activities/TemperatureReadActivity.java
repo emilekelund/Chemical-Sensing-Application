@@ -165,7 +165,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
         }
 
         // Setup UI reference to the chart
-        mChart = findViewById(R.id.temperatureChart);
+        mChart = findViewById(R.id.multichannel_chart);
 
         // enable description text
         mChart.getDescription().setEnabled(false);

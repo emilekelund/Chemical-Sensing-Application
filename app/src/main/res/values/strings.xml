@@ -51,4 +51,5 @@
     <string name="not_active">Not active</string>
     <string name="no_of_channels"># channels</string>
     <string name="set">Set</string>
+    <string name="multichannel_y_axis_text">Potential [mV]</string>
 </resources>

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -31,6 +32,14 @@ import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
 import com.example.chemicalsensingapplication.services.GattActions;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,12 +67,17 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     private ToggleButton mPauseDataButton;
     private TextView[] wePotentials = new TextView[7];
     private TextView noOfChannels;
-    private static int activeChannels = 0;
+    private static int activeChannels = 1;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private static final float MULTIPLIER = 0.03125F;
+
+    private ILineDataSet set = null;
+    private LineChart mChart;
+    private Thread thread;
+    private boolean plotData = true;
 
     private long timeSinceSamplingStart = 0;
 
@@ -153,6 +167,64 @@ public class MultiChannelReadActivity extends AppCompatActivity {
             mDeviceAddress = mSelectedDevice.getAddress();
         }
 
+        // Setup UI reference to the chart
+        mChart = findViewById(R.id.multichannel_chart);
+
+        // enable description text
+        mChart.getDescription().setEnabled(false);
+
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setScaleEnabled(true);
+        mChart.setDrawGridBackground(false);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChart.setPinchZoom(true);
+
+        // set an alternative background color
+        mChart.setBackgroundColor(Color.WHITE);
+
+        LineData data = new LineData();
+        data.setValueTextColor(Color.BLACK);
+
+        // add empty data
+        mChart.setData(data);
+
+        // get the legend (only possible after setting data)
+        Legend l = mChart.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTextColor(Color.BLACK);
+
+        // X-axis setup
+        XAxis bottomAxis = mChart.getXAxis();
+        bottomAxis.setTextColor(Color.BLACK);
+        bottomAxis.setDrawGridLines(true);
+        bottomAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        bottomAxis.setAvoidFirstLastClipping(true);
+        bottomAxis.setEnabled(true);
+
+        // Y-axis setup
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setAxisMaximum(500f);
+        leftAxis.setAxisMinimum(-500f);
+        leftAxis.setDrawGridLines(true);
+        // Disable right Y-axis
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        mChart.getAxisLeft().setDrawGridLines(true);
+        mChart.getXAxis().setDrawGridLines(false);
+        mChart.setDrawBorders(false);
+
+        feedMultiple();
+
         // Bind to BleImuService
         // We use onResume or onStart to register a broadcastReceiver
         Intent gattServiceIntent = new Intent(this, BleService.class);
@@ -214,6 +286,77 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     };
 
     /*
+A method to add our pH entries to the chart
+ */
+    private void addEntry(double pH) {
+        LineData data = mChart.getData();
+
+
+        if (data != null) {
+            set = data.getDataSetByIndex(0);
+            // set.addEntry(.....); Can be called as well
+        }
+
+        if (set == null) {
+            set = createSet();
+            assert data != null;
+            data.addDataSet(set);
+        }
+
+        assert data != null;
+        data.addEntry(new Entry(set.getEntryCount(), (float) pH), 0);
+        data.notifyDataChanged();
+
+        // let the chart know it's data has changed
+        mChart.notifyDataSetChanged();
+
+        // limit the number of visible entries
+        mChart.setVisibleXRangeMaximum(50);
+        //mChart.setVisibleYRange(0,30, YAxis.AxisDependency.LEFT);
+
+        // move to the latest entry
+        //mChart.moveViewToX(data.getEntryCount());
+        mChart.moveViewTo(data.getEntryCount(), (float) pH, YAxis.AxisDependency.LEFT);
+    }
+
+    private LineDataSet createSet() {
+
+        LineDataSet set = new LineDataSet(null, "WE7");
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setLineWidth(3f);
+        set.setColor(Color.RED);
+        set.setHighlightEnabled(false);
+        set.setDrawValues(false);
+        set.setDrawCircles(true);
+        set.setCircleRadius(2f);
+        return set;
+    }
+
+    private void feedMultiple() {
+
+        if (thread != null) {
+            thread.interrupt();
+        }
+
+        thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    plotData = true;
+                    try {
+                        Thread.sleep(900);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        thread.start();
+    }
+
+    /*
     A BroadcastReceiver handling various events fired by the Service, see GattActions.Event.
     */
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
@@ -252,6 +395,11 @@ public class MultiChannelReadActivity extends AppCompatActivity {
 
                             for (int i = 0; i < activeChannels; i++) {
                                 wePotentials[i].setText(String.format("%.1fmV", potentials[i]));
+                            }
+
+                            if (plotData) {
+                                addEntry(potentials[6]);
+                                plotData = false;
                             }
 
                             if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
