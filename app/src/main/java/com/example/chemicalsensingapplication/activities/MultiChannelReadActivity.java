@@ -68,13 +68,14 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     private TextView[] wePotentials = new TextView[7];
     private TextView noOfChannels;
     private static int activeChannels = 1;
+    private static int entryCount = 0;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
     private static final float MULTIPLIER = 0.03125F;
 
-    private ILineDataSet set = null;
+    private ILineDataSet[] sets = new ILineDataSet[7];
     private LineChart mChart;
     private Thread thread;
     private boolean plotData = true;
@@ -259,6 +260,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         super.onDestroy();
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
+        thread.interrupt();
     }
 
     /*
@@ -286,50 +288,85 @@ public class MultiChannelReadActivity extends AppCompatActivity {
     };
 
     /*
-A method to add our pH entries to the chart
- */
-    private void addEntry(double pH) {
+    A method to add our pH entries to the chart
+    */
+    private void addEntry(double potential, int index) {
         LineData data = mChart.getData();
 
-
         if (data != null) {
-            set = data.getDataSetByIndex(0);
-            // set.addEntry(.....); Can be called as well
+            for (int i = 0; i < 7; i++) {
+                sets[i] = data.getDataSetByIndex(i);
+            }
         }
 
-        if (set == null) {
-            set = createSet();
-            assert data != null;
-            data.addDataSet(set);
+
+        if (sets[1] == null && sets[2] == null && sets[3] == null
+                && sets[4] == null && sets[5] == null && sets[6] == null) {
+            sets = createSets();
+            for (int i = 0; i < 7; i++) {
+                data.addDataSet(sets[i]);
+            }
+
         }
 
-        assert data != null;
-        data.addEntry(new Entry(set.getEntryCount(), (float) pH), 0);
-        data.notifyDataChanged();
+
+        data.addEntry(new Entry(entryCount, (float) potential), index);
 
         // let the chart know it's data has changed
         mChart.notifyDataSetChanged();
 
         // limit the number of visible entries
-        mChart.setVisibleXRangeMaximum(50);
+        mChart.setVisibleXRangeMaximum(30);
         //mChart.setVisibleYRange(0,30, YAxis.AxisDependency.LEFT);
 
         // move to the latest entry
         //mChart.moveViewToX(data.getEntryCount());
-        mChart.moveViewTo(data.getEntryCount(), (float) pH, YAxis.AxisDependency.LEFT);
+        mChart.moveViewTo(data.getEntryCount(), (float) potential, YAxis.AxisDependency.LEFT);
     }
 
-    private LineDataSet createSet() {
+    private LineDataSet[] createSets() {
 
-        LineDataSet set = new LineDataSet(null, "WE7");
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setLineWidth(3f);
-        set.setColor(Color.RED);
-        set.setHighlightEnabled(false);
-        set.setDrawValues(false);
-        set.setDrawCircles(true);
-        set.setCircleRadius(2f);
-        return set;
+        LineDataSet[] dataSets = new LineDataSet[7];
+        dataSets[0] = new LineDataSet(null, "WE1");
+        dataSets[1] = new LineDataSet(null, "WE2");
+        dataSets[2] = new LineDataSet(null, "WE3");
+        dataSets[3] = new LineDataSet(null, "WE4");
+        dataSets[4] = new LineDataSet(null, "WE5");
+        dataSets[5] = new LineDataSet(null, "WE6");
+        dataSets[6] = new LineDataSet(null, "WE7");
+
+        for (int i = 0; i < dataSets.length; i++) {
+            dataSets[i].setAxisDependency(YAxis.AxisDependency.LEFT);
+            dataSets[i].setHighlightEnabled(false);
+            dataSets[i].setDrawCircles(true);
+            dataSets[i].setDrawValues(false);
+            dataSets[i].setCircleRadius(2.5f);
+            dataSets[i].enableDashedLine(0, 1, 0);
+        }
+
+        dataSets[0].setColor(Color.RED);
+        dataSets[1].setColor(Color.BLACK);
+        dataSets[2].setColor(Color.BLUE);
+        dataSets[3].setColor(Color.MAGENTA);
+        dataSets[4].setColor(Color.GREEN);
+        dataSets[5].setColor(Color.YELLOW);
+        dataSets[6].setColor(Color.GRAY);
+        dataSets[0].setCircleColor(Color.RED);
+        dataSets[1].setCircleColor(Color.BLACK);
+        dataSets[2].setCircleColor(Color.BLUE);
+        dataSets[3].setCircleColor(Color.MAGENTA);
+        dataSets[4].setCircleColor(Color.GREEN);
+        dataSets[5].setCircleColor(Color.YELLOW);
+        dataSets[6].setCircleColor(Color.GRAY);
+        dataSets[0].setCircleHoleColor(Color.RED);
+        dataSets[1].setCircleHoleColor(Color.BLACK);
+        dataSets[2].setCircleHoleColor(Color.BLUE);
+        dataSets[3].setCircleHoleColor(Color.MAGENTA);
+        dataSets[4].setCircleHoleColor(Color.GREEN);
+        dataSets[5].setCircleHoleColor(Color.YELLOW);
+        dataSets[6].setCircleHoleColor(Color.GRAY);
+
+        return dataSets;
     }
 
     private void feedMultiple() {
@@ -398,15 +435,18 @@ A method to add our pH entries to the chart
                             }
 
                             if (plotData) {
-                                addEntry(potentials[6]);
+                                for (int i = 0; i < activeChannels; i++) {
+                                    addEntry(potentials[i], i);
+                                }
                                 plotData = false;
+                                entryCount++;
                             }
 
                             if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
                                 try {
-                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
+                                    dataSample.write(((float) timeSinceSamplingStart / 1000f + ",").getBytes());
                                     for (int i = 0; i < activeChannels; i++) {
-                                        dataSample.write(((float)potentials[i] + ",").getBytes());
+                                        dataSample.write(((float) potentials[i] + ",").getBytes());
                                     }
                                     for (int i = activeChannels; i < 7; i++) {
                                         dataSample.write(("-").getBytes());
@@ -490,7 +530,7 @@ A method to add our pH entries to the chart
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            Log.i(TAG,"Permission is granted");
+            Log.i(TAG, "Permission is granted");
             return true;
         }
     }
