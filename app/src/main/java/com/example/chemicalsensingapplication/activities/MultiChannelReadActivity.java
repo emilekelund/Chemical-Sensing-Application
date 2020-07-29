@@ -139,7 +139,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                     mCountDownTimer.start();
                     MsgUtils.showToast("Data saving started", getApplicationContext());
                     try {
-                        dataSample.write(("time[s],ch1,ch2,ch3,ch4,ch5,ch6,ch7\n").getBytes());
+                        dataSample.write(("Time[s],WE1,WE2,WE3,WE4,WE5,WE6,WE7\n").getBytes());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
