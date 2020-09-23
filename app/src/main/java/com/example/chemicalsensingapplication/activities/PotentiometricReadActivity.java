@@ -79,7 +79,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
-    private static final float MULTIPLIER = 0.0625F;
+    private static final float MULTIPLIER = 0.125F;
 
     private ILineDataSet set = null;
     private LineChart mChart;
