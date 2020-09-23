@@ -69,7 +69,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private TextView mStatusView;
     private String mDeviceAddress;
     private ILineDataSet set = null;
-    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.04);
     private static float slope = 0;
     private static float intercept = 0;
 
@@ -310,7 +309,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private void addEntry(double temperature) {
         LineData data = mChart.getData();
 
-
         if (data != null) {
             set = data.getDataSetByIndex(0);
             // set.addEntry(.....); Can be called as well
@@ -399,10 +397,8 @@ public class TemperatureReadActivity extends AppCompatActivity {
                         case DATA_AVAILABLE:
                             final double resistance = intent.getDoubleExtra(TEMPERATURE_DATA, 0);
                             double temperature;
-                            double ewmaResistance;
-                            ewmaResistance = ewmaFilter.average(resistance);
-                            temperature = resistanceToTemp(ewmaResistance);
-                            mResistanceView.setText(String.format("%.1fk\u2126", (ewmaResistance * (1 * Math.pow(10, -3))))); // Display in kiloOhm
+                            temperature = resistanceToTemp(resistance);
+                            mResistanceView.setText(String.format("%.1fk\u2126", (resistance * (1 * Math.pow(10, -3))))); // Display in kiloOhm
                             mTemperatureView.setText(String.format("%.1f\u00B0C", temperature));
 
                             if (plotData) {
