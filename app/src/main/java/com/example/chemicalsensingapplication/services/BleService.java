@@ -144,8 +144,10 @@ public class BleService extends Service {
             if (TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid())) {
                 // Copy the received byte array so we have a threadsafe copy
                 byte[] rawData = new byte[characteristic.getValue().length];
+
                 System.arraycopy(characteristic.getValue(), 0, rawData, 0,
                         characteristic.getValue().length);
+                Log.i("rawData: ", Arrays.toString(rawData));
 
                 double resistance = BitConverter.bytesToDouble(rawData);
                 broadcastResistanceUpdate(resistance);
