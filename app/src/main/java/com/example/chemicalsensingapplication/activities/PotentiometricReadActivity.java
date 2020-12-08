@@ -515,12 +515,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         }
     }
 
-    public void startCalibration(View view) {
-        Intent intent = new Intent(PotentiometricReadActivity.this, Calibrate_pH_Sensor.class);
-        intent.putExtra(SELECTED_DEVICE, mSelectedDevice);
-        startActivity(intent);
-    }
-
     public void readCalibrationData() throws FileNotFoundException {
         String root = Environment.getExternalStorageDirectory().toString() + "/Chemical_sensing_data/Calibrations";
         InputStream calibrationData = new FileInputStream(root + "/pH_calibrations.csv");
