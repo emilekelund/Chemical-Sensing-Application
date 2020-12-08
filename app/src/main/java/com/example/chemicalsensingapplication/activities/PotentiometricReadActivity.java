@@ -16,11 +16,14 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,12 +77,10 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private static float slope = 0;
     private static float intercept = 0;
 
-    private ExponentialMovingAverage ewmaFilter = new ExponentialMovingAverage(0.5);
-
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
     private FileOutputStream dataSample = null;
 
-    private static final float MULTIPLIER = 0.125F;
+    private static final float MULTIPLIER = 0.03125F; // 0.03125 mV per bit
 
     private ILineDataSet set = null;
     private LineChart mChart;
@@ -236,6 +237,26 @@ public class PotentiometricReadActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_settings_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.calibrate_sensor: {
+                Intent intent = new Intent(PotentiometricReadActivity.this, Calibrate_pH_Sensor.class);
+                intent.putExtra(SELECTED_DEVICE, mSelectedDevice);
+                startActivity(intent);
+                break;
+            }
+            // case blocks for other MenuItems (if any)
+        }
+        return true;
     }
 
     @Override
@@ -396,9 +417,8 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                         case DATA_AVAILABLE:
                             final double rawPotential = intent.getDoubleExtra(POTENTIOMETRIC_DATA, 0);
                             float potential = (float) (rawPotential * MULTIPLIER);
-                            float ewmaPotential = (float) ewmaFilter.average(potential);
-                            float pH = potentialTo_pH(ewmaPotential);
-                            mPotentialView.setText(String.format("%.2f mV", ewmaPotential));
+                            float pH = potentialTo_pH(potential);
+                            mPotentialView.setText(String.format("%.2f mV", potential));
                             m_pHView.setText(String.format("pH %.1f", pH));
 
                             if (plotData) {
@@ -409,7 +429,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                             if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
                                 try {
                                     dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
-                                    dataSample.write((ewmaPotential + ",").getBytes());
+                                    dataSample.write((potential + ",").getBytes());
                                     dataSample.write((pH + "\n").getBytes());
                                 } catch (IOException e) {
                                     e.printStackTrace();

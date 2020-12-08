@@ -167,7 +167,6 @@ public class BleService extends Service {
 
                 int[] multiChannelMeasurements = BitConverter.bytesToDoubleArr(rawData);
 
-
                 broadcastMultiChannelUpdate(multiChannelMeasurements);
             }
         }
@@ -179,7 +178,7 @@ public class BleService extends Service {
             // and the gatt service is ready to receive commands again we set the measurement interval
             if (isMultiChannel) {
                 boolean setChannels = setNoOfChannels(activeChannels);
-                Log.i(TAG, "changeMeasurementInterval: " + setChannels);
+                Log.i(TAG, "setNoOfChannels: " + setChannels);
             }
         }
 
