@@ -123,19 +123,6 @@
         app:layout_constraintEnd_toStartOf="@+id/pause_button"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/calibrate_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="startCalibration"
-        android:text="@string/calibrate_sensor"
-        app:layout_constraintBottom_toTopOf="@+id/pHChart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pause_button" />
-
     <ToggleButton
         android:id="@+id/pause_button"
         android:layout_width="0dp"
@@ -147,7 +134,7 @@
         android:textOff="@string/pause_data_saving"
         android:textOn="@string/continue_data_saving"
         app:layout_constraintBottom_toTopOf="@+id/pHChart"
-        app:layout_constraintEnd_toStartOf="@+id/calibrate_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/toggleButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
