@@ -33,7 +33,6 @@ import androidx.core.app.ActivityCompat;
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
 import com.example.chemicalsensingapplication.services.GattActions;
-import com.example.chemicalsensingapplication.utilities.ExponentialMovingAverage;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;

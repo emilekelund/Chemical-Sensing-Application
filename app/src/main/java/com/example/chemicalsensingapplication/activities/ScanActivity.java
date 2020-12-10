@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcel;
 import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.adapter.BtDeviceAdapter;
+import com.example.chemicalsensingapplication.utilities.MsgUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +99,8 @@ public class ScanActivity extends AppCompatActivity {
 
         //Setup of view and button
         mScanInfoView = findViewById(R.id.scan_info);
+        mScanInfoView.setText(" ");
+
         Button startScanButton = findViewById(R.id.start_scan_button);
         startScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +128,7 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mScanInfoView.setText(R.string.no_devices_found);
+        mScanInfoView.setText(" ");
         initBLE();
     }
 
@@ -185,7 +187,7 @@ public class ScanActivity extends AppCompatActivity {
                         if (mScanning) {
                             mScanning = false;
                             scanner.stopScan(mScanCallback);
-                            //showToast("BLE scan stopped", ScanActivity.this);
+                            MsgUtils.showToast("BLE scan stopped", ScanActivity.this);
                         }
                     }
                 }, SCAN_PERIOD);
@@ -193,13 +195,13 @@ public class ScanActivity extends AppCompatActivity {
                 mScanning = true;
                 scanner.startScan(scanFilters, scanSettings, mScanCallback);
                 mScanInfoView.setText(R.string.no_devices_found);
-                //showToast("BLE scan started", this);
+                MsgUtils.showToast("BLE scan started", this);
             }
         } else {
             if (mScanning) {
                 mScanning = false;
                 scanner.stopScan(mScanCallback);
-                //showToast("BLE scan stopped", this);
+                MsgUtils.showToast("BLE scan stopped", this);
             }
         }
     }
@@ -251,7 +253,7 @@ public class ScanActivity extends AppCompatActivity {
     private void onDeviceSelected(int position) {
         BluetoothDevice selectedDevice = mDeviceList.get(position);
 
-        // BluetoothDevice objects are parceable, i.e. we can "send" the selected device
+        // BluetoothDevice objects are parcelable, i.e. we can "send" the selected device
         // to the DeviceActivity packaged in an intent.
         if (selectedDevice.getName().contains("Temperature")) {
             Intent intent = new Intent(ScanActivity.this, TemperatureReadActivity.class);

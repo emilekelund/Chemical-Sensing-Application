@@ -5,6 +5,7 @@
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/calibrate_sensor"
         android:title="@string/calibrate_sensor"
+        android:icon="@drawable/ic_baseline_verified_24"
         app:showAsAction="never"/>
 
 </menu>
