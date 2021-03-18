@@ -17,4 +17,11 @@ public class BitConverter {
 
         return multiChannelValues;
     }
+
+    public static int[] potentiometerRtdToInt(byte[] bytes) {
+        int[] potentiometerRtdValues = new int[2];
+        potentiometerRtdValues[0] = (bytes[3] << 8) | (bytes[2] & 0xFF);
+        potentiometerRtdValues[1] = (bytes[1] << 8) | (bytes[0] & 0xFF);
+        return potentiometerRtdValues;
+    }
 }
