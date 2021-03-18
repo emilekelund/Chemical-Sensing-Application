@@ -54,7 +54,7 @@ public class GattActions {
         POTENTIOMETRIC_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
         MULTICHANNEL_SERVICE_DISCOVERED("MultiChannel service"),
         MULTICHANNEL_SERVICE_NOT_AVAILABLE("MultiChannel service unavailable"),
-        POTENTIOMETER_RTD_SERVICE_AVAILABLE("PotentiometerRtd service"),
+        POTENTIOMETER_RTD_SERVICE_DISCOVERED("PotentiometerRtd service"),
         POTENTIOMETER_RTD_SERVICE_UNAVAILABLE("PotentiometerRtd service unavailable"),
         DATA_AVAILABLE("Data available");
 
