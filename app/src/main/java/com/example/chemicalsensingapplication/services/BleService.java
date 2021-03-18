@@ -26,11 +26,14 @@ import java.util.List;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_MEASUREMENT;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_NO_OF_ACTIVE_CHANNELS;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_SERVICE;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETER_RTD_MEASUREMENT;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETER_RTD_SERVICE;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_SERVICE;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.Event;
 import static com.example.chemicalsensingapplication.services.GattActions.MULTICHANNEL_DATA;
+import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETER_RTD_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.CLIENT_CHARACTERISTIC_CONFIG;
@@ -48,6 +51,7 @@ public class BleService extends Service {
     private BluetoothGattService mBleTemperatureService = null;
     private BluetoothGattService mBlePotentiometricService = null;
     private BluetoothGattService mBleMultiChannelService = null;
+    private BluetoothGattService mBlePotentiometerRtdService = null;
 
     private boolean isMultiChannel = false;
 
@@ -95,6 +99,7 @@ public class BleService extends Service {
                 mBleTemperatureService = gatt.getService(TEMPERATURE_SERVICE);
                 mBlePotentiometricService = gatt.getService(POTENTIOMETRIC_SERVICE);
                 mBleMultiChannelService = gatt.getService(MULTICHANNEL_SERVICE);
+                mBlePotentiometerRtdService = gatt.getService(POTENTIOMETER_RTD_SERVICE);
 
                 if (mBleTemperatureService != null) {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_DISCOVERED);
@@ -131,6 +136,16 @@ public class BleService extends Service {
 
                     isMultiChannel = true;
 
+                } else if (mBlePotentiometerRtdService != null) {
+                    broadcastChemicalSensingUpdate(Event.POTENTIOMETER_RTD_SERVICE_DISCOVERED);
+                    logCharacteristics(mBlePotentiometerRtdService);
+
+                    // Enable notifications on the potentiometer rtd measurements
+                    BluetoothGattCharacteristic mPotentiometerRtdData =
+                            mBlePotentiometerRtdService.getCharacteristic(POTENTIOMETER_RTD_MEASUREMENT);
+                    boolean result = setCharacteristicNotification(
+                            mPotentiometerRtdData, true);
+                    Log.i(TAG, "setCharacteristicNotification" + result);
                 } else {
                     broadcastChemicalSensingUpdate(Event.TEMPERATURE_SERVICE_NOT_AVAILABLE);
                     Log.i(TAG, "No relevant service available");
@@ -168,6 +183,15 @@ public class BleService extends Service {
                 int[] multiChannelMeasurements = BitConverter.bytesToDoubleArr(rawData);
 
                 broadcastMultiChannelUpdate(multiChannelMeasurements);
+            } else if (POTENTIOMETER_RTD_MEASUREMENT.equals(characteristic.getUuid())) {
+                // Copy the received byte array so we have a threadsafe copy
+                byte[] rawData = new byte[characteristic.getValue().length];
+                System.arraycopy(characteristic.getValue(), 0, rawData, 0,
+                        characteristic.getValue().length);
+
+                int[] potentiometerRtdMeasurement = BitConverter.potentiometerRtdToInt(rawData);
+
+                broadcastPotentiometerRtdUpdate(potentiometerRtdMeasurement);
             }
         }
 
@@ -326,6 +350,13 @@ public class BleService extends Service {
         final Intent intent = new Intent(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
         intent.putExtra(EVENT, Event.DATA_AVAILABLE);
         intent.putExtra(MULTICHANNEL_DATA, multiChannelData);
+        sendBroadcast(intent);
+    }
+
+    private void broadcastPotentiometerRtdUpdate (final int[] potentiometerRtdData) {
+        final Intent intent = new Intent(ACTION_GATT_CHEMICAL_SENSING_EVENTS);
+        intent.putExtra(EVENT, Event.DATA_AVAILABLE);
+        intent.putExtra(POTENTIOMETER_RTD_DATA, potentiometerRtdData);
         sendBroadcast(intent);
     }
 
