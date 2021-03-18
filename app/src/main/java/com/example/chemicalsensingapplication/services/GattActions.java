@@ -33,6 +33,12 @@ public class GattActions {
     public final static String MULTICHANNEL_DATA =
             "com.example.chemicalsensingapplication.services.MULTICHANNEL_DATA";
 
+    /**
+     * A flag for combined potentiometer RTD data in intent (via intent.putExtra)
+     */
+    public final static String POTENTIOMETER_RTD_DATA =
+            "com.example.chemicalsensingapplication.services.POTENTIOMETER_RTD_DATA";
+
 
     /**
      * Events corresponding to Gatt status/events
@@ -48,6 +54,8 @@ public class GattActions {
         POTENTIOMETRIC_SERVICE_NOT_AVAILABLE("Potentiometric service unavailable"),
         MULTICHANNEL_SERVICE_DISCOVERED("MultiChannel service"),
         MULTICHANNEL_SERVICE_NOT_AVAILABLE("MultiChannel service unavailable"),
+        POTENTIOMETER_RTD_SERVICE_AVAILABLE("PotentiometerRtd service"),
+        POTENTIOMETER_RTD_SERVICE_UNAVAILABLE("PotentiometerRtd service unavailable"),
         DATA_AVAILABLE("Data available");
 
         @Override
