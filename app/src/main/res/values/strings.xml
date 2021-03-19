@@ -52,4 +52,7 @@
     <string name="no_of_channels"># channels</string>
     <string name="set">Set</string>
     <string name="multichannel_y_axis_text">Potential [mV]</string>
+    <string name="no_potentiometer_rtd_board_connected">No Potentiometer/RTD board connected</string>
+    <string name="time_s">Time [s]</string>
+    <string name="potential_mv">Potential [mV]</string>
 </resources>
