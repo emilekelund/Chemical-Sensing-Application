@@ -39,6 +39,7 @@ import java.util.Objects;
 
 import static android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.MULTICHANNEL_SERVICE;
+import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETER_RTD_SERVICE;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.POTENTIOMETRIC_SERVICE;
 import static com.example.chemicalsensingapplication.services.ChemicalSensingBoardUUIDs.TEMPERATURE_SERVICE;
 
@@ -76,10 +77,14 @@ public class ScanActivity extends AppCompatActivity {
         ScanFilter multiChannelServiceFilter = new ScanFilter.Builder()
                 .setServiceUuid(new ParcelUuid(MULTICHANNEL_SERVICE))
                 .build();
+        ScanFilter potentiometerRtdServiceFiler = new ScanFilter.Builder()
+                .setServiceUuid(new ParcelUuid(POTENTIOMETER_RTD_SERVICE))
+                .build();
         CHEMICAL_SENSING_SCAN_FILTER = new ArrayList<>();
         CHEMICAL_SENSING_SCAN_FILTER.add(temperatureServiceFilter);
         CHEMICAL_SENSING_SCAN_FILTER.add(potentiometricServiceFilter);
         CHEMICAL_SENSING_SCAN_FILTER.add(multiChannelServiceFilter);
+        CHEMICAL_SENSING_SCAN_FILTER.add(potentiometerRtdServiceFiler);
         SCAN_SETTINGS = new ScanSettings.Builder()
                 .setScanMode(CALLBACK_TYPE_ALL_MATCHES).build();
     }
@@ -265,6 +270,10 @@ public class ScanActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (selectedDevice.getName().contains("MultiChannel")) {
             Intent intent = new Intent(ScanActivity.this, MultiChannelReadActivity.class);
+            intent.putExtra(SELECTED_DEVICE, selectedDevice);
+            startActivity(intent);
+        } else if (selectedDevice.getName().contains("Potentiometer")) {
+            Intent intent = new Intent(ScanActivity.this, PotentiometerRtdReadActivity.class);
             intent.putExtra(SELECTED_DEVICE, selectedDevice);
             startActivity(intent);
         }
