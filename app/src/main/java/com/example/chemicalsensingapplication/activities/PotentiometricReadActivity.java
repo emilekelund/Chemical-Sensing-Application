@@ -164,7 +164,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         }
 
         // Setup UI reference to the chart
-        mChart = findViewById(R.id.pHChart);
+        mChart = findViewById(R.id.potentiometer_chart);
 
         // enable description text
         mChart.getDescription().setEnabled(false);
