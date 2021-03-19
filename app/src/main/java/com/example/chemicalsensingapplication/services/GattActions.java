@@ -7,7 +7,7 @@ public class GattActions {
      * Intended for IntentFilters for a BroadcastReceiver.
      */
     public final static String ACTION_GATT_CHEMICAL_SENSING_EVENTS =
-            "com.example.chemicalsensingapplication.services.ACTION_GATT_TEMPERATURE_EVENTS";
+            "com.example.chemicalsensingapplication.services.ACTION_GATT_CHEMICAL_SENSING_EVENTS";
 
     /**
      * A flag for event info in intents (via intent.putExtra)
