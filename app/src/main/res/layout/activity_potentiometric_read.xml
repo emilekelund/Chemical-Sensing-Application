@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/pHChart"
+        android:id="@+id/potentiometer_chart"
         android:layout_width="374dp"
         android:layout_height="358dp"
         android:layout_marginStart="16dp"
@@ -95,9 +95,9 @@
         android:layout_marginEnd="376dp"
         android:rotation="270"
         android:text="@string/pH_y_axis"
-        app:layout_constraintBottom_toBottomOf="@+id/pHChart"
+        app:layout_constraintBottom_toBottomOf="@+id/potentiometer_chart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pHChart"
+        app:layout_constraintTop_toTopOf="@+id/potentiometer_chart"
         app:layout_constraintVertical_bias="0.507" />
 
     <TextView
@@ -119,7 +119,7 @@
         android:layout_marginBottom="8dp"
         android:textOff="@string/start_sampling"
         android:textOn="@string/stop_sampling"
-        app:layout_constraintBottom_toTopOf="@+id/pHChart"
+        app:layout_constraintBottom_toTopOf="@+id/potentiometer_chart"
         app:layout_constraintEnd_toStartOf="@+id/pause_button"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -133,7 +133,7 @@
         android:checked="false"
         android:textOff="@string/pause_data_saving"
         android:textOn="@string/continue_data_saving"
-        app:layout_constraintBottom_toTopOf="@+id/pHChart"
+        app:layout_constraintBottom_toTopOf="@+id/potentiometer_chart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/toggleButton" />
 
