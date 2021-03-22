@@ -172,7 +172,7 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
         mChart.setDrawGridBackground(false);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(true);
+        mChart.setPinchZoom(false);
 
         // set an alternative background color
         mChart.setBackgroundColor(Color.WHITE);
