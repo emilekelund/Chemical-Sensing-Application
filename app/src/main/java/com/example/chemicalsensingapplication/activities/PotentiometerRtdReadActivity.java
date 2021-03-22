@@ -390,7 +390,7 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
                                 try {
                                     dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
                                     dataSample.write((potential + ",").getBytes());
-                                    dataSample.write((resistance + "\n").getBytes());
+                                    dataSample.write((temperature + "\n").getBytes());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
