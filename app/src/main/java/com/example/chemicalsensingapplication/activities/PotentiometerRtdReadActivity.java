@@ -309,7 +309,7 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
         mChart.notifyDataSetChanged();
 
         // limit the number of visible entries
-        mChart.setVisibleXRangeMaximum(1000);
+        mChart.setVisibleXRangeMaximum(50000);
         //mChart.setVisibleYRange(0,30, YAxis.AxisDependency.LEFT);
 
         // move to the latest entry
