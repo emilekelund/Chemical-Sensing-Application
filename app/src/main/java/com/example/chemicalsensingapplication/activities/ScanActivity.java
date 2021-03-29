@@ -268,7 +268,7 @@ public class ScanActivity extends AppCompatActivity {
             Intent intent = new Intent(ScanActivity.this, PotentiometricReadActivity.class);
             intent.putExtra(SELECTED_DEVICE, selectedDevice);
             startActivity(intent);
-        } else if (selectedDevice.getName().contains("MultiChannel")) {
+        } else if (selectedDevice.getName().contains("Multipotentiometer")) {
             Intent intent = new Intent(ScanActivity.this, MultiChannelReadActivity.class);
             intent.putExtra(SELECTED_DEVICE, selectedDevice);
             startActivity(intent);

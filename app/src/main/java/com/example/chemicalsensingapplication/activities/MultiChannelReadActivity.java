@@ -183,7 +183,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         mChart.setDrawGridBackground(false);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(true);
+        mChart.setPinchZoom(false);
 
         // set an alternative background color
         mChart.setBackgroundColor(Color.WHITE);
@@ -213,8 +213,8 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setTextColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setAxisMaximum(500f);
-        leftAxis.setAxisMinimum(-500f);
+        leftAxis.setAxisMaximum(1000f);
+        leftAxis.setAxisMinimum(-1000f);
         leftAxis.setDrawGridLines(true);
         // Disable right Y-axis
         YAxis rightAxis = mChart.getAxisRight();
@@ -316,7 +316,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         mChart.notifyDataSetChanged();
 
         // limit the number of visible entries
-        mChart.setVisibleXRangeMaximum(30);
+        mChart.setVisibleXRangeMaximum(1000);
         //mChart.setVisibleYRange(0,30, YAxis.AxisDependency.LEFT);
 
         // move to the latest entry
@@ -335,13 +335,13 @@ public class MultiChannelReadActivity extends AppCompatActivity {
         dataSets[5] = new LineDataSet(null, "WE6");
         dataSets[6] = new LineDataSet(null, "WE7");
 
-        for (int i = 0; i < dataSets.length; i++) {
-            dataSets[i].setAxisDependency(YAxis.AxisDependency.LEFT);
-            dataSets[i].setHighlightEnabled(false);
-            dataSets[i].setDrawCircles(true);
-            dataSets[i].setDrawValues(false);
-            dataSets[i].setCircleRadius(2.5f);
-            dataSets[i].enableDashedLine(0, 1, 0);
+        for (LineDataSet dataSet : dataSets) {
+            dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+            dataSet.setHighlightEnabled(false);
+            dataSet.setDrawCircles(false);
+            dataSet.setDrawValues(false);
+            dataSet.setCircleRadius(2.5f);
+            //dataSet.enableDashedLine(0, 1, 0);
         }
 
         dataSets[0].setColor(Color.RED);
@@ -411,6 +411,7 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                             }
                             break;
                         case GATT_DISCONNECTED:
+                        case MULTICHANNEL_SERVICE_NOT_AVAILABLE:
                             mStatusView.setText(event.toString());
                             break;
                         case GATT_SERVICES_DISCOVERED:
@@ -460,9 +461,6 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                                 }
                             }
 
-                            break;
-                        case MULTICHANNEL_SERVICE_NOT_AVAILABLE:
-                            mStatusView.setText(event.toString());
                             break;
                         default:
                             mStatusView.setText(R.string.device_unreachable);
