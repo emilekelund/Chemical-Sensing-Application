@@ -447,10 +447,13 @@ public class MultiChannelReadActivity extends AppCompatActivity {
                                 try {
                                     dataSample.write(((float) timeSinceSamplingStart / 1000f + ",").getBytes());
                                     for (int i = 0; i < activeChannels; i++) {
-                                        dataSample.write(((float) potentials[i] + ",").getBytes());
+                                        dataSample.write(((float) potentials[i] + "").getBytes());
+                                        if (i < 6) {
+                                            dataSample.write((",").getBytes());
+                                        }
                                     }
                                     for (int i = activeChannels; i < 7; i++) {
-                                        dataSample.write(("-").getBytes());
+                                        dataSample.write(("").getBytes());
                                         if (i < 6) {
                                             dataSample.write((",").getBytes());
                                         }
