@@ -53,7 +53,7 @@
         android:text="@string/no_data"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/toggleButton"
+        app:layout_constraintBottom_toTopOf="@+id/save_data"
         app:layout_constraintEnd_toStartOf="@+id/pHViewer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
@@ -70,7 +70,7 @@
         android:text="@string/no_data"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/toggleButton"
+        app:layout_constraintBottom_toTopOf="@+id/save_data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/potentialValueViewer"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
@@ -111,7 +111,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
-        android:id="@+id/toggleButton"
+        android:id="@+id/save_data"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -135,6 +135,6 @@
         android:textOn="@string/continue_data_saving"
         app:layout_constraintBottom_toTopOf="@+id/potentiometer_chart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/toggleButton" />
+        app:layout_constraintStart_toEndOf="@+id/save_data" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
