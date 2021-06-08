@@ -1,6 +1,6 @@
 package com.example.chemicalsensingapplication.activities;
 
-import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,16 +19,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
@@ -45,17 +43,18 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static android.os.Environment.DIRECTORY_DOCUMENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
@@ -71,13 +70,13 @@ public class PotentiometricReadActivity extends AppCompatActivity {
     private TextView mStatusView;
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
-    private ToggleButton mSaveDataButton;
-    private ToggleButton mPauseDataButton;
+    private Button mSaveDataButton;
     private static float slope = 0;
     private static float intercept = 0;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
-    private FileOutputStream dataSample = null;
+
+    private final ArrayList<Double> mSampledValues = new ArrayList<>();
 
     private static final float MULTIPLIER = 0.03125F; // 0.03125 mV per bit
 
@@ -99,7 +98,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                 public void onFinish() {
 
                 }
-            };
+            }.start();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -111,8 +110,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         m_pHView = findViewById(R.id.pHViewer);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
-        mSaveDataButton = findViewById(R.id.save_data);
-        mPauseDataButton = findViewById(R.id.pause_button);
+        mSaveDataButton = findViewById(R.id.potentiometer_save_data);
 
         // SETTING UP THE TOOLBAR
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -126,29 +124,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-            }
-        });
-
-        // On-click listener for the toggle button used to sample data
-        mSaveDataButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Button is checked, create a new file and start the timer
-                    dataSample = createFiles();
-                    mCountDownTimer.start();
-                    MsgUtils.showToast("Data saving started", getApplicationContext());
-                } else {
-                    try {
-                        // Button is unchecked, close the file
-                        closeFiles(dataSample);
-                        MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
-                        mCountDownTimer.cancel();
-                        timeSinceSamplingStart = 0;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         });
 
@@ -227,15 +202,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        isStoragePermissionGranted(); // The user needs to approve the file storing
-
-        // Read the latest calibrations
-        try {
-            readCalibrationData();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -266,12 +232,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
-        // Read the latest calibrations
-        try {
-            readCalibrationData();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -280,10 +240,6 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         unregisterReceiver(mGattUpdateReceiver);
         if (thread != null) {
             thread.interrupt();
-        }
-        // When the activity is paused, toggle the button so that the files are closed
-        if (mSaveDataButton.isChecked()) {
-            mSaveDataButton.toggle();
         }
     }
 
@@ -425,15 +381,9 @@ public class PotentiometricReadActivity extends AppCompatActivity {
                                 plotData = false;
                             }
 
-                            if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
-                                try {
-                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
-                                    dataSample.write((potential + ",").getBytes());
-                                    dataSample.write((pH + "\n").getBytes());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                            mSampledValues.add((double) (timeSinceSamplingStart / 1000));
+                            mSampledValues.add((double) potential);
+                            mSampledValues.add((double) pH);
 
                             break;
                         case POTENTIOMETRIC_SERVICE_NOT_AVAILABLE:
@@ -458,93 +408,118 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         return (slope * potential) + intercept;
     }
 
-    // Method to sample data used by the ToggleButton
-    private FileOutputStream createFiles() {
-        // Get the external storage location
-        String root = Environment.getExternalStorageDirectory().toString();
-        // Create a new directory
-        File myDir = new File(root, "/Chemical_sensing_data");
-        if (!myDir.exists()) {
-            myDir.mkdirs();
-        }
-
-        String potentiometric = "pH_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
-
-        File potentiometricFile = new File(myDir, potentiometric);
-
-        try {
-            potentiometricFile.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            return new FileOutputStream(potentiometricFile, true);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-    // Helper method to close the files.
-    private static void closeFiles(FileOutputStream fo) throws IOException {
-        fo.flush();
-        fo.close();
-    }
-
-    // Method to check if the user has granted access to store data on external memory
-    public boolean isStoragePermissionGranted() {
-        String TAG = "Storage Permission";
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Permission is granted");
-                return true;
-            } else {
-                Log.i(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.i(TAG,"Permission is granted");
-            return true;
-        }
-    }
-
-    public void readCalibrationData() throws FileNotFoundException {
-        String root = Environment.getExternalStorageDirectory().toString() + "/Chemical_sensing_data/Calibrations";
-        InputStream calibrationData = new FileInputStream(root + "/pH_calibrations.csv");
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(calibrationData));
-
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowData = line.split(",");
-                slope = Float.parseFloat(rowData[0]);
-                intercept = Float.parseFloat(rowData[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                calibrationData.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
     public static float getSlope() {
         return slope;
     }
 
     public static float getIntercept() {
         return intercept;
+    }
+
+    // Request code for creating a csv file.
+    private static final int CREATE_FILE = 1;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createFile() {
+        final File dir;
+        if (Build.VERSION_CODES.Q > Build.VERSION.SDK_INT) {
+            dir = new File(Environment.getExternalStorageDirectory().getPath()
+                    + "/Chemical_sensing_data");
+        } else {
+            dir = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS).getPath()
+                    + "/Chemical_sensing_data");
+        }
+
+        String fileName = "Potentiometer_" + df.format(Calendar.getInstance().getTime());
+
+        if (!dir.exists())
+            dir.mkdir();
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+
+        startActivityForResult(intent, CREATE_FILE);
+    }
+
+    // Request code for opening the calibration data
+    private static final int OPEN_FILE = 2;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void openFile(){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+
+        startActivityForResult(intent, OPEN_FILE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == 1
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
+
+                    // Write our sampled values to the created file
+                    for (int i = 0; i < mSampledValues.size(); i+=3){
+                        try {
+                            outputStream.write((mSampledValues.get(i) + ",").getBytes());
+                            outputStream.write((mSampledValues.get(i+1) + ",").getBytes());
+                            outputStream.write((mSampledValues.get(i+2) + "\n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (requestCode == 2
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that the user selected
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    // Read the opened values from the inputStream
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] rowData = line.split(",");
+                        slope = Float.parseFloat(rowData[0]);
+                        intercept = Float.parseFloat(rowData[1]);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void saveData(View view) {
+        createFile();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void openCalibration(View view) {
+        openFile();
     }
 }
