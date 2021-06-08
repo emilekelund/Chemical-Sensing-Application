@@ -9,11 +9,11 @@
     <string name="calculating_resistance">Calculating\nresistance</string>
     <string name="board_disconnected">Board\n disconnected</string>
     <string name="waiting_for_resistance">Waiting for\n resistance</string>
-    <string name="resistance_x_axis">Resistance [MΩ]</string>
-    <string name="temperature_y_axis">Temperature [°C]</string>
+    <string name="resistance_x_axis">Resistance (MΩ)</string>
+    <string name="temperature_y_axis">Temperature (°C)</string>
     <string name="pH_y_axis">pH Value</string>
     <string name="calculating_temperature">Calculating\ntemperature</string>
-    <string name="x_axis_label">Time [s]</string>
+    <string name="x_axis_label">Time (s)</string>
     <string name="start_sampling">Start data saving</string>
     <string name="stop_sampling">Stop data saving</string>
     <string name="welcome_info_text">Welcome to the chemical sensing application.\nPress the button to scan for chemical sensing devices.</string>
@@ -51,10 +51,10 @@
     <string name="not_active">Not active</string>
     <string name="no_of_channels"># channels</string>
     <string name="set">Set</string>
-    <string name="multichannel_y_axis_text">Potential [mV]</string>
+    <string name="multichannel_y_axis_text">Potential (mV)</string>
     <string name="no_potentiometer_rtd_board_connected">No Potentiometer/RTD board connected</string>
-    <string name="time_s">Time [s]</string>
-    <string name="potential_mv">Potential [mV]</string>
+    <string name="time_s">Time (s)</string>
+    <string name="potential_mv">Potential (mV)</string>
     <string name="save_data">Save data</string>
     <string name="open_calibration">Open calibration</string>
 </resources>
