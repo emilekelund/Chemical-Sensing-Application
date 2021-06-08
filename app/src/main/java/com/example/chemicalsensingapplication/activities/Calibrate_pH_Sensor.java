@@ -284,7 +284,7 @@ public class Calibrate_pH_Sensor extends AppCompatActivity {
         // Get the external storage location
         String root = Environment.getExternalStorageDirectory().toString();
         // Create a new directory
-        File myDir = new File(root, "/Chemical_sensing_data/Calibrations");
+        File myDir = new File(root, "/Documents/Chemical_sensing_data/Calibrations");
         if (!myDir.exists()) {
             myDir.mkdirs();
         }
