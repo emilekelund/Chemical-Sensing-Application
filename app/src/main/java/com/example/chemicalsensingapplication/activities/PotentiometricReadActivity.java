@@ -111,7 +111,7 @@ public class PotentiometricReadActivity extends AppCompatActivity {
         m_pHView = findViewById(R.id.pHViewer);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
-        mSaveDataButton = findViewById(R.id.toggleButton);
+        mSaveDataButton = findViewById(R.id.save_data);
         mPauseDataButton = findViewById(R.id.pause_button);
 
         // SETTING UP THE TOOLBAR
