@@ -1,6 +1,6 @@
 package com.example.chemicalsensingapplication.activities;
 
-import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,15 +17,13 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
@@ -42,21 +40,21 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static android.os.Environment.DIRECTORY_DOCUMENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETER_RTD_DATA;
-import static com.example.chemicalsensingapplication.services.GattActions.POTENTIOMETRIC_DATA;
 
 public class PotentiometerRtdReadActivity extends AppCompatActivity {
     private static final String TAG = PotentiometricReadActivity.class.getSimpleName();
-    public static String SELECTED_DEVICE = "Selected device";
 
     private BluetoothDevice mSelectedDevice = null;
 
@@ -66,11 +64,11 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
     private TextView mDeviceView;
     private String mDeviceAddress;
     private BleService mBluetoothLeService;
-    private ToggleButton mSaveDataButton;
-    private ToggleButton mPauseDataButton;
+    private Button mSaveDataButton;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm"); // Custom date format for file saving
-    private FileOutputStream dataSample = null;
+
+    private final ArrayList<Double> mSampledValues = new ArrayList<>();
 
     private ILineDataSet set = null;
     private LineChart mChart;
@@ -92,7 +90,7 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
                 public void onFinish() {
 
                 }
-            };
+            }.start();
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -103,8 +101,7 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
         mTemperatureView = findViewById(R.id.temperature_viewer);
         mStatusView = findViewById(R.id.status_view);
         mDeviceView = findViewById(R.id.device_view);
-        mSaveDataButton = findViewById(R.id.data_save_toggle);
-        mPauseDataButton = findViewById(R.id.pause_save_toggle);
+        mSaveDataButton = findViewById(R.id.save_data_button);
 
         // SETTING UP THE TOOLBAR
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -118,29 +115,6 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-            }
-        });
-
-        // On-click listener for the toggle button used to sample data
-        mSaveDataButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Button is checked, create a new file and start the timer
-                    dataSample = createFiles();
-                    mCountDownTimer.start();
-                    MsgUtils.showToast("Data saving started", getApplicationContext());
-                } else {
-                    try {
-                        // Button is unchecked, close the file
-                        closeFiles(dataSample);
-                        MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
-                        mCountDownTimer.cancel();
-                        timeSinceSamplingStart = 0;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         });
 
@@ -221,7 +195,6 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        isStoragePermissionGranted(); // The user needs to approve the file storing
     }
 
     @Override
@@ -240,10 +213,6 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
         unregisterReceiver(mGattUpdateReceiver);
         if (thread != null) {
             thread.interrupt();
-        }
-        // When the activity is paused, toggle the button so that the files are closed
-        if (mSaveDataButton.isChecked()) {
-            mSaveDataButton.toggle();
         }
     }
 
@@ -386,15 +355,9 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
                                 plotData = false;
                             }
 
-                            if (mSaveDataButton.isChecked() && !mPauseDataButton.isChecked()) {
-                                try {
-                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
-                                    dataSample.write((potential + ",").getBytes());
-                                    dataSample.write((temperature + "\n").getBytes());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                            mSampledValues.add((double) (timeSinceSamplingStart / 1000));
+                            mSampledValues.add(potential);
+                            mSampledValues.add(temperature);
 
                             break;
                         case POTENTIOMETER_RTD_SERVICE_UNAVAILABLE:
@@ -415,59 +378,66 @@ public class PotentiometerRtdReadActivity extends AppCompatActivity {
         return intentFilter;
     }
 
-    // Method to sample data used by the ToggleButton
-    private FileOutputStream createFiles() {
-        // Get the external storage location
-        String root = Environment.getExternalStorageDirectory().toString();
-        // Create a new directory
-        File myDir = new File(root, "/Chemical_sensing_data");
-        if (!myDir.exists()) {
-            myDir.mkdirs();
+    // Request code for creating a csv file.
+    private static final int CREATE_FILE = 1;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createFile() {
+        final File dir;
+        if (Build.VERSION_CODES.Q > Build.VERSION.SDK_INT) {
+            dir = new File(Environment.getExternalStorageDirectory().getPath()
+                    + "/Chemical_sensing_data");
+        } else {
+            dir = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS).getPath()
+                    + "/Chemical_sensing_data");
         }
 
-        String potentiometric = "potential_temperature_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
+        String fileName = "PotentiometerTemperature_" + df.format(Calendar.getInstance().getTime());
 
-        File potentiometricFile = new File(myDir, potentiometric);
+        if (!dir.exists())
+            dir.mkdir();
 
-        try {
-            potentiometricFile.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
 
-        try {
-            return new FileOutputStream(potentiometricFile, true);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        startActivityForResult(intent, CREATE_FILE);
     }
 
-    // Helper method to close the files.
-    private static void closeFiles(FileOutputStream fo) throws IOException {
-        fo.flush();
-        fo.close();
-    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == 1
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
 
-    // Method to check if the user has granted access to store data on external memory
-    public boolean isStoragePermissionGranted() {
-        String TAG = "Storage Permission";
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Permission is granted");
-                return true;
-            } else {
-                Log.i(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
+                    // Write our sampled values to the created file
+                    for (int i = 0; i < mSampledValues.size(); i+=3){
+                        try {
+                            outputStream.write((mSampledValues.get(i) + ",").getBytes());
+                            outputStream.write((mSampledValues.get(i+1) + ",").getBytes());
+                            outputStream.write((mSampledValues.get(i+2) + "\n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.i(TAG,"Permission is granted");
-            return true;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void saveData(View view) {
+        createFile();
     }
 }
