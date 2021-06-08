@@ -57,4 +57,5 @@
     <string name="potential_mv">Potential (mV)</string>
     <string name="save_data">Save data</string>
     <string name="open_calibration">Open calibration</string>
+    <string name="set_channels">Set channels</string>
 </resources>
