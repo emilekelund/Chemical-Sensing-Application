@@ -1,6 +1,6 @@
 package com.example.chemicalsensingapplication.activities;
 
-import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,8 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,20 +17,17 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 
 import com.example.chemicalsensingapplication.R;
 import com.example.chemicalsensingapplication.services.BleService;
 import com.example.chemicalsensingapplication.services.GattActions;
-import com.example.chemicalsensingapplication.utilities.ExponentialMovingAverage;
 import com.example.chemicalsensingapplication.utilities.MsgUtils;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -43,17 +40,18 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
 
+import static android.os.Environment.DIRECTORY_DOCUMENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.ACTION_GATT_CHEMICAL_SENSING_EVENTS;
 import static com.example.chemicalsensingapplication.services.GattActions.EVENT;
 import static com.example.chemicalsensingapplication.services.GattActions.TEMPERATURE_DATA;
@@ -72,11 +70,11 @@ public class TemperatureReadActivity extends AppCompatActivity {
     private static float slope = 0;
     private static float intercept = 0;
 
-    private ToggleButton mSaveDataButton;
-    private ToggleButton mPauseButton;
+    private Button mSaveDataButton;
 
     private static final DateFormat df = new SimpleDateFormat("yyMMdd_HH:mm:ss"); // Custom date format for file saving
-    private FileOutputStream dataSample = null;
+
+    private final ArrayList<Double> mSampledValues = new ArrayList<>();
 
     private BleService mBluetoothLeService;
 
@@ -97,7 +95,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
                 public void onFinish() {
 
                 }
-            };
+            }.start();
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -110,8 +108,7 @@ public class TemperatureReadActivity extends AppCompatActivity {
         mTemperatureView = findViewById(R.id.tempViewer);
         mDeviceView = findViewById(R.id.device_view);
         mStatusView = findViewById(R.id.status_view);
-        mSaveDataButton = findViewById(R.id.toggleButton);
-        mPauseButton = findViewById(R.id.pause_button);
+        mSaveDataButton = findViewById(R.id.save_data);
 
         // SETTING UP THE TOOLBAR
         Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -127,30 +124,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        // On-click listener for the toggle button used to sample data
-        mSaveDataButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Button is checked, create a new file and start the timer
-                    dataSample = createFiles();
-                    mCountDownTimer.start();
-                    MsgUtils.showToast("Data saving started", getApplicationContext());
-                } else {
-                    try {
-                        // Button is unchecked, close the file
-                        closeFiles(dataSample);
-                        MsgUtils.showToast("Data is now stored on your phone.", getApplicationContext());
-                        mCountDownTimer.cancel();
-                        timeSinceSamplingStart = 0;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
 
         final Intent intent = getIntent();
         mSelectedDevice = intent.getParcelableExtra(ScanActivity.SELECTED_DEVICE);
@@ -227,14 +200,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
         Intent gattServiceIntent = new Intent(this, BleService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        isStoragePermissionGranted();
-
-        // Read the latest calibrations
-        try {
-            readCalibrationData();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -246,12 +211,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
             Log.d(TAG, "Connect request result=" + result);
         }
 
-        // Read the latest calibrations
-        try {
-            readCalibrationData();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -260,10 +219,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
         unregisterReceiver(mGattUpdateReceiver);
         if (thread != null) {
             thread.interrupt();
-        }
-        // When the activity is paused, toggle the button so that the files are closed
-        if (mSaveDataButton.isChecked()) {
-            mSaveDataButton.toggle();
         }
     }
 
@@ -406,15 +361,8 @@ public class TemperatureReadActivity extends AppCompatActivity {
                                 plotData = false;
                             }
 
-                            if (mSaveDataButton.isChecked() && !mPauseButton.isChecked()) {
-                                try {
-                                    dataSample.write(((float)timeSinceSamplingStart / 1000f + ",").getBytes());
-                                    dataSample.write((resistance + ",").getBytes());
-                                    dataSample.write((temperature + "\n").getBytes());
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                            mSampledValues.add((double) (timeSinceSamplingStart/1000));
+                            mSampledValues.add(temperature);
 
 
                             break;
@@ -440,56 +388,105 @@ public class TemperatureReadActivity extends AppCompatActivity {
         return (slope * ((double) Math.round((resistance * (1 * Math.pow(10, -3))) * 10d) / 10d)) + intercept;
     }
 
-    // Method to sample data used by the ToggleButton.
-    private FileOutputStream createFiles() {
-        // Get the external storage location
-        String root = Environment.getExternalStorageDirectory().toString();
-        // Create a new directory
-        File myDir = new File(root, "/Chemical_sensing_data");
-        if (!myDir.exists()) {
-            myDir.mkdirs();
+    // Request code for creating a csv file.
+    private static final int CREATE_FILE = 1;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createFile() {
+        final File dir;
+        if (Build.VERSION_CODES.Q > Build.VERSION.SDK_INT) {
+            dir = new File(Environment.getExternalStorageDirectory().getPath()
+                    + "/Chemical_sensing_data");
+        } else {
+            dir = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOCUMENTS).getPath()
+                    + "/Chemical_sensing_data");
         }
 
-        String potentiometric = "temp_measurement_" + df.format(Calendar.getInstance().getTime()) + ".csv";
+        String fileName = "Temperature_" + df.format(Calendar.getInstance().getTime());
 
-        File potentiometricFile = new File(myDir, potentiometric);
+        if (!dir.exists())
+            dir.mkdir();
 
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
 
-        try {
-            return new FileOutputStream(potentiometricFile, true);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+        startActivityForResult(intent, CREATE_FILE);
     }
 
-    // Helper method to close the files.
-    private static void closeFiles(FileOutputStream fo) throws IOException {
-        fo.flush();
-        fo.close();
+    // Request code for opening the calibration data
+    private static final int OPEN_FILE = 2;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void openFile(){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+
+        startActivityForResult(intent, OPEN_FILE);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == 1
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
 
-    // Method to check if the user has granted access to store data on external memory
-    public boolean isStoragePermissionGranted() {
-        String TAG = "Storage Permission";
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                //Log.v(TAG, "Permission is granted");
-                return true;
-            } else {
-                //Log.v(TAG, "Permission is revoked");
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
+                    // Write our sampled values to the created file
+                    for (int i = 0; i < mSampledValues.size(); i+=2){
+                        try {
+                            outputStream.write((mSampledValues.get(i) + ",").getBytes());
+                            outputStream.write((mSampledValues.get(i+1) + "\n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            //Log.v(TAG,"Permission is granted");
-            return true;
         }
+
+        if (requestCode == 2
+                && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that the user selected
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    // Read the opened values from the inputStream
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] rowData = line.split(",");
+                        slope = Float.parseFloat(rowData[0]);
+                        intercept = Float.parseFloat(rowData[1]);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void saveData(View view) {
+        createFile();
     }
 
 
@@ -499,31 +496,6 @@ public class TemperatureReadActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void readCalibrationData() throws FileNotFoundException {
-        String root = Environment.getExternalStorageDirectory().toString() + "/Chemical_sensing_data/Calibrations";
-        InputStream calibrationData = new FileInputStream(root + "/temp_calibrations.csv");
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(calibrationData));
-
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowData = line.split(",");
-                slope = Float.parseFloat(rowData[0]);
-                intercept = Float.parseFloat(rowData[1]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                calibrationData.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
     public static float getSlope() {
         return slope;
@@ -531,5 +503,10 @@ public class TemperatureReadActivity extends AppCompatActivity {
 
     public static float getIntercept() {
         return intercept;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void openCalibration(View view) {
+        openFile();
     }
 }
