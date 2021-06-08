@@ -15,6 +15,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -203,30 +204,6 @@
         app:layout_constraintStart_toEndOf="@+id/we7_text"
         app:layout_constraintTop_toTopOf="@+id/we7_text" />
 
-    <ToggleButton
-        android:id="@+id/savedata_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="32dp"
-        android:textOff="@string/start_sampling"
-        android:textOn="@string/stop_sampling"
-        app:layout_constraintBottom_toTopOf="@+id/pause_toggle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/numberofchannels" />
-
-    <ToggleButton
-        android:id="@+id/pause_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="32dp"
-        android:textOff="@string/pause_data_saving"
-        android:textOn="@string/continue_data_saving"
-        app:layout_constraintBottom_toBottomOf="@+id/we7_value"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/savedata_toggle" />
-
     <View
         android:id="@+id/we1_divider"
         style="@style/Divider"
@@ -276,30 +253,6 @@
         app:layout_constraintStart_toStartOf="@+id/we7_text"
         app:layout_constraintTop_toBottomOf="@+id/we7_text" />
 
-    <EditText
-        android:id="@+id/numberofchannels"
-        android:layout_width="97dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="@string/no_of_channels"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/savedata_toggle"
-        app:layout_constraintEnd_toStartOf="@+id/setchannels"
-        app:layout_constraintTop_toTopOf="@+id/we1_value"
-        android:autofillHints="" />
-
-    <Button
-        android:id="@+id/setchannels"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="@string/set"
-        app:layout_constraintBottom_toBottomOf="@+id/numberofchannels"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/numberofchannels"
-        android:onClick="setChannels"/>
-
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/multichannel_chart"
         android:layout_width="373dp"
@@ -327,7 +280,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/yaxis_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="360dp"
@@ -337,5 +290,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintVertical_bias="0.5" />
+
+    <EditText
+        android:id="@+id/edit_number_of_channels"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/set_channels"
+        android:inputType="numberDecimal"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/we1_value"
+        app:layout_constraintEnd_toStartOf="@+id/set_channels_button"
+        app:layout_constraintStart_toEndOf="@+id/we1_divider"
+        app:layout_constraintTop_toTopOf="@+id/we1_value" />
+
+    <Button
+        android:id="@+id/multichannel_save_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="saveData"
+        android:text="@string/save_data"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/we3_divider"
+        app:layout_constraintTop_toBottomOf="@+id/set_channels_button" />
+
+    <Button
+        android:id="@+id/set_channels_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/set"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_number_of_channels"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edit_number_of_channels"
+        app:layout_constraintTop_toTopOf="@+id/edit_number_of_channels"
+        android:onClick="setChannels" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
