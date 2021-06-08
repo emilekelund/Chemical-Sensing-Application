@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -54,7 +55,7 @@
         android:text="@string/no_data"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/data_save_toggle"
+        app:layout_constraintBottom_toTopOf="@+id/save_data_button"
         app:layout_constraintEnd_toStartOf="@+id/temperature_viewer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
@@ -71,36 +72,10 @@
         android:text="@string/no_data"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/pause_save_toggle"
+        app:layout_constraintBottom_toTopOf="@+id/save_data_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/potential_viewer"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
-
-    <ToggleButton
-        android:id="@+id/data_save_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:textOff="@string/start_sampling"
-        android:textOn="@string/stop_sampling"
-        app:layout_constraintBottom_toTopOf="@+id/potentiometer_chart"
-        app:layout_constraintEnd_toStartOf="@+id/pause_save_toggle"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/pause_save_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:textOff="@string/pause_data_saving"
-        android:textOn="@string/continue_data_saving"
-        app:layout_constraintBottom_toTopOf="@+id/potentiometer_chart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/data_save_toggle" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/potentiometer_chart"
@@ -136,5 +111,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/potentiometer_chart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/potentiometer_chart" />
+
+    <Button
+        android:id="@+id/save_data_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/save_data"
+        app:layout_constraintBottom_toTopOf="@+id/potentiometer_chart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:onClick="saveData"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
