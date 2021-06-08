@@ -54,7 +54,7 @@
         android:text="@string/no_data"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/toggleButton"
+        app:layout_constraintBottom_toTopOf="@+id/save_data"
         app:layout_constraintEnd_toStartOf="@+id/tempViewer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
@@ -71,7 +71,7 @@
         android:text="@string/no_data"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/toggleButton"
+        app:layout_constraintBottom_toTopOf="@+id/save_data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/resistanceValueViewer"
         app:layout_constraintTop_toBottomOf="@+id/status_view" />
@@ -110,43 +110,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton"
+    <Button
+        android:id="@+id/save_data"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
+        android:onClick="saveData"
+        android:text="@string/save_data"
         android:textOff="@string/start_sampling"
         android:textOn="@string/stop_sampling"
         app:layout_constraintBottom_toTopOf="@+id/temperature_chart"
-        app:layout_constraintEnd_toStartOf="@+id/pause_button"
+        app:layout_constraintEnd_toStartOf="@+id/open_calibration_button"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/calibrate_sensor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:onClick="startTempCalibrationActivity"
         android:text="@string/calibrate_sensor"
         app:layout_constraintBottom_toTopOf="@+id/temperature_chart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pause_button" />
+        app:layout_constraintStart_toEndOf="@+id/open_calibration_button" />
 
-    <ToggleButton
-        android:id="@+id/pause_button"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/open_calibration_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
-        android:textOff="@string/pause_data_saving"
-        android:textOn="@string/continue_data_saving"
+        android:text="@string/open_calibration"
         app:layout_constraintBottom_toTopOf="@+id/temperature_chart"
         app:layout_constraintEnd_toStartOf="@+id/calibrate_sensor"
-        app:layout_constraintStart_toEndOf="@+id/toggleButton" />
+        app:layout_constraintStart_toEndOf="@+id/save_data"
+        android:onClick="openCalibration" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
