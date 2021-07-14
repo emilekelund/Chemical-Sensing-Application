@@ -115,7 +115,7 @@ public class ScanActivity extends AppCompatActivity {
             }
         });
 
-        // Setup recycler view and corresponding adapter
+        // Setup recycler view and corresponding adapter.
         RecyclerView recyclerView = findViewById(R.id.scan_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
